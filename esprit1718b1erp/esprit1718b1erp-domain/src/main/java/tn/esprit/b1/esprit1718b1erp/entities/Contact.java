@@ -45,7 +45,7 @@ public class Contact implements Serializable {
     @OneToMany(mappedBy = "society", fetch = FetchType.EAGER)
     private List<Contact> client;
 
-    @OneToMany(mappedBy = "supplier")
+    @OneToMany(mappedBy = "supplier", orphanRemoval = true)
     private List<Item> items;
 
     @OneToMany(mappedBy = "contact")

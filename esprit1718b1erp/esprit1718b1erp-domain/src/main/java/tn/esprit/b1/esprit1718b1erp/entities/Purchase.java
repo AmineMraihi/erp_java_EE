@@ -10,11 +10,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import javafx.collections.ObservableList;
 
 @Entity
 public class Purchase implements Serializable {
@@ -36,7 +39,7 @@ public class Purchase implements Serializable {
     @ManyToOne
     private Contact contact;
 
-    @OneToMany(mappedBy = "purchase")
+    @ManyToMany
     private List<Item> item;
 
     @OneToOne
@@ -57,6 +60,9 @@ public class Purchase implements Serializable {
     private String Dsecription;
 
     private String typePayementPurchase;
+
+    @ManyToOne
+    private Product product;
 
     @Enumerated(EnumType.STRING)
     private Statupurchase statupurchase;
@@ -139,6 +145,14 @@ public class Purchase implements Serializable {
 
     public void setPurchase_type(String purchase_type) {
         this.purchase_type = purchase_type;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Statupurchase getStatupurchase() {
@@ -248,5 +262,23 @@ public class Purchase implements Serializable {
         this.typePayementPurchase = typePayementPurchase;
         this.statupurchase = statupurchase;
     }
+
+    public Purchase(Contact contact, Date dateDemande, Date dateRecu, Integer quantite,
+            String purchase_type, String dsecription, String typePayementPurchase, Product product
+           ) {
+        super();
+        this.contact = contact;
+      ////  this.item = item;
+        this.dateDemande = dateDemande;
+        this.dateRecu = dateRecu;
+        Quantite = quantite;
+        this.purchase_type = purchase_type;
+        
+        Dsecription = dsecription;
+        this.typePayementPurchase = typePayementPurchase;
+        this.product = product;
+       
+    }
+
 
 }

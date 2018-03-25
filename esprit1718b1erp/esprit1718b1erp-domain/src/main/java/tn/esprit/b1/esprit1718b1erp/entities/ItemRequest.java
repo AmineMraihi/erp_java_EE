@@ -69,4 +69,11 @@ public class ItemRequest implements Serializable {
         this.itemRequestStatus = itemRequestStatus;
     }
 
+    @Override
+    public String toString() {
+        return "ItemRequest [item=" + item + "]";
+    }
+    
+    
+
 }

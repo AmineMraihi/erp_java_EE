@@ -2,12 +2,14 @@ package tn.esprit.b1.esprit1718b1erp.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Product implements Serializable {
@@ -22,12 +24,38 @@ public class Product implements Serializable {
     int qte;
     float prixQuantite;
 
+    @OneToMany(mappedBy = "product")
+    private List<Purchase> purchase;
     @ManyToOne
     private Sale sale;
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
+
+    public Integer getId_Product() {
+        return Id_Product;
+    }
+
+    public void setId_Product(Integer id_Product) {
+        Id_Product = id_Product;
+    }
+
+    public List<Purchase> getPurchase() {
+        return purchase;
+    }
+
+    public void setPurchase(List<Purchase> purchase) {
+        this.purchase = purchase;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
+    }
 
     public Product() {
     }
@@ -90,6 +118,11 @@ public class Product implements Serializable {
 
     public static long getSerialversionuid() {
         return serialVersionUID;
+    }
+
+    @Override
+    public String toString() {
+        return nomProduit;
     }
 
 }

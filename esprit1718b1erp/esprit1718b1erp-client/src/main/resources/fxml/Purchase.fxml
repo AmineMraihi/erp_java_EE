@@ -6,6 +6,8 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -16,13 +18,140 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="652.0" prefWidth="1225.0" style="-fx-background-color: white;" stylesheets="@../css/Metro-UI.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.b1.esprit1718b1erp.app.client.controllers.PurchaseController">
+<AnchorPane id="AnchorPane" prefHeight="711.0" prefWidth="1187.0" style="-fx-background-color: white;" stylesheets="@../css/Metro-UI.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.b1.esprit1718b1erp.app.client.controllers.PurchaseController">
     <children>
-      <AnchorPane fx:id="paneTabel" layoutY="91.0" opacity="0.0" prefHeight="560.0" prefWidth="1225.0">
+      <Text fill="#2b579a" layoutX="14.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase" wrappingWidth="222.53125">
+         <font>
+            <Font name="Segoe UI Semilight" size="24.0" />
+         </font>
+      </Text>
+      <ProgressBar fx:id="bar" layoutY="84.0" prefHeight="3.0" prefWidth="1225.0" progress="0.0" />
+      <ImageView fx:id="imgLoad" fitHeight="33.0" fitWidth="40.0" layoutX="192.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/301.GIF" />
+         </image>
+      </ImageView>
+      <TabPane fx:id="TabPane" layoutY="57.0" prefHeight="654.0" prefWidth="1216.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Purchase">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="332.0">
+                     <children>
+                        <AnchorPane fx:id="paneCrud" layoutX="-4.0" layoutY="39.0" opacity="0.96" prefHeight="589.0" prefWidth="1225.0" style="-fx-background-color: white;">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" layoutX="69.0" layoutY="25.0" prefHeight="17.0" prefWidth="122.0" text="Supplier Full name :" />
+                              <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="69.0" prefHeight="17.0" prefWidth="122.0" text="Supplier phone " />
+                              <Label fx:id="txtsupadresse" alignment="CENTER_RIGHT" layoutX="62.0" layoutY="116.0" prefHeight="17.0" prefWidth="122.0" text="Supplier Adresse: " />
+                              <TextField fx:id="txtPurchaseCode" disable="true" layoutX="192.0" layoutY="111.0" prefHeight="27.0" prefWidth="300.0" />
+                              <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="158.0" prefHeight="17.0" prefWidth="122.0" text="Purchase Type : " />
+                              <Label alignment="CENTER_RIGHT" layoutX="578.0" layoutY="172.0" prefHeight="17.0" prefWidth="122.0" text="Purchase Type  :" />
+                              <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="203.0" prefHeight="17.0" prefWidth="122.0" text="Description :" />
+                              <Button fx:id="btnBack" layoutX="29.0" layoutY="13.0" mnemonicParsing="false" onAction="#aksiBack" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/buttonCircleBlack.css">
+                                 <graphic>
+                                    <ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../img/arrowLeftBlack.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <ComboBox fx:id="cbsupplier" layoutX="192.0" layoutY="20.0" prefHeight="27.0" prefWidth="300.0" />
+                              <CheckBox fx:id="paid" layoutX="734.0" layoutY="171.0" mnemonicParsing="false" onAction="#aksiTrue" text="paid" />
+                              <CheckBox fx:id="unpaid" layoutX="861.0" layoutY="171.0" mnemonicParsing="false" onAction="#aksiFalse" text="unpaid" />
+                              <TextArea fx:id="txtDescription" layoutX="192.0" layoutY="191.0" prefHeight="64.0" prefWidth="300.0" promptText="Description" />
+                              <Label alignment="CENTER_RIGHT" layoutX="563.0" layoutY="25.0" prefHeight="17.0" prefWidth="122.0" text="Product name :" />
+                              <ComboBox fx:id="cbProjectname" layoutX="702.0" layoutY="20.0" prefHeight="27.0" prefWidth="300.0" />
+                              <Label alignment="CENTER_RIGHT" layoutX="568.0" layoutY="78.0" prefHeight="17.0" prefWidth="122.0" text="requested date" />
+                              <Label alignment="CENTER_RIGHT" layoutX="568.0" layoutY="125.0" prefHeight="17.0" prefWidth="122.0" text="delivery date: " />
+                              <Label alignment="CENTER_RIGHT" layoutX="549.0" layoutY="244.0" prefHeight="17.0" prefWidth="122.0" text="Item :" />
+                              <DatePicker fx:id="txtdaterequested" layoutX="700.0" layoutY="72.0" prefHeight="29.0" prefWidth="300.0" />
+                              <DatePicker fx:id="txtdeliverydate" layoutX="700.0" layoutY="128.0" prefHeight="29.0" prefWidth="300.0" />
+                              <ComboBox fx:id="cbitems" layoutX="700.0" layoutY="244.0" onAction="#ONiTEM_action" prefHeight="27.0" prefWidth="300.0" />
+                              <TextField fx:id="txtsuppphone" disable="true" layoutX="192.0" layoutY="64.0" prefHeight="27.0" prefWidth="300.0" />
+                              <ComboBox fx:id="cbtypepurchase" layoutX="192.0" layoutY="153.0" prefHeight="27.0" prefWidth="300.0" />
+                              <Label alignment="CENTER_RIGHT" layoutX="530.0" layoutY="201.0" prefHeight="20.0" prefWidth="160.0" text="TypePayementPurchase" />
+                              <ComboBox fx:id="txtpaymenttype" layoutX="702.0" layoutY="198.0" prefHeight="27.0" prefWidth="300.0" />
+                              <TableView fx:id="tableitem" layoutX="14.0" layoutY="305.0" prefHeight="166.0" prefWidth="1156.0">
+                                 <columns>
+                                    <TableColumn fx:id="tbbarcode" prefWidth="163.0" text="Bar code">
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
+                                             <image>
+                                                <Image url="@../img/tabel.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </TableColumn>
+                                    <TableColumn fx:id="tbname" prefWidth="125.0" text="Item name">
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
+                                             <image>
+                                                <Image url="@../img/tabel.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </TableColumn>
+                                    <TableColumn fx:id="tbdescription" prefWidth="408.0" text="Description">
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
+                                             <image>
+                                                <Image url="@../img/tabel.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </TableColumn>
+                                    <TableColumn fx:id="tbquantity" prefWidth="166.0" text="Quantity">
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
+                                             <image>
+                                                <Image url="@../img/tabel.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </TableColumn>
+                                    <TableColumn fx:id="tbprice" prefWidth="167.0" text="Price">
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
+                                             <image>
+                                                <Image url="@../img/tabel.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </TableColumn>
+                                    <TableColumn fx:id="tbtotalprice" prefWidth="192.0" text="Total price">
+                                       <graphic>
+                                          <ImageView fitHeight="31.0" fitWidth="1.0" opacity="0.49" pickOnBounds="true" smooth="false">
+                                             <image>
+                                                <Image url="@../img/tabel.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </TableColumn>
+                                 </columns>
+                              </TableView>
+                              <TextField fx:id="txtQuantity" layoutX="294.0" layoutY="507.0" onKeyReleased="#aksiQuantity" prefHeight="27.0" prefWidth="122.0" promptText="Quantity On Hand" />
+                              <Label alignment="CENTER_RIGHT" layoutX="157.0" layoutY="507.0" prefHeight="27.0" prefWidth="122.0" text="Item Total Quantity" />
+                              <Label alignment="CENTER_RIGHT" layoutX="456.0" layoutY="507.0" prefHeight="27.0" prefWidth="122.0" text="Total Amount : " />
+                              <TextField fx:id="txtamont" layoutX="599.0" layoutY="507.0" onKeyReleased="#aksiQuantity" prefHeight="27.0" prefWidth="91.0" />
+                             <Label alignment="CENTER_RIGHT" layoutX="712.0" layoutY="507.0" prefHeight="27.0" prefWidth="143.0" text="Total Amount in USD  : " />
+                              <TextField fx:id="txtamontcurr" layoutX="861.0" layoutY="507.0" prefHeight="27.0" prefWidth="91.0" />
+                              <Button fx:id="btnSave" layoutX="1048.0" layoutY="506.0" mnemonicParsing="false" onAction="#aksiSave" prefHeight="29.0" prefWidth="122.0" styleClass="btn" text="Save" />
+                           </children>
+                        </AnchorPane>
+                      <TextField fx:id="txtID" layoutX="226.0" layoutY="10.0" prefHeight="27.0" prefWidth="52.0" visible="false" />
+                        <Button fx:id="btnNew" defaultButton="true" layoutX="1053.0" layoutY="16.0" mnemonicParsing="false" onAction="#aksiNew" prefHeight="27.0" prefWidth="108.0" styleClass="btn" text="New Data" />  
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Sale" />
+        </tabs>
+      </TabPane>
+      <AnchorPane fx:id="paneTabel" layoutY="155.0" prefHeight="530.0" prefWidth="1225.0">
          <children>
-            <TableView fx:id="tableData" layoutX="7.0" layoutY="7.0" onMouseClicked="#aksiKlikTableData" prefHeight="546.0" prefWidth="1226.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="7.0">
+            <TableView fx:id="tablePurchase" layoutY="-20.0" onMouseClicked="#aksiKlikTablePurchase" prefHeight="600.0" prefWidth="1212.0" AnchorPane.bottomAnchor="-20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="-20.0">
               <columns>
-                  <TableColumn fx:id="colAction" prefWidth="130.0" text="ACTION">
+                  <TableColumn fx:id="tpActionP" prefWidth="331.0" text="Action">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -31,7 +160,7 @@
                         </ImageView>
                      </graphic>
                   </TableColumn>
-                <TableColumn fx:id="colProductId" prefWidth="135.0" text="PRODUCT ID">
+                  <TableColumn fx:id="tbdescP" prefWidth="68.0" text="Description">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -40,7 +169,7 @@
                         </ImageView>
                      </graphic>
                   </TableColumn>
-                  <TableColumn fx:id="colManufacturerIid" prefWidth="165.0" text="MANUFACTURER ID">
+                <TableColumn fx:id="tbquantityP" prefWidth="118.0" text="Quantity">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -49,7 +178,7 @@
                         </ImageView>
                      </graphic>
                   </TableColumn>
-                  <TableColumn fx:id="colProductCode" prefWidth="164.0" text="PRODUCT CODE">
+                  <TableColumn fx:id="tbSommeP" prefWidth="109.0" text="Amount">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -58,7 +187,16 @@
                         </ImageView>
                      </graphic>
                   </TableColumn>
-                  <TableColumn fx:id="colPurchaseCost" prefWidth="160.0" text="PRCHASE COST">
+                  <TableColumn fx:id="tbDateDemandeP" prefWidth="115.0" text="Date Requested">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="24.0" opacity="0.49" pickOnBounds="true" smooth="false">
+                           <image>
+                              <Image url="@../img/tabel.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </TableColumn>
+                  <TableColumn fx:id="tbdateDeliveredP" prefWidth="113.0" text="Delivered Date">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -67,7 +205,7 @@
                         </ImageView>
                      </graphic>
                   </TableColumn>
-                  <TableColumn fx:id="colQuantityOnHand" prefWidth="183.0" text="QUANTITY ON HAND">
+                  <TableColumn fx:id="tbPurchaseTypeP" prefWidth="85.0" text="Purchase Type">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -76,7 +214,7 @@
                         </ImageView>
                      </graphic>
                   </TableColumn>
-                  <TableColumn fx:id="colMarkup" prefWidth="200.0" text="MARKUP">
+                  <TableColumn fx:id="tbProjectIdP" prefWidth="122.0" text="Product Name">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -85,16 +223,7 @@
                         </ImageView>
                      </graphic>
                   </TableColumn>
-                  <TableColumn fx:id="colAvailable" prefWidth="200.0" text="AVAILABLE">
-                     <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
-                           <image>
-                              <Image url="@../img/tabel.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </TableColumn>
-                  <TableColumn fx:id="colDescription" prefWidth="300.0" text="DESCRIPTION">
+                  <TableColumn fx:id="tbStatutP" minWidth="0.0" prefWidth="148.0" text="Status">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
                            <image>
@@ -107,122 +236,5 @@
             </TableView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="paneCrud" layoutY="91.0" opacity="0.0" prefHeight="560.0" prefWidth="1225.0" style="-fx-background-color: white;">
-         <children>
-            <TextField fx:id="txtId" disable="true" editable="false" layoutX="192.0" layoutY="31.0" prefHeight="27.0" prefWidth="300.0" promptText="Generate" />
-            <Label alignment="CENTER_RIGHT" layoutX="105.0" layoutY="36.0" prefHeight="17.0" prefWidth="79.0" text="*Purchase ID :" textFill="#b22121" />
-            <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="72.0" prefHeight="17.0" prefWidth="122.0" text="Supplier Full name :" />
-            <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="107.0" prefHeight="17.0" prefWidth="122.0" text="Supplier phone " />
-            <Label fx:id="txtsupadresse" alignment="CENTER_RIGHT" layoutX="62.0" layoutY="142.0" prefHeight="17.0" prefWidth="122.0" text="Supplier Adresse: " />
-            <TextField fx:id="txtPurchaseCode" layoutX="192.0" layoutY="137.0" prefHeight="27.0" prefWidth="300.0" />
-            <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="176.0" prefHeight="17.0" prefWidth="122.0" text="Purchase Type : " />
-            <Label alignment="CENTER_RIGHT" layoutX="590.0" layoutY="364.0" prefHeight="17.0" prefWidth="122.0" text="Purchase Type  :" />
-            <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="280.0" prefHeight="17.0" prefWidth="122.0" text="Description :" />
-            <Button fx:id="btnSave" layoutX="395.0" layoutY="382.0" mnemonicParsing="false" onAction="#aksiSave" prefHeight="27.0" prefWidth="98.0" styleClass="btn" text="Save" />
-            <Button fx:id="btnBack" layoutX="29.0" layoutY="13.0" mnemonicParsing="false" onAction="#aksiBack" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/buttonCircleBlack.css">
-               <graphic>
-                  <ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/arrowLeftBlack.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
-            <ComboBox fx:id="cbsupplier" layoutX="193.0" layoutY="66.0" prefHeight="27.0" prefWidth="300.0" />
-            <CheckBox fx:id="paid" layoutX="764.0" layoutY="363.0" mnemonicParsing="false" onAction="#aksiTrue" text="paid" />
-            <CheckBox fx:id="unpaid" layoutX="884.0" layoutY="360.0" mnemonicParsing="false" onAction="#aksiFalse" text="unpaid" />
-            <TextArea fx:id="txtDescription" layoutX="192.0" layoutY="280.0" prefHeight="90.0" prefWidth="300.0" promptText="Description" />
-            <Label alignment="CENTER_RIGHT" layoutX="556.0" layoutY="69.0" prefHeight="17.0" prefWidth="122.0" text="Project name :" />
-            <ComboBox fx:id="cbProjectname" layoutX="711.0" layoutY="64.0" prefHeight="27.0" prefWidth="300.0" />
-            <Label alignment="CENTER_RIGHT" layoutX="573.0" layoutY="107.0" prefHeight="17.0" prefWidth="122.0" text="requested date" />
-            <Label alignment="CENTER_RIGHT" layoutX="565.0" layoutY="142.0" prefHeight="17.0" prefWidth="122.0" text="delivery date: " />
-            <Label alignment="CENTER_RIGHT" layoutX="556.0" layoutY="211.0" prefHeight="17.0" prefWidth="122.0" text="Item :" />
-            <Label alignment="CENTER_RIGHT" layoutX="556.0" layoutY="257.0" prefHeight="17.0" prefWidth="122.0" text="quantity" />
-            <DatePicker fx:id="txtdaterequested" layoutX="724.0" layoutY="101.0" />
-            <DatePicker fx:id="txtdeliverydate" layoutX="724.0" layoutY="137.0" />
-            <ComboBox fx:id="cbitems" layoutX="724.0" layoutY="206.0" onAction="#ONiTEM_action" prefHeight="27.0" prefWidth="300.0" />
-            <Label alignment="CENTER_RIGHT" layoutX="590.0" layoutY="296.0" prefHeight="17.0" prefWidth="122.0" text="amont : " />
-            <TextField fx:id="txtQuantity" layoutX="695.0" layoutY="252.0" onKeyReleased="#aksiQuantity" prefHeight="27.0" prefWidth="300.0" promptText="Quantity On Hand" />
-            <TextField fx:id="txtamont" layoutX="734.0" layoutY="300.0" onKeyReleased="#aksiQuantity" prefHeight="27.0" prefWidth="300.0" promptText="Quantity On Hand" />
-            <TextField fx:id="txtsuppphone" layoutX="193.0" layoutY="102.0" prefHeight="27.0" prefWidth="300.0" />
-            <ComboBox fx:id="cbtypepurchase" layoutX="192.0" layoutY="180.0" prefHeight="27.0" prefWidth="300.0" />
-            <Label alignment="CENTER_RIGHT" layoutX="571.0" layoutY="401.0" prefHeight="20.0" prefWidth="160.0" text="TypePayementPurchase" />
-            <ComboBox fx:id="txtpaymenttype" layoutX="751.0" layoutY="398.0" prefHeight="27.0" prefWidth="300.0" />
-            <AnchorPane fx:id="paneTabel1" layoutX="11.0" layoutY="454.0" prefHeight="249.0" prefWidth="1236.0">
-               <children>
-                  <TableView fx:id="tableitem" layoutX="7.0" layoutY="7.0" onMouseClicked="#aksiKlikTableData" prefHeight="546.0" prefWidth="1226.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="7.0">
-                     <columns>
-                        <TableColumn fx:id="tbbarcode" prefWidth="163.0" text="Bar code">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
-                                 <image>
-                                    <Image url="@../img/tabel.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </TableColumn>
-                        <TableColumn fx:id="tbname" prefWidth="125.0" text="Item name">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
-                                 <image>
-                                    <Image url="@../img/tabel.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </TableColumn>
-                        <TableColumn fx:id="tbdescription" prefWidth="408.0" text="Description">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
-                                 <image>
-                                    <Image url="@../img/tabel.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </TableColumn>
-                        <TableColumn fx:id="tbquantity" prefWidth="166.0" text="Quantity">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
-                                 <image>
-                                    <Image url="@../img/tabel.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </TableColumn>
-                        <TableColumn fx:id="tbprice" prefWidth="167.0" text="Price">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="28.0" opacity="0.49" pickOnBounds="true" smooth="false">
-                                 <image>
-                                    <Image url="@../img/tabel.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </TableColumn>
-                        <TableColumn fx:id="tbaction" prefWidth="192.0" text="Action">
-                           <graphic>
-                              <ImageView fitHeight="31.0" fitWidth="1.0" opacity="0.49" pickOnBounds="true" smooth="false">
-                                 <image>
-                                    <Image url="@../img/tabel.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </TableColumn>
-                     </columns>
-                  </TableView>
-               </children>
-            </AnchorPane>
-           
-         </children>
-      </AnchorPane>
-      <Text fill="#2b579a" layoutX="14.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase">
-         <font>
-            <Font name="Segoe UI Semilight" size="48.0" />
-         </font>
-      </Text>
-      <Button fx:id="btnNew" defaultButton="true" layoutX="1101.0" layoutY="46.0" mnemonicParsing="false" onAction="#aksiNew" prefHeight="27.0" prefWidth="108.0" styleClass="btn" text="New Data" />
-      <ProgressBar fx:id="bar" layoutY="84.0" prefHeight="3.0" prefWidth="1225.0" progress="0.0" />
-      <ImageView fx:id="imgLoad" fitHeight="33.0" fitWidth="40.0" layoutX="192.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" visible="false">
-         <image>
-            <Image url="@../img/301.GIF" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

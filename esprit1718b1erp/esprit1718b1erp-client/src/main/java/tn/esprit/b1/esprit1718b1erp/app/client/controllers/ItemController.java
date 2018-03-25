@@ -7,9 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +22,11 @@ import java.util.concurrent.RejectedExecutionException;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import org.controlsfx.control.Notifications;
+import org.controlsfx.dialog.ExceptionDialog;
+
+//import org.controlsfx.control.Notifications;
 
 import com.sun.prism.impl.Disposer.Record;
 
@@ -35,19 +43,24 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -58,14 +71,19 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import javafx.scene.control.Alert;
 
 import tn.esprit.b1.esprit1718b1erp.app.client.animations.FadeInUpTransition;
+import tn.esprit.b1.esprit1718b1erp.app.client.animations.FadeOutUpTransition;
+import tn.esprit.b1.esprit1718b1erp.app.client.util.ItemVerfication;
 import tn.esprit.b1.esprit1718b1erp.entities.Category;
 import tn.esprit.b1.esprit1718b1erp.entities.Contact;
 import tn.esprit.b1.esprit1718b1erp.entities.Item;
+import tn.esprit.b1.esprit1718b1erp.entities.ItemRequest;
 import tn.esprit.b1.esprit1718b1erp.entities.Item_Type;
 import tn.esprit.b1.esprit1718b1erp.services.amine.CategoryServiceRemote;
+import tn.esprit.b1.esprit1718b1erp.services.amine.ItemRequestServiceRemote;
 import tn.esprit.b1.esprit1718b1erp.services.amine.ItemServiceRemote;
 import tn.esprit.b1.esprit1718b1erp.services.jassem.ContactServiceRemote;
 
@@ -104,6 +122,9 @@ public class ItemController implements Initializable {
     private ProgressBar bar;
 
     @FXML
+    private ComboBox<String> cbCurrency;
+
+    @FXML
     private ImageView imgLoad;
 
     @FXML
@@ -137,7 +158,55 @@ public class ItemController implements Initializable {
     private TextField txtSelling;
 
     @FXML
+    private Tab ItemAlertMenu;
+
+    @FXML
     private Button btnSave;
+
+    @FXML
+    private TableView<Item> tableDataAlert;
+
+    @FXML
+    private TableColumn<String, String> colAlerType;
+
+    @FXML
+    private TableColumn<Item, String> colItemNameAlert;
+
+    @FXML
+    private TableColumn<Item, String> colItemCategoryAlert;
+
+    @FXML
+    private TableColumn<Item, Date> colItemExpirationDate;
+
+    @FXML
+    private TableColumn<Item, Integer> colItemQuantityAlert;
+
+    @FXML
+    private TableColumn<Item, Integer> colItemBarcodeAlert;
+
+    @FXML
+    private TableColumn<Item, String> colItemSupplierAlert;
+
+    @FXML
+    private TableView<ItemRequest> tableDataImport;
+
+    @FXML
+    private TableColumn<ItemRequest, String> colImportItemName;
+
+    @FXML
+    private TableColumn<ItemRequest, String> colImportItemCategory;
+
+    @FXML
+    private TableColumn<ItemRequest, String> colImportItemExpirationDate;
+
+    @FXML
+    private TableColumn<ItemRequest, Integer> colImportItemQuantity;
+
+    @FXML
+    private TableColumn<ItemRequest, String> colImportItemBarcode;
+
+    @FXML
+    private TableColumn<ItemRequest, String> colImportItemSupplier;
 
     @FXML
     private Button btnBack;
@@ -153,6 +222,9 @@ public class ItemController implements Initializable {
 
     @FXML
     private CheckBox cbService;
+
+    @FXML
+    private Button btnImportItem;
 
     @FXML
     private TextArea txtDescription;
@@ -189,6 +261,9 @@ public class ItemController implements Initializable {
 
     @FXML
     private TextField txtId11;
+
+    @FXML
+    private Label QuantityLabel;
 
     @FXML
     private TextField txtSupplierName;
@@ -229,27 +304,58 @@ public class ItemController implements Initializable {
     @FXML
     private DatePicker txtExpirationDate;
 
-    private ObservableList<Item> listData;
+    boolean checkAlertOnQuantity, selectimage;
+
+    private ObservableList<Item> listData, listDataAlert;
+    private ObservableList<ItemRequest> listItemImports;
     Config2 con = new Config2();
     private InitialContext ctx = null;
+    Item iPic;
 
     private final String jndiNameItem = "esprit1718b1erp-ear/esprit1718b1erp-service/ItemService!tn.esprit.b1.esprit1718b1erp.services.amine.ItemServiceRemote";
     private final String jndiNameCategory = "esprit1718b1erp-ear/esprit1718b1erp-service/CategoryService!tn.esprit.b1.esprit1718b1erp.services.amine.CategoryServiceRemote";
     private final String jndiNameSupplier = "esprit1718b1erp-ear/esprit1718b1erp-service/ContactService!tn.esprit.b1.esprit1718b1erp.services.jassem.ContactServiceRemote";
+    private final String jndiNameItemRequest = "esprit1718b1erp-ear/esprit1718b1erp-service/ItemRequestService!tn.esprit.b1.esprit1718b1erp.services.amine.ItemRequestServiceRemote";
 
     ItemServiceRemote itemService;
     CategoryServiceRemote categorieService;
     ContactServiceRemote contactService;
+    ItemRequestServiceRemote itemRequestService;
 
     String getImageUrl, imgName;
 
+    Integer status;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         Platform.runLater(() -> {
             afficher();
             selectWithService();
             cbCategory.getItems().addAll(findAllCategories());
+            cbCurrency.getItems().addAll("EUR", "USD", "CHF", "GBP", "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "AUD",
+                    "AWG", "AZN");
+            status = 0;
+            cbService.setOnAction(e -> {
+                QuantityLabel.setOpacity(0);
+                txtQuantity.setOpacity(0);
+            });
+
+            cbOther.setOnAction(e -> {
+                QuantityLabel.setOpacity(1);
+                txtQuantity.setOpacity(1);
+            });
+
+            cbProduct.setOnAction(e -> {
+                QuantityLabel.setOpacity(1);
+                txtQuantity.setOpacity(1);
+            });
+
+            afficherAlert();
+            colAlerType.setCellValueFactory(c -> new SimpleStringProperty("quantity"));
+            tableDataAlert.setItems(listDataAlert);
         });
+
     }
 
     @FXML
@@ -261,9 +367,9 @@ public class ItemController implements Initializable {
     @FXML
     void aksiAddSupplier(ActionEvent event) {
         Contact contact = new Contact();
-        contact.setStreet(txtSupplierName.getText());
+        contact.setFirst_name(txtSupplierName.getText());
         contact.setCountry(null);
-        contact.setCity(txtCitySupplier.getText());
+        contact.setLast_name(txtCitySupplier.getText());
         contact.setPhone(Integer.parseInt(txtSupplierPhone.getText()));
         contact.setEmail(txtSupplierEmail.getText());
         contact.setWebsite(txtSupplierWebsite.getText());
@@ -318,38 +424,51 @@ public class ItemController implements Initializable {
 
     @FXML
     void aksiKlikTableData(MouseEvent event) {
-        try {
-            Item item = tableData.getSelectionModel().getSelectedItem();
-            txtItemName.setText(item.getName());
-            txtDescription.setText(item.getDescription());
-            cbCategory.setValue(item.getCategory());
-            cbSupplier.setValue(item.getSupplier());
-            switch (item.getType().toString()) {
-            case "PRODUCT":
-                cbProduct.setSelected(true);
-                break;
-            case "SERVICE":
-                cbService.setSelected(true);
-                break;
-            case "OTHER":
-                cbOther.setSelected(true);
-                break;
-            }
-            txtQuantity.setText(Integer.toString(item.getQuantity()));
-            txtBarcode.setText(Integer.toString(item.getBarcode()));
-            txtBuying.setText(Float.toString(item.getByingPrice()));
-            txtSelling.setText(Float.toString(item.getSellingPrice()));
-            if (item.getShowAlertOnQuantity()) {
-                txtLowestQuantity.setText(Integer.toString(item.getMinimumQuanity()));
-            }
-            if (item.getShowAlertOnExpirationDate()) {
-                txtExpirationDate.setUserData(item.getExpirationDate());
-            }
-            File imagefile = new File("C:\\\\wamp64\\\\www\\\\imagesAmine\\\\" + item.getPicture());
-            Image ima = new Image(imagefile.toURI().toString(), 300, 208, false, false);
-            imgItem.setImage(ima);
-        } catch (Exception e) {
+        if (status == 1) {
+            try {
+                Item item = tableData.getSelectionModel().getSelectedItem();
+                iPic = item;
+                System.out.println(item.getPicture());
+                txtItemName.setText(item.getName());
+                txtDescription.setText(item.getDescription());
+                cbCategory.setValue(item.getCategory());
+                cbSupplier.setValue(item.getSupplier());
+                switch (item.getType().toString()) {
+                case "PRODUCT":
+                    cbProduct.setSelected(true);
+                    break;
+                case "SERVICE":
+                    cbService.setSelected(true);
+                    break;
+                case "OTHER":
+                    cbOther.setSelected(true);
+                    break;
+                }
+                txtQuantity.setText(Integer.toString(item.getQuantity()));
+                txtBarcode.setText(Integer.toString(item.getBarcode()));
+                txtBuying.setText(Float.toString(item.getByingPrice()));
+                txtSelling.setText(Float.toString(item.getSellingPrice()));
+                if (item.getShowAlertOnQuantity()) {
+                    cbLowQuantity.setSelected(true);
+                    txtLowestQuantity.setText(Integer.toString(item.getMinimumQuanity()));
+                }
+                if (item.getShowAlertOnExpirationDate()) {
+                    cbLowExpirationDate.setSelected(true);
+                    try {
+                        String dated = item.getExpirationDate().toString();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        LocalDate date = LocalDate.parse(dated, formatter);
+                        txtExpirationDate.setValue(date);
+                    } catch (DateTimeParseException exc) {
+                    }
+                }
+                File imagefile = new File("C:\\\\wamp64\\\\www\\\\imagesAmine\\\\" + item.getPicture());
+                Image ima = new Image(imagefile.toURI().toString(), 300, 208, false, false);
+                System.out.println("C:\\\\wamp64\\\\www\\\\imagesAmine\\\\" + item.getPicture());
+                imgItem.setImage(ima);
+            } catch (Exception e) {
 
+            }
         }
     }
 
@@ -361,6 +480,7 @@ public class ItemController implements Initializable {
     }
 
     @FXML
+
     void aksiQuantity(KeyEvent event) {
 
     }
@@ -387,13 +507,27 @@ public class ItemController implements Initializable {
             item.setType(Item_Type.PRODUCT);
         }
 
-        item.setBarcode(Integer.parseInt(txtBarcode.getText()));
+        if (cbOther.isSelected()) {
+            item.setType(Item_Type.OTHER);
+        }
 
+        if (cbService.isSelected()) {
+            item.setType(Item_Type.SERVICE);
+        }
+        if (ItemVerfication.verifyTypes(cbProduct.isSelected(), cbOther.isSelected(), cbService.isSelected())) {
+            System.out.println("yepp");
+        }
+        item.setBarcode(Integer.parseInt(txtBarcode.getText()));
         item.setQuantity(Integer.parseInt(txtQuantity.getText()));
         item.setSellingPrice(Float.parseFloat(txtSelling.getText()));
         item.setByingPrice(Float.parseFloat(txtBuying.getText()));
-
-        item.setPicture(imgName);
+        item.setCurrency(cbCurrency.getValue());
+        item.setTotalPrice(Integer.parseInt(txtQuantity.getText()) * Float.parseFloat(txtSelling.getText()));
+        if (selectimage) {
+            item.setPicture(imgName);
+        } else {
+            item.setPicture(iPic.getPicture());
+        }
 
         // alerts
         if (cbLowQuantity.isSelected()) {
@@ -412,13 +546,40 @@ public class ItemController implements Initializable {
         } else {
             item.setShowAlertOnExpirationDate(false);
         }
-        addItem(item);
+
+        if (!(txtId.getText()).equals("")) {
+            item.setId(Integer.parseInt(txtId.getText()));
+        }
+        saveOrUpdateItem(item);
+        Config2.dialog(Alert.AlertType.INFORMATION, "Success Save Data..");
         clear();
+        TabPane.setOpacity(0);
+        selectWithService();
+    }
+
+    @FXML
+    void ImportItem(ActionEvent event) {
+        Item i = tableDataAlert.getSelectionModel().getSelectedItem();
+        ItemRequest ir = new ItemRequest();
+        ir.setItem(i);
+        ir.setQuantityNeeded(i.getMinimumQuanity() - i.getQuantity());
+        if (ItemRequestExists(ir) == null) {
+            addItemRequest(ir);
+            System.out.println("it says null");
+        }
+        afficherItemImport();
+        listItemImports = FXCollections.observableArrayList();
+        listItemImports.add(ir);
+        tableDataImport.setItems(listItemImports);
+        SingleSelectionModel<Tab> selectionModel = TabPane.getSelectionModel();
+        selectionModel.select(3);
+
     }
 
     @FXML
     void aksiUpload(ActionEvent event) {
         FileChooser fc = new FileChooser();
+        selectimage = true;
         File selectedfile = fc.showOpenDialog(null);
         if (selectedfile != null) {
             getImageUrl = selectedfile.getAbsolutePath();
@@ -438,6 +599,7 @@ public class ItemController implements Initializable {
     }
 
     private void clear() {
+        txtId.clear();
         txtItemName.clear();
         txtDescription.clear();
         txtQuantity.clear();
@@ -445,6 +607,9 @@ public class ItemController implements Initializable {
         txtSelling.clear();
         txtBuying.clear();
         imgItem.setImage(null);
+        cbOther.setSelected(false);
+        cbProduct.setSelected(false);
+        cbService.setSelected(false);
         cbCategory.getItems().clear();
         cbCategory.getItems().addAll(findAllCategories());
         cbSupplier.getItems().clear();
@@ -477,6 +642,7 @@ public class ItemController implements Initializable {
             @Override
             protected Task<Integer> createTask() {
                 selectData();
+                selectDataAlert();
                 return new Task<Integer>() {
                     @Override
                     protected Integer call() throws Exception {
@@ -515,16 +681,74 @@ public class ItemController implements Initializable {
         tableData.setItems(listData);
     }
 
-    private void addItem(Item i) {
+    private void selectDataAlert() {
+        boolean condition = false;
+        listDataAlert = FXCollections.observableArrayList();
+        for (Item i : findAll()) {
+            if (i.getQuantity() < i.getMinimumQuanity()) {
+                condition = true;
+                listDataAlert.add(i);
+            }
+        }
+        if (condition) {
+            buildNotificationItem("Warning !", "Item quantity is lower than what is recommand, press to fix issue",
+                    Pos.BOTTOM_RIGHT, e -> {
+                        afficherAlert();
+                        clear();
+                        SingleSelectionModel<Tab> selectionModel = TabPane.getSelectionModel();
+                        selectionModel.select(2);
+                        paneTabel.setOpacity(0);
+                        colAlerType.setCellValueFactory(c -> new SimpleStringProperty("quantity"));
+                        tableDataAlert.setItems(listDataAlert);
+                        new FadeInUpTransition(TabPane).play();
+                    });
+        }
+
+    }
+
+    private void saveOrUpdateItem(Item i) {
         try {
             ctx = new InitialContext();
             itemService = (ItemServiceRemote) ctx.lookup(jndiNameItem);
-            itemService.save(i);
+            if (i.getId() == null) {
+                itemService.save(i);
+            } else {
+                itemService.update(i);
+            }
         } catch (NamingException e) {
             System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
             System.out.println("catched rejected");
         }
+    }
+
+    private void addItemRequest(ItemRequest i) {
+        try {
+            ctx = new InitialContext();
+            itemRequestService = (ItemRequestServiceRemote) ctx.lookup(jndiNameItemRequest);
+            itemRequestService.save(i);
+        } catch (NamingException e) {
+            System.out.println("NamingException jndi");
+        } catch (RejectedExecutionException e1) {
+            System.out.println("catched rejected");
+        } catch (Exception e2) {
+            System.out.println("something is wrong");
+        }
+    }
+
+    private ItemRequest ItemRequestExists(ItemRequest ir) {
+        try {
+            ctx = new InitialContext();
+            itemRequestService = (ItemRequestServiceRemote) ctx.lookup(jndiNameItemRequest);
+            return itemRequestService.iRExist(ir.getItem().getId());
+        } catch (NamingException e) {
+            System.out.println("NamingException jndi");
+        } catch (RejectedExecutionException e1) {
+            System.out.println("catched rejected");
+        } catch (Exception e2) {
+            System.out.println("something is wrong");
+        }
+        return null;
     }
 
     void deleteItem(Item i) {
@@ -536,15 +760,18 @@ public class ItemController implements Initializable {
             System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
             System.out.println("catched rejected");
+        } catch (Exception e2) {
+            System.out.println("something is wrong");
         }
     }
 
     void afficher() {
-        listData = FXCollections.observableArrayList();
+        // listData = FXCollections.observableArrayList();
         Config2.setModelColumn(colItemName, "name");
         Config2.setModelColumn(colItemType, "type");
         Config2.setModelColumn(colItemQuantity, "quantity");
         Config2.setModelColumn(colItemBarcode, "barcode");
+
         colItemCategory.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
 
@@ -559,7 +786,8 @@ public class ItemController implements Initializable {
 
                     @Override
                     public ObservableValue<String> call(CellDataFeatures<Item, String> param) {
-                        return new SimpleStringProperty(param.getValue().getSupplier().getCity());
+                        return new SimpleStringProperty(param.getValue().getSupplier().getFirst_name() + " "
+                                + param.getValue().getSupplier().getLast_name());
                     }
                 });
 
@@ -573,6 +801,100 @@ public class ItemController implements Initializable {
 
         });
 
+    }
+
+    void afficherAlert() {
+        // listData = FXCollections.observableArrayList();
+        Config2.setModelColumn(colItemNameAlert, "name");
+        Config2.setModelColumn(colItemExpirationDate, "expirationDate");
+        Config2.setModelColumn(colItemQuantityAlert, "quantity");
+        Config2.setModelColumn(colItemBarcodeAlert, "barcode");
+
+        colItemCategoryAlert.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
+
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<Item, String> param) {
+                        return new SimpleStringProperty(param.getValue().getCategory().getName());
+                    }
+                });
+
+        colItemSupplierAlert.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
+
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<Item, String> param) {
+                        return new SimpleStringProperty(param.getValue().getSupplier().getFirst_name() + " "
+                                + param.getValue().getSupplier().getLast_name());
+                    }
+                });
+
+        // colActionAlert.setCellFactory(new Callback<TableColumn<Record, Boolean>,
+        // TableCell<Record, Boolean>>() {
+        //
+        // @Override
+        // public TableCell<Record, Boolean> call(TableColumn<Record, Boolean> param) {
+        // // TODO Auto-generated method stub
+        // return new ButtonCell();
+        // }
+        //
+        // });
+
+    }
+
+    private void afficherItemImport() {
+        Config2.setModelColumn(colImportItemQuantity, "quantityNeeded");
+
+        colImportItemName.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<ItemRequest, String>, ObservableValue<String>>() {
+
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<ItemRequest, String> param) {
+                        return new SimpleStringProperty(param.getValue().getItem().getName().toString());
+                    }
+                });
+
+        colImportItemCategory.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<ItemRequest, String>, ObservableValue<String>>() {
+
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<ItemRequest, String> param) {
+                        return new SimpleStringProperty(param.getValue().getItem().getCategory().getName());
+                    }
+                });
+
+        colImportItemExpirationDate.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<ItemRequest, String>, ObservableValue<String>>() {
+
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<ItemRequest, String> param) {
+                        String dd="";
+//                        try {
+                            dd = convert(param.getValue().getItem().getExpirationDate());
+//                        } catch (NullPointerException e) {
+//                            System.out.println("this item doesnt have expiration date, excception is catched");
+//                        }
+                        return new SimpleStringProperty(dd);
+                    }
+                });
+        
+        colImportItemBarcode.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ItemRequest,String>, ObservableValue<String>>() {
+            
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<ItemRequest, String> param) {
+                String s=Integer.toString(param.getValue().getItem().getBarcode());
+                return new SimpleStringProperty(s);
+            }
+        });
+        
+        colImportItemSupplier.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ItemRequest,String>, ObservableValue<String>>() {
+            
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<ItemRequest, String> param) {
+                // TODO Auto-generated method stub
+                return new SimpleStringProperty(param.getValue().getItem().getSupplier().getFirst_name());
+            }
+        });
     }
 
     private void addcategory(Category c) {
@@ -648,6 +970,12 @@ public class ItemController implements Initializable {
         return d1;
     }
 
+    void buildNotificationItem(String title, String text, Pos position, EventHandler<ActionEvent> e) {
+        Notifications notificationBuilder = Notifications.create().title(title).text(text).graphic(null)
+                .hideAfter(Duration.seconds(10)).position(Pos.BOTTOM_RIGHT).onAction(e);
+        notificationBuilder.showWarning();
+    }
+
     private class ButtonCell extends TableCell<Record, Boolean> {
 
         final Hyperlink cellButtonDelete = new Hyperlink("Delete");
@@ -655,23 +983,39 @@ public class ItemController implements Initializable {
         final HBox hb = new HBox(cellButtonDelete, cellButtonEdit);
 
         public ButtonCell() {
-
+            hb.setSpacing(4);
             cellButtonDelete.setOnAction((ActionEvent t) -> {
+                status = 1;
                 int row = getTableRow().getIndex();
                 tableData.getSelectionModel().select(row);
-
                 aksiKlikTableData(null);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are You Sure Delete Data ?");
                 alert.initStyle(StageStyle.UTILITY);
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
-                    deleteItem(tableData.getSelectionModel().getSelectedItem());
-                    afficher();
-                    System.out.println("testyyyyys" + tableData.getSelectionModel().getSelectedItem().getId());
+                    Item i = tableData.getSelectionModel().getSelectedItem();
+                    deleteItem(i);
+                    clear();
                     selectData();
                 } else {
-
+                    clear();
+                    selectData();
                 }
+                status = 0;
+            });
+
+            cellButtonEdit.setOnAction(t -> {
+                status = 1;
+                int row = getTableRow().getIndex();
+                tableData.getSelectionModel().select(row);
+                clear();
+                aksiKlikTableData(null);
+                Item i = tableData.getSelectionModel().getSelectedItem();
+                System.out.println("+++++" + i.getPicture());
+                txtId.setText(Integer.toString(i.getId()));
+                paneTabel.setOpacity(0);
+                new FadeInUpTransition(TabPane).play();
+                status = 0;
             });
 
             // Action when the button is pressed
@@ -690,4 +1034,9 @@ public class ItemController implements Initializable {
 
     }
 
+    public static String convert(Date d) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String text = df.format(d);
+        return text;
+    }
 }

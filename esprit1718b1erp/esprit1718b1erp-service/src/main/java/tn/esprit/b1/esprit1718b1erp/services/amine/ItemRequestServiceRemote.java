@@ -7,5 +7,5 @@ import tn.esprit.b1.esprit1718b1erp.utilities.IGenericDAO;
 
 @Remote
 public interface ItemRequestServiceRemote extends IGenericDAO<ItemRequest> {
-
+    ItemRequest iRExist(int i);
 }
