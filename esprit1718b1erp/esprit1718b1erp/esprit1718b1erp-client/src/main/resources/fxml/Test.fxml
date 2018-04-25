@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.b1.esprit1718b1erp.app.client.controllers.TestController">
+   <children>
+      <Button fx:id="buttonId" layoutX="300.0" layoutY="117.0" mnemonicParsing="false" onAction="#buttonFunction" text="Button" />
+      <ImageView fitHeight="77.0" fitWidth="69.0" layoutX="519.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/login.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>

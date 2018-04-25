@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="AgendaPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="652.0" prefWidth="1252.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.b1.esprit1718b1erp.app.client.controllers.AgendaController">
+   <children>
+      <TabPane fx:id="TabPane" layoutX="14.0" layoutY="78.0" prefHeight="560.0" prefWidth="1208.0" tabClosingPolicy="UNAVAILABLE">
+         <tabs>
+            <Tab text="Meeting">
+               <content>
+                  <AnchorPane fx:id="paneCrud" prefHeight="560.0" prefWidth="1225.0" style="-fx-background-color: white;">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" layoutX="105.0" layoutY="36.0" prefHeight="17.0" prefWidth="79.0" text="Target Date :" />
+                        <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="72.0" prefHeight="17.0" prefWidth="122.0" text="Title  :" />
+                        <Label alignment="CENTER_RIGHT" layoutX="44.0" layoutY="374.0" prefHeight="17.0" prefWidth="122.0" text="Project :" />
+                        <Label alignment="CENTER_RIGHT" layoutX="62.0" layoutY="103.0" prefHeight="17.0" prefWidth="122.0" text="Description :" />
+                        <Button fx:id="btnAddMeeting" layoutX="1066.0" layoutY="31.0" mnemonicParsing="false" onAction="#addMeeting" prefHeight="27.0" prefWidth="98.0" styleClass="btn" text="Save" />
+                        <ComboBox fx:id="cbProjectM" layoutX="191.0" layoutY="369.0" prefHeight="27.0" prefWidth="300.0" promptText="Select Project" />
+                        <ImageView fx:id="addCategory" fitHeight="29.0" fitWidth="33.0" layoutX="438.0" layoutY="368.0" onMouseClicked="#addProjectButton" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/add.png" />
+                           </image>
+                        </ImageView>
+                        <TextField fx:id="txttitleM" layoutX="191.0" layoutY="67.0" prefHeight="27.0" prefWidth="300.0" promptText="Enter Title" />
+                        <Label layoutX="130.0" layoutY="287.0" prefHeight="17.0" prefWidth="54.0" text="Budget :" />
+                        <TextField fx:id="txtBudgetM" layoutX="192.0" layoutY="282.0" prefHeight="27.0" prefWidth="299.0" promptText="Enter Budget" />
+                        <TextField fx:id="txtPlaceM" layoutX="192.0" layoutY="330.0" prefHeight="27.0" prefWidth="299.0" promptText="Enter Meeting Place" />
+                        <Label layoutX="135.0" layoutY="335.0" prefHeight="17.0" prefWidth="45.0" text="Place :" />
+                        <DatePicker fx:id="txtDateM" layoutX="191.0" layoutY="32.0" prefHeight="25.0" prefWidth="301.0" promptText="Enter Target Date" />
+                        <TextArea fx:id="txtDescriptionM" layoutX="192.0" layoutY="103.0" prefHeight="152.0" prefWidth="296.0" promptText="Enter Description" />
+                        <ListView fx:id="ListPersons1" layoutX="672.0" layoutY="22.0" prefHeight="375.0" prefWidth="264.0" />
+                        <TableView fx:id="tablePersons1" layoutX="192.0" layoutY="405.0" prefHeight="103.0" prefWidth="744.0">
+                           <columns>
+                              <TableColumn fx:id="colNomPerson1" prefWidth="285.99998474121094" text="First Name" />
+                              <TableColumn fx:id="colPrenomPerson1" prefWidth="267.0" text="Last Name" />
+                              <TableColumn fx:id="colAction1" prefWidth="188.0" text="Action" />
+                           </columns>
+                        </TableView>
+                        <Label alignment="CENTER_RIGHT" layoutX="518.0" layoutY="36.0" prefHeight="17.0" prefWidth="127.0" text="Select Participants :" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Event">
+               <content>
+                  <AnchorPane fx:id="paneCrud1" prefHeight="560.0" prefWidth="1225.0" style="-fx-background-color: white;">
+                     <children>
+                        <Button fx:id="btnBack1" layoutX="29.0" layoutY="13.0" mnemonicParsing="false" onAction="#aksiBack" prefHeight="40.0" prefWidth="40.0" stylesheets="@../css/buttonCircleBlack.css">
+                           <graphic>
+                              <ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/arrowLeftBlack.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <AnchorPane fx:id="paneCrud2" prefHeight="560.0" prefWidth="1225.0" style="-fx-background-color: white;">
+                           <children>
+                              <ImageView fx:id="imgItem1" fitHeight="153.0" fitWidth="172.0" layoutX="1029.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+                              <Button fx:id="btnUpload1" defaultButton="true" layoutX="1045.0" layoutY="223.0" mnemonicParsing="false" onAction="#aksiUpload1" prefHeight="29.0" prefWidth="141.0" styleClass="btn" text="upload picture" />
+                              <Button fx:id="btnAddEvent" layoutX="1046.0" layoutY="293.0" mnemonicParsing="false" onAction="#addEvent" prefHeight="27.0" prefWidth="140.0" styleClass="btn" text="Save" />
+                              <ListView fx:id="ListPersons" layoutX="680.0" layoutY="35.0" prefHeight="375.0" prefWidth="264.0" />
+                              <TableView fx:id="tablePersons" layoutX="198.0" layoutY="418.0" prefHeight="103.0" prefWidth="744.0">
+                                <columns>
+                                  <TableColumn fx:id="colNomPerson" prefWidth="285.99998474121094" text="First Name" />
+                                  <TableColumn fx:id="colPrenomPerson" prefWidth="267.0" text="Last Name" />
+                                    <TableColumn fx:id="colAction" prefWidth="188.0" text="Action" />
+                                </columns>
+                              </TableView>
+                              <Label alignment="CENTER_RIGHT" layoutX="542.0" layoutY="44.0" prefHeight="17.0" prefWidth="127.0" text="Select Participants :" />
+                           </children>
+                        </AnchorPane>
+                        <Label alignment="CENTER_RIGHT" layoutX="115.0" layoutY="46.0" prefHeight="17.0" prefWidth="79.0" text="Target Date :" />
+                        <Label alignment="CENTER_RIGHT" layoutX="72.0" layoutY="82.0" prefHeight="17.0" prefWidth="122.0" text="Title  :" />
+                        <Label alignment="CENTER_RIGHT" layoutX="54.0" layoutY="384.0" prefHeight="17.0" prefWidth="122.0" text="Project :" />
+                        <Label alignment="CENTER_RIGHT" layoutX="72.0" layoutY="113.0" prefHeight="17.0" prefWidth="122.0" text="Description :" />
+                        <ComboBox fx:id="cbProjectE" layoutX="201.0" layoutY="379.0" prefHeight="27.0" prefWidth="300.0" promptText="Select Project" />
+                        <TextField fx:id="txtTitleE" layoutX="201.0" layoutY="77.0" prefHeight="27.0" prefWidth="300.0" promptText="Enter Title" />
+                        <Label layoutX="140.0" layoutY="297.0" prefHeight="17.0" prefWidth="54.0" text="Budget :" />
+                        <TextField fx:id="txtBudgetE" layoutX="202.0" layoutY="292.0" prefHeight="27.0" prefWidth="299.0" promptText="Enter Budget" />
+                        <TextField fx:id="txtPlaceE" layoutX="202.0" layoutY="340.0" prefHeight="27.0" prefWidth="299.0" promptText="Enter Meeting Place" />
+                        <Label layoutX="145.0" layoutY="345.0" prefHeight="17.0" prefWidth="45.0" text="Place :" />
+                        <DatePicker fx:id="txtDateE" layoutX="201.0" layoutY="42.0" prefHeight="25.0" prefWidth="301.0" promptText="Enter Target Date" />
+                        <TextArea fx:id="txtDescriptionE" layoutX="202.0" layoutY="113.0" prefHeight="152.0" prefWidth="296.0" promptText="Enter Description" />
+                        <ImageView fx:id="addProjectE" fitHeight="29.0" fitWidth="33.0" layoutX="448.0" layoutY="378.0" onMouseClicked="#addProjectButton" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/add.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Handle Events">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="TableHandleEvents" layoutX="16.0" layoutY="22.0" prefHeight="226.0" prefWidth="1177.0">
+                          <columns>
+                            <TableColumn fx:id="ColTypeEvent" prefWidth="130.0" text="Type" />
+                            <TableColumn fx:id="ColTitleEvent" prefWidth="142.0" text="Title" />
+                              <TableColumn fx:id="ColDateEvent" prefWidth="180.0" text="Date" />
+                              <TableColumn fx:id="ColPlaceEvent" prefWidth="181.0" text="Place" />
+                              <TableColumn fx:id="ColBudgetEvent" prefWidth="173.0" text="Budget" />
+                              <TableColumn fx:id="ColProjectEvent" prefWidth="166.0" text="Project" />
+                              <TableColumn fx:id="ColActionEvent" prefWidth="204.0" text="Action" />
+                          </columns>
+                        </TableView>
+                        <TableView fx:id="TableHandleMeetings" layoutX="16.0" layoutY="266.0" prefHeight="226.0" prefWidth="1177.0">
+                           <columns>
+                              <TableColumn fx:id="ColTypeEvent1" prefWidth="130.0" text="Type" />
+                              <TableColumn fx:id="ColTitleEvent1" prefWidth="142.0" text="Title" />
+                              <TableColumn fx:id="ColDateEvent1" prefWidth="180.0" text="Date" />
+                              <TableColumn fx:id="ColPlaceEvent1" prefWidth="181.0" text="Place" />
+                              <TableColumn fx:id="ColBudgetEvent1" prefWidth="173.0" text="Budget" />
+                              <TableColumn fx:id="ColProjectEvent1" prefWidth="166.0" text="Project" />
+                              <TableColumn fx:id="ColActionEvent1" prefWidth="204.0" text="Action" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <Button fx:id="btnCalendar" defaultButton="true" layoutX="1081.0" layoutY="24.0" mnemonicParsing="false" onAction="#ShowCalendar" prefHeight="29.0" prefWidth="141.0" styleClass="btn" text="Show Calendar" />
+   </children>
+</AnchorPane>
