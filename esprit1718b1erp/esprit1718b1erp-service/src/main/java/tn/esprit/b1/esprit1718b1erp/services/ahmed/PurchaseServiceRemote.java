@@ -16,7 +16,7 @@ import tn.esprit.b1.esprit1718b1erp.utilities.IGenericDAO;
 @Remote
 public interface PurchaseServiceRemote extends IGenericDAO<Purchase> {
 
-    Map<String, Number> sommetot_purchase();
+   
   /////  List <Purchase> purchaseNames();
    List<Purchase> aaaa();
    List<Item> getlistItem(int i);

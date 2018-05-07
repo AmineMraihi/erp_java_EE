@@ -1,0 +1,250 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:m="http://code.google.com/p/gmaps4jsf/"
+     xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+    xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:define name="pageCSS">
+        <h:outputStylesheet library="css" name="bootstrap.min.css" />
+        <h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+        <h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+        <h:outputStylesheet library="css"
+            name="plugins/steps/jquery.steps.css" />
+        <h:outputStylesheet library="css" name="animate.css" />
+        <h:outputStylesheet library="css" name="style.css" />
+<style>
+p {
+  text-align: center;
+  font-size: 60px;
+  margin-top:0px;
+}
+
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc3QZUxX-9y1OPFwmeUyMUQnMXRmt0h2c"></script>
+
+       
+    </ui:define>
+
+    <ui:define name="titleHere">
+    <div class="col-lg-4">
+    
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5>Sale Opportunities List</h5>
+                                            <div class="ibox-tools">
+                                                <span class="label label-warning-light">Select</span>
+                                            </div>
+                                        </div>
+                                        <div class="ibox-content">
+                                            
+                                            
+                                            
+                                                <div class="feed-activity-list">
+                                            <ui:repeat var="saleOpportunity" value="#{saleOpportunityBean.saleOpportunities}">
+                                                    <div class="feed-element">
+                                                        <a href="profile.html" class="pull-left"> <img
+                                                            alt="image" class="img-circle"
+                                                            src="resources/img/sale.png" /></a>
+                                                        <div class="media-body ">
+                                                            <small class="pull-right">#{saleOpportunity.nameSaleOpportunity} </small><strong>
+                                                            #{saleOpportunity.creationDate}</strong> Product : #{saleOpportunity.produit.nomProduit} <br /> <small
+                                                                class="text-muted">Located in #{saleOpportunity.region}</small>
+                                                        </div>
+                                                    </div>                                  
+                                            </ui:repeat>
+                                                </div>
+                                            
+                                                
+                                            
+                                        </div>
+                                    </div>
+
+                                </div>
+                                      
+    
+    <p:growl id="messages" showDetail="true" />
+ <div style="margin-left:auto; margin-right:0;width: 50%;height: 400px;position: relative;overflow: hidden;">
+<p:gmap id="gmap" center="47.78680171751627,-122.30632082519531" zoom="13" type="ROADMAP" style="width:100%;height:400px" model="#{infoWindowView.advancedModel}">
+        <p:ajax event="overlaySelect" listener="#{infoWindowView.onMarkerSelect}" />
+        <p:gmapInfoWindow id="infoWindow">
+            <p:outputPanel style="text-align: center; display: block; margin: auto">
+ 
+                    
+                  
+                    <h:outputText value="#{infoWindowView.marker.title}" />
+ 
+            </p:outputPanel>
+        </p:gmapInfoWindow>
+    </p:gmap>
+ 
+ </div>
+ 
+<p:dialog widgetVar="dlg" showEffect="fade">
+    <h:form prependId="false">
+        <h:panelGrid columns="2">
+            <h:outputLabel for="title" value="Title:" />
+            <p:inputText id="title" value="#{addMarkersView.title}" />
+ 
+            <f:facet name="footer">
+                <p:commandButton value="Add" actionListener="#{addMarkersView.addMarker}" update=":messages" oncomplete="markerAddComplete()" />
+                <p:commandButton value="Cancel" onclick="return cancel()" />
+            </f:facet>
+        </h:panelGrid>
+ 
+        <h:inputHidden id="lat" value="#{addMarkersView.lat}" />
+        <h:inputHidden id="lng" value="#{addMarkersView.lng}" />
+    </h:form>
+</p:dialog>
+<h:form>
+    <p:growl id="growl" life="3000" />
+ 
+    
+</h:form>
+ 
+<script type="text/javascript">
+    var currentMarker = null;
+ 
+    function handlePointClick(event) {
+        if(currentMarker === null) {
+            document.getElementById('lat').value = event.latLng.lat();
+            document.getElementById('lng').value = event.latLng.lng();
+ 
+            currentMarker = new google.maps.Marker({
+                position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+            });
+ 
+            PF('map').addOverlay(currentMarker);
+ 
+            PF('dlg').show();
+        }   
+    }
+ 
+    function markerAddComplete() {
+        var title = document.getElementById('title');
+        currentMarker.setTitle(title.value);
+        title.value = "";
+ 
+        currentMarker = null;
+        PF('dlg').hide();
+    }
+ 
+    function cancel() {
+        PF('dlg').hide();
+        currentMarker.setMap(null);
+        currentMarker = null;
+ 
+        return false;
+    }
+</script>
+    </ui:define>
+    <ui:define name="pageJS">
+        <h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+        <h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+        <h:outputScript library="js"
+            name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+        <h:outputScript library="js"
+            name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+        <!-- Custom and plugin javascript -->
+
+        <h:outputScript library="js" name="inspinia.js"></h:outputScript>
+        <h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+        <!-- Steps -->
+        <h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+        <!-- Jquery Validate -->
+        <h:outputScript library="js"
+            name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+        <!-- Chosen -->
+        <h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+        <!-- iCheck -->
+        <h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+        <!-- MENU -->
+        <h:outputScript library="js"
+            name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+        <h:outputScript>
+        // <![CDATA[
+         $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+        </h:outputScript>
+    </ui:define>
+</ui:composition>

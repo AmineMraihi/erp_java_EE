@@ -5,6 +5,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import tn.esprit.b1.esprit1718b1erp.entities.Product;
 import tn.esprit.b1.esprit1718b1erp.entities.SaleOpportunity;
 import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
 
@@ -31,5 +32,10 @@ public class SaleOpportunityService extends GenericDAO<SaleOpportunity> implemen
 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    @Override
+    public Product getProductById(int id) {
+        return entityManager.find(Product.class, id);
     }
 }

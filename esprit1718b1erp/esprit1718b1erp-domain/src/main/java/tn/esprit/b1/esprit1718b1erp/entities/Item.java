@@ -17,11 +17,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-
 public class Item implements Serializable {
 
     /**
@@ -78,6 +78,9 @@ public class Item implements Serializable {
 
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
+    
+    @Temporal(TemporalType.DATE)
+    private Date lastUpdatedDate;
 
     private Boolean showAlertOnQuantity = true;
     
@@ -105,6 +108,9 @@ public class Item implements Serializable {
     private Boolean showAlertOnExpirationDate = true;
     @OneToMany
     private List<Breakdown> breakdowns;
+    
+    @OneToOne
+    private Tier tier;
     
  
     public List<Breakdown> getBreakdowns() {
@@ -405,7 +411,23 @@ public class Item implements Serializable {
         this.breakdown = breakdown;
     }
 
+    public Tier getTier() {
+        return tier;
+    }
 
+    public void setTier(Tier tier) {
+        this.tier = tier;
+    }
+
+    public Date getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(Date lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    
     
     
 

@@ -17,6 +17,7 @@ import tn.esprit.b1.esprit1718b1erp.utilities.IGenericDAO;
 public interface ContactServiceRemote extends IGenericDAO<Contact> {
 public Entreprise findCompanyByname(String name);
 public List<String> findAllCompaniesNames();
+public List<Entreprise> findAllCompanies();
 public List<String> findAllParticularsNames();
 public List<Particular> VerifierEntreprise(Entreprise e);
 public Particular findParticularByNameFirstName(String NFirstName);

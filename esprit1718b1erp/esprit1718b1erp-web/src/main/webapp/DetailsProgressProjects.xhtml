@@ -1,0 +1,206 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+		<h:outputStylesheet library="css"
+			name="plugins/steps/jquery.steps.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+<style>
+p {
+  text-align: center;
+  font-size: 60px;
+  margin-top:0px;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="titleHere">
+	<div>
+	<h2 style="margin-top: 30px">Remaining Time : </h2><p id="demo" ></p>
+
+<script>
+window.onload = function(){
+	var countDownDate = new Date(document.getElementById("datefinproject").value +' 00:00:00').getTime();
+	// Update the count down every 1 second
+	var x = setInterval(function() {
+
+	    // Get todays date and time
+	    var now = new Date().getTime();
+	    
+	    // Find the distance between now an the count down date
+	    var distance = countDownDate - now;
+	    
+	    // Time calculations for days, hours, minutes and seconds
+	    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+	    
+	    // Output the result in an element with id="demo"
+	    document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+	    + minutes + "m " + seconds + "s ";
+	    
+	    // If the count down is over, write some text 
+	    
+	}, 1000);
+}
+
+
+</script>
+	</div>
+		<div class="col-lg-4">
+									<div class="ibox float-e-margins">
+										<div class="ibox-title">
+											<h5>#{projectBean.projectDetails.projectName}</h5>
+											<div class="ibox-tools">
+												<span class="label label-warning-light">Details</span>
+											</div>
+										</div>
+										<div class="ibox-content">
+											
+											
+											
+												<div class="feed-activity-list">
+											
+												<h:form>
+													<div class="feed-element">
+														<a href="profile.html" class="pull-left"> <img
+															alt="image" class="img-circle"
+															src="resources/img/profile.jpg" /></a>
+														<div class="media-body ">
+															<small class="pull-right">#{projectBean.projectDetails.projectName}</small><strong>
+															#{projectBean.projectDetails.responsable.name}</strong> Starts #{projectBean.projectDetails.startDate} <br /> <small
+																class="text-muted">Will finish the #{projectBean.projectDetails.finDate}</small> <br />
+																<input hidden="true" id="datefinproject" type="text" value="#{projectBean.projectDetails.finDate}"/>
+														</div>
+													</div>
+													</h:form>									
+												</div>
+											
+												
+											
+										</div>
+									</div>
+<div>
+
+</div>
+								</div>
+
+		<!-- 	/here -->
+	</ui:define>
+	<ui:define name="pageJS">
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+		<!-- Custom and plugin javascript -->
+
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+		<!-- Steps -->
+		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+		<!-- Jquery Validate -->
+		<h:outputScript library="js"
+			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+		<!-- Chosen -->
+		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+		<!-- iCheck -->
+		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+		<!-- MENU -->
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+		<h:outputScript>
+		// <![CDATA[
+		 $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

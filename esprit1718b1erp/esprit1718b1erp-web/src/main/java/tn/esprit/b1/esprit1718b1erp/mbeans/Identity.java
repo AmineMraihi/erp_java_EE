@@ -36,8 +36,14 @@ public class Identity {
             return "/login?faces-redirect=true";
 
         }
+        System.out.println(user.getName());
         return navigateTo;
 
+    }
+    
+    public String doLogout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "/login?faces-redirect=true";
     }
 
     public User getUser() {

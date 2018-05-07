@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+		<h:outputStylesheet library="css"
+			name="plugins/steps/jquery.steps.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+	</ui:define>
+
+	<ui:define name="titleHere">
+		<div class="col-lg-4">
+									<div class="ibox float-e-margins">
+										<div class="ibox-title">
+											<h5>In progress projects List</h5>
+											<div class="ibox-tools">
+												<span class="label label-warning-light">Select</span>
+											</div>
+										</div>
+										<div class="ibox-content">
+											
+											
+											
+												<div class="feed-activity-list">
+											<ui:repeat var="project" value="#{projectBean.inProgress}">
+											<h:form>
+													<div class="feed-element">
+														<a href="profile.html" class="pull-left"> <img
+															alt="image" class="img-circle"
+															src="resources/img/profile.jpg" /></a>
+														<div class="media-body ">
+															<small class="pull-right">#{project.projectName}</small><strong>
+															#{project.responsable.name}</strong> Starts #{project.startDate} <br /> <small
+																class="text-muted">Will finish the #{project.finDate}</small> <br />
+																<small><a
+														jsf:action="#{projectBean.toProjectDetails(project.id)}"> view more.. </a>
+														
+														</small>
+														</div>
+													</div>
+													</h:form>									
+											</ui:repeat>
+												</div>
+											
+												
+											
+										</div>
+									</div>
+
+								</div>
+
+		<!-- 	/here -->
+	</ui:define>
+	<ui:define name="pageJS">
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+		<!-- Custom and plugin javascript -->
+
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+		<!-- Steps -->
+		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+		<!-- Jquery Validate -->
+		<h:outputScript library="js"
+			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+		<!-- Chosen -->
+		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+		<!-- iCheck -->
+		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+		<!-- MENU -->
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+		<h:outputScript>
+		// <![CDATA[
+		 $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

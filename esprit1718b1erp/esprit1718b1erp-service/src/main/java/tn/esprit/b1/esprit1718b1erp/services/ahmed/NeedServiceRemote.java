@@ -10,7 +10,7 @@ import tn.esprit.b1.esprit1718b1erp.utilities.IGenericDAO;
 
 @Remote
 public interface NeedServiceRemote extends IGenericDAO<Needa>{
-    Map<String, Number> Need_somme();
+
     Double SommeSalesiPhoneX(Integer i);
     Double SommeSalesiPhone8(Integer i);
     Double SommeSalesiPhone8Plus(Integer i);

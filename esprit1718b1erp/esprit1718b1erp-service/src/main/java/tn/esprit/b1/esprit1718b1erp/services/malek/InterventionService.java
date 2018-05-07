@@ -2,18 +2,21 @@ package tn.esprit.b1.esprit1718b1erp.services.malek;
 
 import java.util.List;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import tn.esprit.b1.esprit1718b1erp.entities.Intervention;
+import tn.esprit.b1.esprit1718b1erp.entities.Item;
 import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
 
 /**
  * Session Bean implementation class InterventionService
  */
 @Stateless
+@LocalBean
 public class InterventionService extends GenericDAO<Intervention> implements InterventionServiceRemote, InterventionServiceLocal {
 
     @PersistenceContext
@@ -58,5 +61,9 @@ public class InterventionService extends GenericDAO<Intervention> implements Int
         query.setParameter("i", id);
         return query.getSingleResult();
     }  
-
+    
+    public void deleteInterventionById(int i) {
+        entityManager.remove(entityManager.find(Intervention.class, i));
+    }
+    
 }

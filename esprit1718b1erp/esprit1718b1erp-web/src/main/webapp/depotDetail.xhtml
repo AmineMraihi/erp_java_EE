@@ -1,0 +1,258 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+
+	</ui:define>
+
+	<ui:define name="titleHere">
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-4">
+				<h2>Put your title here</h2>
+				<ol class="breadcrumb">
+					<li><a href="home.jsf">home</a></li>
+					<li class="active"><strong>item management</strong></li>
+				</ol>
+			</div>
+			<div class="col-sm-8">
+				<div class="title-action">
+					<a href="#" class="btn btn-primary">action </a>
+				</div>
+			</div>
+		</div>
+
+
+		<!--	here -->
+		<div class="wrapper wrapper-content">
+			<div class="row animated fadeInRight">
+				<div class="col-lg-6">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>Depot details</h5>
+						</div>
+						<div>
+							<div class="ibox-content profile-content">
+								<h4>
+									<strong>#{itemBean.depotDetails.name}  #{itemBean.depotDetails.id}</strong>
+								</h4>
+								<p>
+									<i class="fa fa-map-marker"></i> #{itemBean.depotDetails.place}
+								</p>
+								<h5>About #{itemBean.depotDetails.name}</h5>
+								<p>depots used for storage of various items used by this
+									company</p>
+								<div class="row m-t-lg">
+									<div class="col-md-4">
+										<span class="bar">5,3,9,6,5,9,7,3,5,2</span>
+										<h5>
+											<strong>#{itemBean.getNumberOfRowsByDepotId(itemBean.depotDetails.id)}</strong> Rows
+										</h5>
+									</div>
+									<div class="col-md-4">
+										<span class="line">5,3,9,6,5,9,7,3,5,2</span>
+										<h5>
+											<strong>#{itemBean.getNumberOfTiersByDepotId(itemBean.depotDetails.id)}</strong> Tiers
+										</h5>
+									</div>
+									<div class="col-md-4">
+										<span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
+										<h5>
+											<strong>#{itemBean.getNumberOfItemsByDepotId(itemBean.depotDetails.id)}</strong> Items
+										</h5>
+									</div>
+								</div>
+								<div class="user-button">
+									<div class="row">
+										<div class="col-md-6">
+											<button type="button"
+												class="btn btn-primary btn-sm btn-block">
+												<i class="fa fa-envelope"></i> Send Message
+											</button>
+										</div>
+										<div class="col-md-6">
+											<button type="button"
+												class="btn btn-default btn-sm btn-block">
+												<i class="fa fa-coffee"></i> Buy a coffee
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>Items within</h5>
+							<div class="ibox-tools"></div>
+						</div>
+						<div class="ibox-content">
+							<div class="text-center">
+								<canvas id="myChart" height="140"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="ibox ">
+						<div class="ibox-title">
+							<h5>List of Row,Tiers and items</h5>
+						</div>
+						<div class="ibox-content">
+
+							<p class="m-b-lg">each item is located under tier, row for
+								more better looking interface</p>
+
+							<div class="dd" id="nestable2">
+								<ol class="dd-list">
+									<ui:repeat var="row"
+										value="#{itemBean.trys(itemBean.depotDetails.id)}">
+										<li class="dd-item" data-id="1">
+											<div class="dd-handle">
+												<span class="label label-info"><i class="fa fa-users"></i></span>
+												#{row.abcRows}
+											</div>
+											<ol class="dd-list">
+												<ui:repeat var="tier" value="#{itemBean.tryss(row.id)}">
+													<li class="dd-item" data-id="2">
+														<div class="dd-handle">
+															<span class="label label-info"><i
+																class="fa fa-cog"></i></span> #{tier.tierEnum}
+														</div>
+
+													</li>
+													<ol class="dd-list">
+														<ui:repeat var="item"
+															value="#{itemBean.getItemsByTierId(tier.id)}">
+															<h:form>
+																<h:commandLink
+																	action="#{itemBean.toItemDetails(item.id)}">
+																	<li class="dd-item" data-id="2">
+																		<div class="dd-handle">
+																			<span class="label label-info"><i
+																				class="fa fa-cog"></i></span> #{item.name}
+																		</div>
+
+																	</li>
+																</h:commandLink>
+															</h:form>
+														</ui:repeat>
+													</ol>
+
+												</ui:repeat>
+											</ol>
+										</li>
+									</ui:repeat>
+								</ol>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+
+
+
+
+		<div class="footer">
+			<div class="pull-right">
+				10GB of <strong>250GB</strong> Free.
+			</div>
+			<div>
+				<strong>Copyright</strong> Example Company &amp;copy; 2014-2015
+			</div>
+		</div>
+
+		<!-- 	/here -->
+
+
+	</ui:define>
+	<ui:define name="pageJS">
+
+		<!-- Mainly scripts -->
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+		<!-- Custom and plugin javascript -->
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+		<!-- Peity -->
+		<h:outputScript library="js" name="plugins/peity/jquery.peity.min.js"></h:outputScript>
+
+		<!-- Peity -->
+		<h:outputScript library="js" name="demo/peity-demo.js"></h:outputScript>
+
+		<!-- ChartJS-->
+		<h:outputScript library="js" name="Chart.js"></h:outputScript>
+
+
+
+		<script type="text/javascript" language="javascript">
+        var ctx = document.getElementById("myChart").getContext('2d');
+		var myChart = new Chart(ctx, {
+    	type: 'pie',
+    	data: {
+        labels: [
+            ""
+        	<ui:repeat var="item" value="#{itemBean.getItemsByDepotId(itemBean.depotDetails.id)}">,"#{item.name}"</ui:repeat>
+
+            ],
+        datasets: [{
+            label: '# of Votes',
+            data: [
+            null
+                <ui:repeat var="item" value="#{itemBean.getItemsByDepotId(itemBean.depotDetails.id)}">,#{item.quantity}</ui:repeat>
+                
+            ],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        	}]
+   			 },
+    		options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+   		 }
+		});
+		</script>
+
+	</ui:define>
+</ui:composition>

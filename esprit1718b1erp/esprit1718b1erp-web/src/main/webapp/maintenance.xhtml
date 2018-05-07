@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<script name="jquery/jquery.js" library="primefaces"></script>
+	</h:head>
+	<ui:define name="titleHere">
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-4">
+				<h2>Put your title here</h2>
+				<ol class="breadcrumb">
+					<li><a href="index.html">This is</a></li>
+					<li class="active"><strong>Breadcrumb</strong></li>
+				</ol>
+			</div>
+			<div class="col-sm-8">
+				<div class="title-action">
+					<a href="#" class="btn btn-primary">Send Request</a>
+				</div>
+			</div>
+		</div>
+		<!--	here -->
+		<br />
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5></h5>
+					</div>
+					<div class="ibox-content">
+						<h2>Send Intervention</h2>
+						<p>please complete the wizard to add item</p>
+
+						<h:form>
+							<h1>info</h1>
+							<div class="row">
+
+								<div class="form-group">
+									<label>Machine Type *</label>
+
+									<h:selectOneMenu styleClass="form-control"
+										value="#{maintenanceBean.machinetype}">
+										<f:selectItem itemLabel="Select a type" itemValue="" />
+										<f:selectItems value="#{machineTypeData.roles}" />
+									</h:selectOneMenu>
+								</div>
+
+								<div class="form-group">
+									<label>Item's reference *</label>
+									<h:selectOneMenu styleClass="form-control"
+										value="#{maintenanceBean.itemId}">
+										<f:selectItem itemLabel="select an Item" itemValue="" />
+										<f:selectItems value="#{maintenanceBean.items}" var="item"
+											itemValue="#{item.id}" itemLabel="#{item.name}" />
+									</h:selectOneMenu>
+								</div>
+
+								<div class="form-group">
+									<label>Intervention Type *</label>
+
+									<h:selectOneMenu styleClass="form-control"
+										value="#{maintenanceBean.interventiontype}">
+										<f:selectItem itemLabel="Type of intervention" itemValue="" />
+										<f:selectItems value="#{interType.types}" />
+									</h:selectOneMenu>
+								</div>
+								<label>Priority *</label>
+
+								<h:selectOneMenu styleClass="form-control"
+									value="#{maintenanceBean.priority}">
+									<f:selectItem itemLabel="Select Priority" itemValue="" />
+									<f:selectItems value="#{interventionPriorityData.roles}" />
+								</h:selectOneMenu>
+							</div>
+							<div class="form-group">
+								<label>Desired Date*</label>
+							</div>
+								<div style="height: 500px">
+	
+										<p:calendar value="#{maintenanceBean.desireddate}"
+											styleClass="form-control required" showOn="button"></p:calendar>
+								</div>
+							<div class="form-group">
+
+								<label>Description *</label>
+								<h:inputTextarea value="#{maintenanceBean.description}"
+									styleClass="form-control" />
+							</div>
+
+
+							<div class="text-center" style="margin-top: 120px">
+								<h:commandButton value="Send Request"
+									action="#{maintenanceBean.addIntervention()}"
+									styleClass="btn btn-primary" />
+
+							</div>
+
+
+						</h:form>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+	</ui:define>
+	<ui:define name="pageJS"></ui:define>
+</ui:composition>

@@ -101,7 +101,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -126,7 +125,6 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import tn.esprit.b1.esprit1718b1erp.app.client.animations.FadeInUpTransition;
-import tn.esprit.b1.esprit1718b1erp.app.client.animations.FadeOutUpTransition;
 import tn.esprit.b1.esprit1718b1erp.app.client.animations.FadeOutUpTransition;
 import tn.esprit.b1.esprit1718b1erp.app.client.util.ItemUtil;
 import tn.esprit.b1.esprit1718b1erp.app.client.util.ItemVerfication;
@@ -246,7 +244,7 @@ public class ItemController implements Initializable {
 
     @FXML
     private TextField txtSelling;
-    
+
     @FXML
     private Label ProductIdItem;
 
@@ -467,8 +465,10 @@ public class ItemController implements Initializable {
     private TableColumn<ItemOffer, String> colItemOfferSupplier;
 
     DatePicker ddd = new DatePicker();
-    boolean checkAlertOnQuantity, selectimage;
-    private ObservableList<Item> listData, listDataAlert;
+    boolean checkAlertOnQuantity;
+    boolean selectimage;
+    private ObservableList<Item> listData;
+    private ObservableList<Item> listDataAlert;
     private ObservableList<Category> listDataCategory;
     private ObservableList<ItemOffer> listDataItemOffer;
 
@@ -494,7 +494,6 @@ public class ItemController implements Initializable {
     Integer status;
     int itemRId;
     TableColumn<Item, String> expirationDate = new TableColumn<Item, String>();
-   
 
     VBox grid = new VBox(70);
 
@@ -516,6 +515,7 @@ public class ItemController implements Initializable {
         Platform.runLater(() -> {
             txtId.setVisible(false);
             ProductIdItem.setVisible(false);
+            addSupplier.setVisible(false);
             tableData.getColumns().add(expirationDate);
             afficherItemImport();
             afficher();
@@ -631,6 +631,7 @@ public class ItemController implements Initializable {
                 @Override
                 public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                     filerItemList((String) oldValue, (String) newValue);
+                    afficher();
                 }
             });
 
@@ -668,10 +669,7 @@ public class ItemController implements Initializable {
                             }
                         }
                     } catch (NumberFormatException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
                     }
-
                 }
             });
 
@@ -685,8 +683,6 @@ public class ItemController implements Initializable {
                         String formattedDate1 = dateFormat1.format(timeStampDate);
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         LocalDate date = LocalDate.parse(formattedDate1, formatter);
-                        System.out.println(txtExpirationDate.getValue().isBefore(date));
-                        System.out.println("hello");
                         if (txtExpirationDate.getValue().isBefore(date)) {
                             playSound("error.mp3");
                             Config2.dialog(Alert.AlertType.ERROR, "Please, provide a valid date");
@@ -707,9 +703,7 @@ public class ItemController implements Initializable {
             itemService = (ItemServiceRemote) ctx.lookup(jndiNameItem);
             list = itemService.getItemNamesList();
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return list;
     }
@@ -738,25 +732,13 @@ public class ItemController implements Initializable {
 
         calendarView.setMaxSize(1225, 531);
         calendarView.setRequestedTime(LocalTime.now());
-        calendarView.setShowAddCalendarButton(false);
-        calendarView.setShowToolBar(false);
-        calendarView.setShowDeveloperConsole(false);
-        calendarView.setShowPageSwitcher(false);
-        calendarView.setShowPageToolBarControls(false);
-        calendarView.setShowPrintButton(false);
-        calendarView.setShowSearchField(false);
-        calendarView.setShowSearchResultsTray(false);
-        calendarView.setShowSourceTray(false);
-        calendarView.setShowSourceTrayButton(false);
-        calendarView.setShowToday(false);
-        calendarView.setShowToolBar(false);
         Stage primaryStage = new Stage();
         Scene scene = new Scene(calendarView);
         primaryStage.setTitle("Calendar");
         primaryStage.setScene(scene);
-        primaryStage.setX(150);
-        primaryStage.setY(172);
-        primaryStage.setWidth(1131);
+        primaryStage.setX(175);
+        primaryStage.setY(140);
+        primaryStage.setWidth(1151);
         primaryStage.setHeight(560);
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.show();
@@ -785,9 +767,6 @@ public class ItemController implements Initializable {
         contact.setEmail(txtSupplierEmail.getText());
         contact.setWebsite(txtSupplierWebsite.getText());
         contact.setRole("provider");
-        // addSupplier(contact);
-        // cbSupplier.getItems().clear();
-        // cbSupplier.getItems().addAll(findAllSuppliers());
         cbSupplier.setValue(contact);
         addSupplierPane.setOpacity(0);
         addSupplierPane.toBack();
@@ -812,9 +791,6 @@ public class ItemController implements Initializable {
         Category category = new Category();
         category.setName(txtCategoryName.getText());
         category.setDescription(txtDescriptionCategory.getText());
-        // addcategory(category);
-        // cbCategory.getItems().clear();
-        // cbCategory.getItems().addAll(findAllCategories());
         cbCategory.setValue(category);
         addCategoryPane.setOpacity(0);
         addCategoryPane.toBack();
@@ -853,11 +829,16 @@ public class ItemController implements Initializable {
                 } catch (NullPointerException e) {
                 }
 
-                System.out.println("******************" + item.getBarcode());
                 cbCurrency.setValue(item.getCurrency());
                 txtBarcode.setText(Integer.toString(item.getBarcode()));
-                txtBuying.setText(Float.toString(item.getByingPrice()));
-                txtSelling.setText(Float.toString(item.getSellingPrice()));
+                try {
+                    txtBuying.setText(Float.toString(item.getByingPrice()));
+                } catch (NullPointerException e) {
+                }
+                try {
+                    txtSelling.setText(Float.toString(item.getSellingPrice()));
+                } catch (NullPointerException e) {
+                }
                 switch (item.getType().toString()) {
                 case "PRODUCT":
                     cbProduct.setSelected(true);
@@ -903,10 +884,8 @@ public class ItemController implements Initializable {
 
                 File imagefile = new File("C:\\\\wamp64\\\\www\\\\imagesAmine\\\\" + item.getPicture());
                 Image ima = new Image(imagefile.toURI().toString(), 300, 208, false, false);
-                System.out.println("C:\\\\wamp64\\\\www\\\\imagesAmine\\\\" + item.getPicture());
                 imgItem.setImage(ima);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -967,7 +946,6 @@ public class ItemController implements Initializable {
             item.setType(Item_Type.SERVICE);
         }
         if (ItemVerfication.verifyTypes(cbProduct.isSelected(), cbOther.isSelected(), cbService.isSelected())) {
-            System.out.println("yepp");
         }
         item.setBarcode(Integer.parseInt(txtBarcode.getText()));
         try {
@@ -976,12 +954,18 @@ public class ItemController implements Initializable {
         }
         try {
             item.setSellingPrice(Float.parseFloat(txtSelling.getText()));
+            
+        } catch (Exception e2) {
+        }
+        try {
             item.setByingPrice(Float.parseFloat(txtBuying.getText()));
+        } catch (NumberFormatException e2) {
+        }
+        try {
             item.setCurrency(cbCurrency.getValue());
         } catch (Exception e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
         }
+
         try {
             item.setTotalPrice(Integer.parseInt(txtQuantity.getText()) * Float.parseFloat(txtSelling.getText()));
         } catch (NumberFormatException e1) {
@@ -989,11 +973,7 @@ public class ItemController implements Initializable {
         if (selectimage) {
             item.setPicture(imgName);
         } else {
-            if(iPic!=null) {
             item.setPicture(iPic.getPicture());
-            }else {
-                item.setPicture("");
-            }
         }
 
         // alerts
@@ -1018,8 +998,6 @@ public class ItemController implements Initializable {
             item.setId(Integer.parseInt(txtId.getText()));
         }
 
-        System.out.println(u);
-        // saveOrUpdateItem(item);
         ItemUtil.saveOrUpdateItemWithCategoryAndSupplier(item, cbCategory.getValue(), cbSupplier.getValue(), u);
         Toolkit.getDefaultToolkit().beep();
         Config2.dialog(Alert.AlertType.INFORMATION, "Success Save Data..");
@@ -1027,6 +1005,7 @@ public class ItemController implements Initializable {
         TabPane.setOpacity(0);
         selectWithService();
         afficher();
+        selectimage=false;
     }
 
     @FXML
@@ -1052,11 +1031,6 @@ public class ItemController implements Initializable {
     @FXML
     void ItemStatisticsAction(ActionEvent event) {
         pieChartQuantityShow();
-        // SingleSelectionModel<Tab> selectionModel = TabPane.getSelectionModel();
-        // selectionModel.select(4);
-        // paneTabel.setOpacity(0);
-        // new FadeInUpTransition(TabPane).play();
-
         pieChartQuantityShow();
         newStatisticPane.toFront();
         new FadeInUpTransition(newStatisticPane).play();
@@ -1103,7 +1077,6 @@ public class ItemController implements Initializable {
     void importItemFromTableItemOffer(ActionEvent event) {
         ItemOffer iO = tableDataItemOffer.getSelectionModel().getSelectedItem();
         Item i = iO.getItem();
-        System.out.println(i);
         ItemRequest ir = new ItemRequest();
         ir.setItem(i);
         ir.setItemRequestStatus(ItemRequestStatus.NOTDONE);
@@ -1449,7 +1422,7 @@ public class ItemController implements Initializable {
         }
         if (condition) {
             playSound("alert.mp3");
-            buildNotificationItem("Warning !", "Item quantity is lower than what is recommand, press to fix issue",
+            buildNotificationItem("Warning !", "Item quantity is lower than what is recommanded, press to fix issue",
                     Pos.BOTTOM_RIGHT, e -> {
                         afficherAlert();
                         clear();
@@ -1463,7 +1436,6 @@ public class ItemController implements Initializable {
         if (condition2) {
             playSound("alert.mp3");
             buildNotificationItem("Warning!", "Be careful some items' expiration date is close", Pos.TOP_RIGHT, e -> {
-                System.out.println("you're right !!!");
                 afficherAlert();
                 clear();
                 SingleSelectionModel<Tab> selectionModel = TabPane.getSelectionModel();
@@ -1482,11 +1454,8 @@ public class ItemController implements Initializable {
             itemRequestService = (ItemRequestServiceRemote) ctx.lookup(jndiNameItemRequest);
             return itemRequestService.addItemRequestGetId(i);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         } catch (Exception e2) {
-            System.out.println("something is wrong in addItemRequest");
         }
         return 0;
     }
@@ -1497,11 +1466,8 @@ public class ItemController implements Initializable {
             itemOfferService = (ItemOfferServiceRemote) ctx.lookup(jndiNameItemOffer);
             itemOfferService.update(i);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         } catch (Exception e2) {
-            System.out.println("something is wrong in addItemOffer");
         }
     }
 
@@ -1511,11 +1477,8 @@ public class ItemController implements Initializable {
             itemOfferService = (ItemOfferServiceRemote) ctx.lookup(jndiNameItemOffer);
             itemOfferService.delete(i);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         } catch (Exception e2) {
-            System.out.println("something is wrong in addItemOffer");
         }
     }
 
@@ -1525,9 +1488,7 @@ public class ItemController implements Initializable {
             categorieService = (CategoryServiceRemote) ctx.lookup(jndiNameCategory);
             categorieService.delete(c);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
     }
 
@@ -1537,11 +1498,8 @@ public class ItemController implements Initializable {
             itemRequestService = (ItemRequestServiceRemote) ctx.lookup(jndiNameItemRequest);
             itemRequestService.update(i);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         } catch (Exception e2) {
-            System.out.println("something is wrong in updateItemRequest");
         }
     }
 
@@ -1597,11 +1555,8 @@ public class ItemController implements Initializable {
             itemService = (ItemServiceRemote) ctx.lookup(jndiNameItem);
             itemService.deleteItemWithCategoryAndSupplier(i);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         } catch (Exception e2) {
-            e2.printStackTrace();
         }
     }
 
@@ -1667,8 +1622,6 @@ public class ItemController implements Initializable {
         Config2.setModelColumn(colItemBarcode, "barcode");
         // Config2.setModelColumn(colItemQuantity, "quantity");
 
-        
-
         expirationDate.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
 
@@ -1699,7 +1652,6 @@ public class ItemController implements Initializable {
                             try {
                                 setText(i);
                             } catch (Exception e1) {
-                                System.out.println("exception was catched");
                             }
                             if (tv != null) {
                                 try {
@@ -1707,22 +1659,12 @@ public class ItemController implements Initializable {
                                     Date d2 = new Date();
                                     long diff = d1.getTime() - d2.getTime();
                                     long realDifferenceInDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                                    System.out.println("/////////////////////////////");
-                                    System.out.println(i);
-                                    System.out.println("//////////////////////////////");
                                     if (realDifferenceInDays < 7) {
-                                        // setStyle("-fx-background-color: red");
                                         currentRow.setStyle("-fx-background-color:darkgoldenrod");
                                     }
                                 } catch (NullPointerException e) {
-                                    // TODO Auto-generated catch block
-                                    // e.printStackTrace();
                                 } catch (NumberFormatException e1) {
-                                    // TODO Auto-generated catch block
-                                    // e.printStackTrace();
                                 } catch (Exception e2) {
-                                    e2.printStackTrace();
-                                    System.out.println("exception general was catched");
                                 }
                             }
                         }
@@ -1741,9 +1683,6 @@ public class ItemController implements Initializable {
                                 return new SimpleStringProperty(Integer.toString(param.getValue().getQuantity()));
                             }
                         } catch (NullPointerException e) {
-                            // TODO Auto-generated catch block
-                            // e.printStackTrace();
-                            System.out.println("exception catched !!!!!!!!!!!!!");
                         }
                         return new SimpleStringProperty("");
                     }
@@ -1763,21 +1702,15 @@ public class ItemController implements Initializable {
                             try {
                                 setText(i);
                             } catch (Exception e1) {
-                                System.out.println("exception was catched");
                             }
                             if (tv != null) {
                                 try {
                                     if (Integer.parseInt(i) < tv.getItems().get(getTableRow().getIndex())
                                             .getMinimumQuanity()) {
-                                        // setStyle("-fx-background-color: red");
                                         currentRow.setStyle("-fx-background-color:coral");
                                     }
                                 } catch (NullPointerException e) {
-                                    // TODO Auto-generated catch block
-                                    // e.printStackTrace();
                                 } catch (NumberFormatException e1) {
-                                    // TODO Auto-generated catch block
-                                    // e.printStackTrace();
                                 }
                             }
                         }
@@ -1814,18 +1747,44 @@ public class ItemController implements Initializable {
 
         });
 
+//        colItemImage.setCellValueFactory(
+//                new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
+//
+//                    @Override
+//                    public ObservableValue<String> call(CellDataFeatures<Item, String> param) {
+//                        return new SimpleStringProperty(param.getValue().getUser().getLogin());
+//                    }
+//                });
+        
         colItemImage.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
 
                     @Override
                     public ObservableValue<String> call(CellDataFeatures<Item, String> param) {
-                        return new SimpleStringProperty(param.getValue().getUser().getLogin());
+                        return new SimpleStringProperty(param.getValue().getPicture());
                     }
                 });
-        
-       
 
-        
+        colItemImage.setCellFactory(new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
+
+            @Override
+            public TableCell<Item, String> call(TableColumn<Item, String> param) {
+                return new TableCell<Item, String>() {
+                    @Override
+                    protected void updateItem(String i, boolean empty) {
+                        super.updateItem(i, empty);
+                        setText(null);
+                        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                        File imagefile = new File("C:\\\\wamp64\\\\www\\\\imagesAmine\\\\" + i);
+                        Image ima = new Image(imagefile.toURI().toString(), 140, 100, false, false);
+                        ImageView imageView = new ImageView();
+                        imageView.setImage(ima);
+                        setGraphic(imageView);
+                    }
+                };
+            }
+        });
+
     }
 
     void afficherAlert() {
@@ -1836,23 +1795,24 @@ public class ItemController implements Initializable {
         Config2.setModelColumn(colItemBarcodeAlert, "barcode");
         Config2.setModelColumn(colAlerType, "alertItemType");
 
-        colItemQuantityAlert.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Item,String>, ObservableValue<String>>() {
-            
-            @Override
-            public ObservableValue<String> call(CellDataFeatures<Item, String> param) {
-                try {
-                    if (Integer.toString(param.getValue().getQuantity()) != null) {
-                        return new SimpleStringProperty(Integer.toString(param.getValue().getQuantity()));
+        colItemQuantityAlert.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
+
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<Item, String> param) {
+                        try {
+                            if (Integer.toString(param.getValue().getQuantity()) != null) {
+                                return new SimpleStringProperty(Integer.toString(param.getValue().getQuantity()));
+                            }
+                        } catch (NullPointerException e) {
+                            // TODO Auto-generated catch block
+                            // e.printStackTrace();
+                            System.out.println("exception catched !!!!!!!!!!!!!");
+                        }
+                        return new SimpleStringProperty("");
                     }
-                } catch (NullPointerException e) {
-                    // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                    System.out.println("exception catched !!!!!!!!!!!!!");
-                }
-                return new SimpleStringProperty("");
-            }
-        });
-        
+                });
+
         colItemQuantityAlert.setCellFactory(new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
             @Override
             public TableCell<Item, String> call(TableColumn<Item, String> param) {
@@ -1873,8 +1833,8 @@ public class ItemController implements Initializable {
                                 try {
                                     if (Integer.parseInt(i) < tv.getItems().get(getTableRow().getIndex())
                                             .getMinimumQuanity()) {
-                                         setStyle("-fx-background-color: coral");
-//                                        currentRow.setStyle("-fx-background-color:coral");
+                                        setStyle("-fx-background-color: coral");
+                                        // currentRow.setStyle("-fx-background-color:coral");
                                     }
                                 } catch (NullPointerException e) {
                                     // TODO Auto-generated catch block
@@ -1889,7 +1849,7 @@ public class ItemController implements Initializable {
                 };
             }
         });
-        
+
         colItemExpirationDate.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
 
@@ -1904,7 +1864,7 @@ public class ItemController implements Initializable {
                         return new SimpleStringProperty(dd);
                     }
                 });
-        
+
         colItemExpirationDate.setCellFactory(new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
 
             @Override
@@ -1932,8 +1892,8 @@ public class ItemController implements Initializable {
                                     System.out.println(i);
                                     System.out.println("//////////////////////////////");
                                     if (realDifferenceInDays < 7) {
-                                         setStyle("-fx-background-color: darkgoldenrod");
-//                                        currentRow.setStyle("-fx-background-color:darkgoldenrod");
+                                        setStyle("-fx-background-color: darkgoldenrod");
+                                        // currentRow.setStyle("-fx-background-color:darkgoldenrod");
                                     }
                                 } catch (NullPointerException e) {
                                     // TODO Auto-generated catch block
@@ -1951,7 +1911,7 @@ public class ItemController implements Initializable {
                 };
             }
         });
-        
+
         colItemCategoryAlert.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Item, String>, ObservableValue<String>>() {
 
@@ -1973,7 +1933,6 @@ public class ItemController implements Initializable {
     }
 
     private void afficherItemOffer() {
-        // Config2.setModelColumn(colItemOfferPrice, "buyingPrice");
         colitemOfferName.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<ItemOffer, String>, ObservableValue<String>>() {
 
@@ -2223,9 +2182,7 @@ public class ItemController implements Initializable {
             itemService = (ItemServiceRemote) ctx.lookup(jndiNameItem);
             items = itemService.findAll();
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return items;
     }
@@ -2237,9 +2194,7 @@ public class ItemController implements Initializable {
             itemOfferService = (ItemOfferServiceRemote) ctx.lookup(jndiNameItemOffer);
             iO = itemOfferService.getItemOfferBestItemPrice(i);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return iO;
     }
@@ -2251,9 +2206,7 @@ public class ItemController implements Initializable {
             itemOfferService = (ItemOfferServiceRemote) ctx.lookup(jndiNameItemOffer);
             items = itemOfferService.getItemOffersByItem(i);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return items;
     }
@@ -2265,9 +2218,7 @@ public class ItemController implements Initializable {
             itemService = (ItemServiceRemote) ctx.lookup(jndiNameItem);
             items = itemService.ListStock(s);
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return items;
     }
@@ -2279,9 +2230,7 @@ public class ItemController implements Initializable {
             categorieService = (CategoryServiceRemote) ctx.lookup(jndiNameCategory);
             categories = categorieService.findAll();
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return categories;
     }
@@ -2294,9 +2243,6 @@ public class ItemController implements Initializable {
             cbItemOfferSupplier.setValue(iO.getSupplier());
             txtItemOfferPrice.setText(Integer.toString(iO.getBuyingPrice()));
         } catch (NullPointerException e) {
-            // TODO Auto-generated catch block
-            // e.printStackTrace();
-            System.out.println("exception was catched aksikilkTableItemOffer");
         }
     }
 
@@ -2307,9 +2253,7 @@ public class ItemController implements Initializable {
             contactService = (ContactServiceRemote) ctx.lookup(jndiNameSupplier);
             suppliers = contactService.findAll();
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return suppliers;
     }
@@ -2321,11 +2265,8 @@ public class ItemController implements Initializable {
             itemRequestService = (ItemRequestServiceRemote) ctx.lookup(jndiNameItemRequest);
             itemRequests = itemRequestService.findAllNotDone();
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         } catch (Exception e2) {
-            System.out.println("something is wrong in findAllItemRequests");
         }
         return itemRequests;
     }
@@ -2337,9 +2278,7 @@ public class ItemController implements Initializable {
             itemOfferService = (ItemOfferServiceRemote) ctx.lookup(jndiNameItemOffer);
             itemOffers = itemOfferService.findAll();
         } catch (NamingException e) {
-            System.out.println("NamingException jndi");
         } catch (RejectedExecutionException e1) {
-            System.out.println("catched rejected");
         }
         return itemOffers;
     }
@@ -2350,9 +2289,6 @@ public class ItemController implements Initializable {
         try {
             d1 = sdf.parse(date);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.out.println("parse exception  or null");
         }
         return d1;
     }
@@ -2363,9 +2299,6 @@ public class ItemController implements Initializable {
         try {
             d1 = sdf.parse(date);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.out.println("parse exception  or null");
         }
         return d1;
     }
@@ -2496,39 +2429,19 @@ public class ItemController implements Initializable {
             }
             if (filteredList.size() == 1) {
                 Item i = filteredList.get(0);
-                System.out.println(i);
                 ItemRequest iR = new ItemRequest();
                 iR.setItem(i);
                 iR.setItemRequestStatus(ItemRequestStatus.NOTDONE);
 
                 try {
                     if (ItemRequestExists(iR) == null) {
-                        // if (ItemRequestExists(iR) == null ||
-                        // tableDataImport.getItems().indexOf(iR)==-1 ) {
                         playSound("bip.mp3");
                         itemRId = addItemRequest(iR);
                         tableDataImport.getItems().add(iR);
                     }
                 } catch (Exception e) {
-                    System.out.println("exception !!!!!!!!");
                 }
-                // }
                 afficherItemImport();
-                // System.out.println(tableDataImport.getItems());
-                // for (ItemRequest iR1 : tableDataImport.getItems()) {
-                // if (!iR1.getItem().getName().equals(iR.getItem().getName())) {
-                // tableDataImport.getItems().clear();
-                // if (tableDataImport.getItems().contains(iR)) {
-                // System.out.println(tableDataImport.getItems().indexOf(iR));
-                // }else {
-                // System.out.println("it does not contains");
-                // System.out.println(tableDataImport.getItems().indexOf(iR));
-                //
-                // tableDataImport.getItems().add(iR);
-                // }
-
-                // }
-                // }
 
             }
         }
@@ -2622,14 +2535,11 @@ public class ItemController implements Initializable {
             try {
                 it.setExpirationDate(convert(ddd.getEditor().getText()));
             } catch (ParseException e2) {
-                e2.printStackTrace();
             }
             ir.setSupplier(itemsuppliertext.getValue());
             ir.setItemRequestStatus(ItemRequestStatus.DONE);
-            // ir.setId(itemRId);
 
             try {
-                System.out.println(ir.getId());
             } catch (Exception e2) {
             }
 
@@ -2725,6 +2635,7 @@ public class ItemController implements Initializable {
                     ItemOffer c = tableDataItemOffer.getSelectionModel().getSelectedItem();
                     deleteItemOffer(c);
                     clear();
+                    afficherItemOffer();
                     selectDataItemOffer();
                 } else {
                     clear();

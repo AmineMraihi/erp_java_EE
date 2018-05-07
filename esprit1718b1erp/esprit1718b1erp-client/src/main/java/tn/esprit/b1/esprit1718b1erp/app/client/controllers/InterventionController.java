@@ -23,8 +23,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -143,6 +145,7 @@ import tn.esprit.b1.esprit1718b1erp.entities.User;
 import tn.esprit.b1.esprit1718b1erp.entities.UserFunction;
 import tn.esprit.b1.esprit1718b1erp.services.UserService;
 import tn.esprit.b1.esprit1718b1erp.services.UserServiceRemote;
+import tn.esprit.b1.esprit1718b1erp.services.ahmed.PurchaseServiceRemote;
 import tn.esprit.b1.esprit1718b1erp.services.amine.CategoryServiceRemote;
 import tn.esprit.b1.esprit1718b1erp.services.amine.ItemServiceRemote;
 import tn.esprit.b1.esprit1718b1erp.services.jassem.ContactServiceRemote;
@@ -498,6 +501,8 @@ public class InterventionController implements Initializable {
         // TODO Auto-generated method stub
         //System.out.println(findInterventionByItem("Asus"));
       //  namestock.getItems().addAll(findAllRef("For maintain"));
+        Map<Number, Number> hhh = new HashMap<Number, Number>(sommetot_purchase_parproduit());
+        Set set = hhh.entrySet();
        
         tech.getItems().addAll(findUserByRole(UserFunction.TECHNICIAN));
       
@@ -2346,6 +2351,21 @@ public class InterventionController implements Initializable {
             
             
         }
+    }
+    private Map<Number, Number> sommetot_purchase_parproduit() {
+        Map<Number, Number> breakdowns = new HashMap<Number, Number>();
+
+        ///////// List<Map<String,String>> products = new ArrayList<>();
+        try {
+            ctx = new InitialContext();
+           breakdownService = (BreakdownServiceRemote) ctx.lookup(jndiNameBreakdown);
+            breakdowns = breakdownService.sommetot_purchase();
+        } catch (NamingException e) {
+            System.out.println("NamingException jndi");
+        } catch (RejectedExecutionException e1) {
+            System.out.println("catched rejected");
+        }
+        return breakdowns;
     }
    /* void afficherqnt() {
         // listData = FXCollections.observableArrayList();

@@ -1,0 +1,236 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+		<h:outputStylesheet library="css"
+			name="plugins/steps/jquery.steps.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+
+	</ui:define>
+
+	<ui:define name="titleHere">
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-4">
+				<h2>Put your title here</h2>
+				<ol class="breadcrumb">
+					<li><a href="home.jsf">home</a></li>
+					<li class="active"><strong>item management</strong></li>
+				</ol>
+			</div>
+			<div class="col-sm-8">
+				<div class="title-action">
+					<a href="#" class="btn btn-primary">action </a>
+				</div>
+			</div>
+		</div>
+
+
+		<!--	here -->
+
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="wrapper wrapper-content animated fadeInUp">
+
+					<div class="ibox">
+						<div class="ibox-title">
+							<h5>All projects assigned to this account</h5>
+							<div class="ibox-tools">
+								<a href="itemManagement.jsf" class="btn btn-primary btn-xs">Add
+									a new item</a>
+							</div>
+						</div>
+						<div class="ibox-content">
+							<div class="row m-b-sm m-t-sm">
+								<div class="col-md-1">
+									<button type="button" id="loading-example-btn"
+										class="btn btn-white btn-sm">
+										<i class="fa fa-refresh"></i> Refresh
+									</button>
+								</div>
+								<div class="col-md-11">
+									<div class="input-group">
+										<input type="text" placeholder="Search"
+											class="input-sm form-control" /> <span
+											class="input-group-btn">
+											<button type="button" class="btn btn-sm btn-primary">
+												Go!</button>
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="project-list">
+								<h:form>
+									<table class="table table-hover">
+										<tbody>
+											<ui:repeat var="item" value="#{itemBean.getItemAlert()}">
+												<tr>
+													<td class="project-status"><span
+														class="label label-danger">action required</span></td>
+
+
+													<td class="project-title"><a
+														jsf:action="#{itemBean.toItemDetails(item.id)}">#{item.name}</a>
+														<br /> <small>Created #{item.lastUpdatedDate} </small></td>
+
+
+													<td class="project-title">#{item.category.name}</td>
+
+
+													<td><strong>#{item.quantity} </strong><span
+														class="pie">#{item.quantity}/#{itemBean.overallQuantities}}</span></td>
+
+
+													<td class="project-actions"><a
+														jsf:styleClass="btn btn-white btn-sm"
+														jsf:action="#{itemBean.toItemImportPage(item.id)}"><i
+															class="fa-plus"></i> import </a>
+														</td>
+
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 	/here -->
+
+
+	</ui:define>
+	<ui:define name="pageJS">
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+		<!-- Custom and plugin javascript -->
+
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+
+		<!-- Steps -->
+		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+		<!-- Jquery Validate -->
+		<h:outputScript library="js"
+			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+		<!-- Chosen -->
+		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+		<!-- iCheck -->
+		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+		<!-- MENU -->
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+		<!-- Flot -->
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/flot/jquery.flot.tooltip.min.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.spline.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.resize.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.pie.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.symbol.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/curvedLines.js"></h:outputScript>
+
+		<!-- Peity -->
+		<h:outputScript library="js" name="plugins/peity/jquery.peity.min.js"></h:outputScript>
+		<h:outputScript library="js" name="demo/peity-demo.js"></h:outputScript>
+
+		<h:outputScript>
+		// <![CDATA[
+		 $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

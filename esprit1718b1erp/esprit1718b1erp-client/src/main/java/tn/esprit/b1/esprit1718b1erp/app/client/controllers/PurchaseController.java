@@ -867,21 +867,21 @@ public class PurchaseController implements Initializable {
       
    
 /////xfhd
-        Purchase purchase = new Purchase(supplier, bb, daterequested, deliverydate, quantity, typepurchase, aaa,
-                Description, tpaymenttype, Projectname);
+      //////  Purchase purchase = new Purchase(supplier, bb, daterequested, deliverydate, quantity, typepurchase, aaa,
+         //////       Description, tpaymenttype, Projectname);
 
         if ((paid.isSelected()) && (unpaid.isSelected())) {
             Config2.dialog(Alert.AlertType.WARNING, "Choose only one parameter");
             paid.requestFocus();
         } else if (paid.isSelected()) {
-            purchase.setStatupurchase(Statupurchase.Paid);
+           /////// purchase.setStatupurchase(Statupurchase.Paid);
         } else
-            purchase.setStatupurchase(Statupurchase.Unpaid);
+           /////// purchase.setStatupurchase(Statupurchase.Unpaid);
         if (!(txtID.getText()).equals("")) {
-            purchase.setId_purchase(Integer.parseInt(txtID.getText()));
-            purchase.getItems().addAll(merzougList);
+          /////  purchase.setId_purchase(Integer.parseInt(txtID.getText()));
+           //////// purchase.getItems().addAll(merzougList);
         }
-        addPurchase(purchase);
+      ////////  addPurchase(purchase);
         paneCrud.setOpacity(0);
         selectWithServicePurchase();
         cleartxtPurchase();
@@ -919,7 +919,7 @@ public class PurchaseController implements Initializable {
                 cbsupplier.setValue(pur.getContact());
                 txtsuppphone.setText(Integer.toString(pur.getContact().getPhone()));
                 txtPurchaseCode.setText((pur.getContact().getStreet()));
-                cbtypepurchase.setValue(pur.getPurchase_type());
+               ///////// cbtypepurchase.setValue(pur.getPurchase_type());
                 txtDescription.setText(pur.getDsecription());
                 cbProjectname.setValue(pur.getProduct());
                 merzougList.addAll(pur.getItems());
@@ -943,7 +943,7 @@ public class PurchaseController implements Initializable {
                     break;
                 }
 
-                txtpaymenttype.setValue(pur.getTypePayementPurchase());
+               //////// txtpaymenttype.setValue(pur.getTypePayementPurchase());
 
             } catch (Exception e) {
 

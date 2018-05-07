@@ -26,6 +26,8 @@ public class ChatEndpoint {
     private Logger log = Logger.getLogger(ChatEndpoint.class.getSimpleName());
     private Room room = Room.getRoom();
 
+    private static String name ;
+    private String msg;
     @OnOpen
     public void open(final Session session, EndpointConfig config) {}
 
@@ -48,10 +50,12 @@ public class ChatEndpoint {
             properties.put("name", name);
             room.join(session);
             room.sendMessage(name + " - Joined the chat room");
+            this.name=name;
         }
         else {
             String name = (String)properties.get("name");
             room.sendMessage(name + " - " + chatMessage.getMessage());
+            msg=chatMessage.getMessage();
         }
     }
 
@@ -63,4 +67,21 @@ public class ChatEndpoint {
 
     @OnError
     public void onError(Session session, Throwable ex) { log.info("Error: " + ex.getMessage()); }
+
+    public static String getName() {
+        return name;
+    }
+
+    public static void setName(String name) {
+        ChatEndpoint.name = name;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+    
 }

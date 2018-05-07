@@ -1,7 +1,9 @@
 package tn.esprit.b1.esprit1718b1erp.services;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +20,8 @@ import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
  * Session Bean implementation class UserService
  */
 @Stateless
+@LocalBean
+
 public class UserService extends GenericDAO<User> implements UserServiceRemote, UserServiceLocal {
     @PersistenceContext
     private EntityManager entityManager;
@@ -81,5 +85,25 @@ public class UserService extends GenericDAO<User> implements UserServiceRemote, 
 
         return B;
     }
+    
+    public Double Totalpay_Employee_parYear(Date date_fin_anee,String year) {
+        Double B = (double) 0;
+      
+        try {
+            Query query = entityManager.createNativeQuery("SELECT ROUND (SUM(((DATEDIFF(:l,u.HiringDate))/30)* Salary),0)"
+                    + " from user u WHERE YEAR(u.HiringDate)=:p");
+            query.setParameter("l", date_fin_anee);
+            query.setParameter("p", year);
 
+            B = (Double) query.getSingleResult();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        return B;
+    }
+
+    
+    
 }

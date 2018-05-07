@@ -14,8 +14,10 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import tn.esprit.b1.esprit1718b1erp.entities.Contact;
+import tn.esprit.b1.esprit1718b1erp.entities.Intervention;
 import tn.esprit.b1.esprit1718b1erp.entities.Item;
 import tn.esprit.b1.esprit1718b1erp.entities.ItemOffer;
+import tn.esprit.b1.esprit1718b1erp.entities.Product;
 import tn.esprit.b1.esprit1718b1erp.entities.Purchase;
 import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
 
@@ -44,23 +46,7 @@ public class PurchaseService extends GenericDAO<Purchase> implements PurchaseSer
         this.entityManager = entityManager;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Map<String, Number> sommetot_purchase() {
-        Map<String, Number> results = new HashMap<String, Number>();
-        ////////// String jpaQuery = "SELECT DISTINCT product_Id_Product
-        ////////// ,SUM(Quantite)FROM purchase GROUP BY product_Id_Product ORDER
-        ////////// BY `SUM(Quantite)` DESC LIMIT 5";
 
-        String jpaQuery = "SELECT DISTINCT g.nomProduit ,SUM(p.Somme)FROM purchase p ,product g"
-                + " WHERE g.nomProduit=(select g.nomProduit from product where g.Id_Product=p.product_Id_Product limit 1) GROUP BY g.nomProduit ORDER BY `SUM(p.Somme)`";
-        List<Object[]> resultList = entityManager.createNativeQuery(jpaQuery).getResultList();
-
-        for (Object[] borderTypes : resultList) {
-            results.put((String) borderTypes[0], (Number) borderTypes[1]);
-        }
-        return results;
-    }
 
     @Override
     public List<Purchase> aaaa() {
@@ -103,5 +89,45 @@ public class PurchaseService extends GenericDAO<Purchase> implements PurchaseSer
 
     //// SELECT DISTINCT product_Id_Product ,SUM(Quantite)FROM purchase GROUP BY
     //// product_Id_Product ORDER BY `SUM(Quantite)` DESC
+    
+    
+    public Contact getSupplierById(int i) {
+        return entityManager.find(Contact.class, i);
+    }
+    public Product getProductbyID(int i) {
+        return entityManager.find(Product.class, i);
+    }
+    public void deletePurchase(int i) {
+        entityManager.remove(entityManager.find(Purchase.class, i));
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public Map<String, Number> sommetot_purchase() {
+        Map<String, Number> results = new HashMap<String, Number>();
+        ////////// String jpaQuery = "SELECT DISTINCT product_Id_Product
+        ////////// ,SUM(Quantite)FROM purchase GROUP BY product_Id_Product ORDER
+        ////////// BY `SUM(Quantite)` DESC LIMIT 5";
 
+        String jpaQuery = "SELECT DISTINCT g.nomProduit ,SUM(p.Somme)FROM purchase p ,product g"
+                + " WHERE g.nomProduit=(select g.nomProduit from product where g.Id_Product=p.product_Id_Product limit 1) GROUP BY g.nomProduit ORDER BY `SUM(p.Somme)`";
+        List<Object[]> resultList = entityManager.createNativeQuery(jpaQuery).getResultList();
+
+        for (Object[] borderTypes : resultList) {
+            results.put((String) borderTypes[0], (Number) borderTypes[1]);
+        }
+        return results;
+    }
+    
+    
+    public List<Double> Somme_Pur_intheLast5Years() {
+        /////DISTINCT year(dateDemande) ,
+        Query query = entityManager.createNativeQuery(
+                "SELECT ROUND(SUM(somme),0) from purchase GROUP BY "
+                + "year(dateDemande) ORDER BY year(dateDemande) asc  LIMIT 5");
+
+        List<Double> result = query.getResultList();
+
+        return result;
+    }
 }

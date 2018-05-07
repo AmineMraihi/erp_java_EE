@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
+import tn.esprit.b1.esprit1718b1erp.entities.Product;
 import tn.esprit.b1.esprit1718b1erp.entities.Project;
 import tn.esprit.b1.esprit1718b1erp.entities.StateProject;
 import tn.esprit.b1.esprit1718b1erp.entities.User;
@@ -17,4 +18,10 @@ public interface ProjectServiceRemote extends IGenericDAO<Project> {
     public Project findResponsablesProjects(User code);
     public Project findProjectByName(String name);
     public List<String> findAllProjectsNames();
+    public Long countProjects();
+    public Long countProgressProjects();
+    public Long countFinishedProjects();
+    public Long countInterruptedProjects();
+    public List<Long> numberProjectsByMonth();
+    public Product getProductById(int id);
 }

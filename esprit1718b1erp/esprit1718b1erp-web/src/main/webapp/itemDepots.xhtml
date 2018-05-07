@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+
+	</ui:define>
+
+	<ui:define name="titleHere">
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-4">
+				<h2>Put your title here</h2>
+				<ol class="breadcrumb">
+					<li><a href="home.jsf">home</a></li>
+					<li class="active"><strong>item management</strong></li>
+				</ol>
+			</div>
+			<div class="col-sm-8">
+				<div class="title-action">
+					<button type="button" class="btn btn-primary" data-toggle="modal"
+						data-target="#myModal4">add depot</button>
+				</div>
+			</div>
+		</div>
+
+
+		<!--	here -->
+		<div id="showtime" class="wrapper wrapper-content animated fadeInRight">
+			<div class="row">
+				<ui:repeat var="depot" value="#{itemBean.depots}">
+					<div class="col-lg-4">
+						<div class="contact-box">
+							<h:form>
+								<h:commandLink action="#{itemBean.toDepotDetails(depot.id)}">
+									<div class="col-sm-8">
+										<h3>
+											<strong>#{depot.name}</strong>
+										</h3>
+										<p>
+											<i class="fa fa-map-marker"></i> #{depot.place}
+										</p>
+										<address>
+											<strong>Twitter, Inc.</strong><br /> 795 Folsom Ave, Suite
+											600<br /> San Francisco, CA 94107<br /> <abbr title="Phone">P:</abbr>
+											(123) 456-7890
+										</address>
+									</div>
+									<div class="clearfix"></div>
+								</h:commandLink>
+							</h:form>
+						</div>
+					</div>
+				</ui:repeat>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="pull-right">
+				10GB of <strong>250GB</strong> Free.
+			</div>
+			<div>
+				<strong>Copyright</strong> Example Company &amp;copy; 2014-2015
+			</div>
+		</div>
+
+
+		<div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content animated fadeIn">
+				<h:form id="hello">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true"></span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">add Depot</h4>
+						<small>Lorem Ipsum is simply dummy text of the printing
+							and typesetting industry.</small>
+					</div>
+					<div class="modal-body">
+						
+							<div class="form-group">
+								<label>name *</label>
+								<h:inputText value="#{depotBean.name}"
+									styleClass="form-control " />
+							</div>
+							<div class="form-group">
+								<label>place *</label>
+								<h:inputText value="#{depotBean.place}"
+									styleClass="form-control " />
+							</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+						<h:commandButton styleClass="btn btn-primary" update="showtime"
+							action="#{depotBean.addDepot()}" value="add Depot">
+							<f:ajax  execute="hello" render="showtime" />
+							</h:commandButton>
+
+					</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<!-- 	/here -->
+
+
+	</ui:define>
+	<ui:define name="pageJS">
+
+		<!-- Mainly scripts -->
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+		<!-- Custom and plugin javascript -->
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+
+		<h:outputScript>
+		// <![CDATA[
+		  $(document).ready(function(){
+            $('.contact-box').each(function() {
+                animationHover(this, 'pulse');
+            });
+        });
+        // ]]>
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

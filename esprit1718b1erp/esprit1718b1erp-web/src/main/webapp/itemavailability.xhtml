@@ -1,0 +1,232 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+		<h:outputStylesheet library="css"
+			name="plugins/steps/jquery.steps.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+
+	</ui:define>
+
+	<ui:define name="titleHere">
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-4">
+				<h2>Put your title here</h2>
+				<ol class="breadcrumb">
+					<li><a href="home.jsf">home</a></li>
+					<li class="active"><strong>Maintenance management</strong></li>
+				</ol>
+			</div>
+			<div class="col-sm-8">
+				<div class="title-action">
+					<a href="#" class="btn btn-primary">action </a>
+				</div>
+			</div>
+		</div>
+
+		<!--	here -->
+		<br />
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>Maintenance Management</h5>
+					</div>
+					<div class="ibox-content">
+						<h2>Treat interventions</h2>
+						<p>please complete the wizard to add item</p>
+
+						<h:form>
+							<h1>info</h1>
+
+
+
+							<div class="form-group">
+								<label>Item's reference *</label>
+								<h:selectOneMenu styleClass="form-control"
+									value="#{maintenanceBean.interventionDetails.item.name}">
+									<f:selectItem
+										itemLabel="#{maintenanceBean.interventionDetails.item.name}"
+										itemValue="#{maintenanceBean.interventionDetails.item.name}" />
+									<f:selectItems value="#{maintenanceBean.items}" var="item"
+										itemValue="#{item.name}" itemLabel="#{item.name}" />
+								</h:selectOneMenu>
+							</div>
+
+							<div class="form-group">
+								<label>Machine Type *</label>
+								<h:selectOneMenu styleClass="form-control"
+									value="#{maintenanceBean.interventionDetails.item.machinetype}">
+
+									<f:selectItem
+										itemLabel="#{maintenanceBean.interventionDetails.item.machinetype}"
+										itemValue="#{maintenanceBean.interventionDetails.item.machinetype}" />
+									<f:selectItems value="#{machineTypeData.roles}" />
+								</h:selectOneMenu>
+
+							</div>
+							<div class="form-group">
+								<label> Available * </label>
+								<tr>
+									<h:selectBooleanCheckbox
+										value="#{maintenance.interventionDetails.item.availability}" />
+								</tr>
+							</div>
+							<div class="form-group">
+
+								<label> Functional/Unfunctional * </label>
+								<tr>
+									<h:selectBooleanCheckbox
+										value="#{maintenanceBean.interventionDetails.item.availability}" />
+								</tr>
+							</div>
+
+							<div class="form-group">
+
+								<label> Last maintain * </label>
+								<h:inputText value="#{maintenanceBean.interventionDetails.item.lastmaintenance}"
+									styleClass="form-control required" />
+							</div>
+							<div class="form-group">
+								<label>Next maintain *</label>
+								<h:inputText value="#{maintenanceBean.interventionDetails.item.nextmaintenance}"
+									styleClass="form-control required" />
+							</div>
+							<div class="form-group">
+								<label>End of Guarantee *</label>
+								<h:inputText value="#{maintenanceBean.interventionDetails.item.durationguarantee}"
+									styleClass="form-control required" />
+							</div>
+							<br />
+						
+
+
+							<div class="text-center" style="margin-top: 120px">
+								<h:commandButton action="#{maintenanceBean.updateItem1(maintenanceBean.interventionDetails.item)}"
+									value="Update" styleClass="btn btn-primary" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 	/here -->
+	</ui:define>
+	<ui:define name="pageJS">
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+		<!-- Custom and plugin javascript -->
+
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+		<!-- Steps -->
+		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+		<!-- Jquery Validate -->
+		<h:outputScript library="js"
+			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+		<!-- Chosen -->
+		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+		<!-- iCheck -->
+		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+		<!-- MENU -->
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+		<h:outputScript>
+		// <![CDATA[
+		 $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

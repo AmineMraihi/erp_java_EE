@@ -1,0 +1,300 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+		<h:outputStylesheet library="css"
+			name="plugins/steps/jquery.steps.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+	</ui:define>
+
+
+	<ui:define name="titleHere">
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-4">
+				<h2>Schedule Management</h2>
+				<ol class="breadcrumb">
+					<li><a href="home.jsf">home</a></li>
+					<li class="active"><strong>Schedule Management</strong></li>
+				</ol>
+			</div>
+			<div class="col-sm-8">
+				<div class="title-action">
+					<a href="#" class="btn btn-primary">Add Company </a>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>Schedule Management</h5>
+					</div>
+					<div class="ibox-content">
+						<h2>Add schedule</h2>
+						<p>please complete the wizard to add contact</p>
+
+
+
+						<div class="panel blank-panel">
+
+							<div class="panel-heading">
+
+								<div class="panel-options">
+
+									<ul class="nav nav-tabs">
+										<li class="active"><a data-toggle="tab" href="#tab-1">Event</a></li>
+										<li class=""><a data-toggle="tab" href="#tab-2">Meeting</a></li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="panel-body">
+
+								<div class="tab-content">
+									<div id="tab-1" class="tab-pane active">
+										<h:form>
+											<h1>info</h1>
+											<div class="row">
+											
+											
+												<div class="form-group">
+													<label>title *</label>
+													<h:inputText value="#{scheduleBean.title}"
+														styleClass="form-control required" />
+												</div>
+												<div class="form-group">
+													<label>Target Date *</label>
+													<h:inputText value="#{scheduleBean.targetDate}"
+														styleClass="form-control required" />
+												</div>
+
+												<div class="form-group">
+													<label>Description *</label>
+													<h:inputTextarea value="#{scheduleBean.description}"
+														styleClass="form-control" />
+												</div>
+												
+												<div class="form-group">
+													<label>Place *</label>
+													<h:inputText value="#{scheduleBean.place}"
+														styleClass="form-control required" />
+
+												</div>
+												<div class="form-group">
+													<label>Project *</label>
+													<h:selectOneMenu styleClass="form-control"
+														value="#{scheduleBean.projectId}">
+														<f:selectItem itemLabel="select project" itemValue="" />
+														<f:selectItems value="#{scheduleBean.projects}"
+															var="project" itemValue="#{project.id}"
+															itemLabel="#{project.projectName}" />
+													</h:selectOneMenu>
+												</div>
+												<div class="form-group">
+													<label>Budget *</label>
+													<h:inputText value="#{scheduleBean.budget}"
+														styleClass="form-control required" />
+												</div>
+												<h1>Finish</h1>
+												<div class="text-center" style="margin-top: 120px">
+													<h:commandButton value="add contact"
+														action="#{scheduleBean.addEvent()}"
+														styleClass="btn btn-primary" />
+												</div>
+											</div>
+
+										</h:form>
+
+
+									</div>
+
+									<div id="tab-2" class="tab-pane">
+										<h:form>
+											<h1>info</h1>
+											<div class="row">
+												<div class="form-group">
+													<label>title *</label>
+													<h:inputText value="#{scheduleBean.title}"
+														styleClass="form-control required" />
+												</div>
+												<div class="form-group">
+													<label>Target Date *</label>
+													<h:inputText value="#{scheduleBean.targetDate}"
+														styleClass="form-control required" />
+												</div>
+		
+												<div class="form-group">
+													<label>Description *</label>
+													<h:inputTextarea value="#{scheduleBean.description}"
+														styleClass="form-control" />
+												</div>
+												
+												<div class="form-group">
+													<label>Place *</label>
+													<h:inputText value="#{scheduleBean.place}"
+														styleClass="form-control required" />
+
+												</div>
+												<div class="form-group">
+													<label>Project *</label>
+													<h:selectOneMenu styleClass="form-control"
+														value="#{scheduleBean.projectId}">
+														<f:selectItem itemLabel="select project" itemValue="" />
+														<f:selectItems value="#{scheduleBean.projects}"
+															var="project" itemValue="#{project.id}"
+															itemLabel="#{project.projectName}" />
+													</h:selectOneMenu>
+												</div>
+												<div class="form-group">
+													<label>budget *</label>
+													<h:inputText value="#{scheduleBean.budget}"
+														styleClass="form-control required" />
+												</div>
+												<h1>Finish</h1>
+												<div class="text-center" style="margin-top: 120px">
+													<h:commandButton value="add contact"
+														action="#{scheduleBean.addMeeting()}"
+														styleClass="btn btn-primary" />
+												</div>
+											</div>
+
+										</h:form>
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+
+
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 	/here -->
+	</ui:define>
+
+
+	<ui:define name="pageJS">
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+		<!-- Custom and plugin javascript -->
+
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+		<!-- Steps -->
+		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+		<!-- Jquery Validate -->
+		<h:outputScript library="js"
+			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+		<!-- Chosen -->
+		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+		<!-- iCheck -->
+		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+		<!-- MENU -->
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+		<h:outputScript>
+		// <![CDATA[
+		 $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

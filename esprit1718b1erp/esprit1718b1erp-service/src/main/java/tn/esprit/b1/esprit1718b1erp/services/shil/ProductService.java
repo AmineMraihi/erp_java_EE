@@ -6,6 +6,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import tn.esprit.b1.esprit1718b1erp.entities.Product;
@@ -58,9 +59,22 @@ public class ProductService extends GenericDAO<Product> implements ProductServic
     @Override
     public List<Product> findWithoutProject() {
         TypedQuery<Product> query=entityManager.createQuery(
-                "select c from Product c where c.project=:i",Product.class
+                "select c from Product c where c.dateCreation=:i",Product.class
                 );        query.setParameter("i", null);
         return query.getResultList();
         
+    }
+    
+    
+    
+    public List<Double> Somme_ProductPrix_InStock() {
+        /////DISTINCT year(dateDemande) ,
+        Query query = entityManager.createNativeQuery(
+                "SELECT ROUND(SUM(prixQuantite),0) from product GROUP BY year(dateCreation)"
+                + " ORDER by year(dateCreation) asc LIMIT 5");
+
+        List<Double> result = query.getResultList();
+
+        return result;
     }
 }

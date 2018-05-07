@@ -48,22 +48,7 @@ public class NeedService extends GenericDAO<Needa> implements NeedServiceRemote,
         this.entityManager = entityManager;
     }
 
-    @Override
-    public Map<String, Number> Need_somme() {
-        Map<String, Number> results = new HashMap<String, Number>();
-        ////// String jpaQuery = "SELECT p.product_id, SUM(s.Somme_products)
-        ////// FROM sale s , sale_product p GROUP BY p.product_id ORDER BY
-        ////// `SUM(s.Somme_products)` DESC";
 
-        String jpaQuery = "SELECT DISTINCT nom_prod , SUM(somme) from needa GROUP BY nom_prod ORDER BY SUM(somme)";
-        List<Object[]> resultList = entityManager.createNativeQuery(jpaQuery).getResultList();
-
-        for (Object[] borderTypes : resultList) {
-            results.put((String) borderTypes[0], (Number) borderTypes[1]);
-
-        }
-        return results;
-    }
  
     
     
@@ -139,7 +124,34 @@ public class NeedService extends GenericDAO<Needa> implements NeedServiceRemote,
        
         return B;
     }
-
+    
+    
    
+    public Map<String, Number> Need_somme() {
+        Map<String, Number> results = new HashMap<String, Number>();
+        ////// String jpaQuery = "SELECT p.product_id, SUM(s.Somme_products)
+        ////// FROM sale s , sale_product p GROUP BY p.product_id ORDER BY
+        ////// `SUM(s.Somme_products)` DESC";
+
+        String jpaQuery = "SELECT DISTINCT nom_prod , SUM(somme) from needa GROUP BY nom_prod ORDER BY SUM(somme)";
+        List<Object[]> resultList = entityManager.createNativeQuery(jpaQuery).getResultList();
+
+        for (Object[] borderTypes : resultList) {
+            results.put((String) borderTypes[0], (Number) borderTypes[1]);
+
+        }
+        return results;
+    }
+    
+
+    public List<Double> Somme_Sales_inLast5Years() {
+        //////DISTINCT year(SaleDate) 
+        Query query = entityManager.createNativeQuery("SELECT ROUND(SUM(somme),0) from needa "
+                + "GROUP BY year(SaleDate) ORDER BY year(SaleDate) asc  LIMIT 5");
+
+        List<Double> result = query.getResultList();
+
+        return result;
+    }
 
 }

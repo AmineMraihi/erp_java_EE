@@ -1,6 +1,7 @@
 package tn.esprit.b1.esprit1718b1erp.services.shil;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,5 +68,12 @@ public class CampaignService extends GenericDAO<Campaign> implements CampaignSer
         Query query = entityManager
                 .createNativeQuery("select SUM(c.budget)  from campaign c");
         return (Double)query.getSingleResult();
+    }
+    @Override
+    public List<Campaign> findAllCampignsNamesAndBudgets() {
+        List<Campaign> campaigns = new ArrayList<Campaign>();
+
+        campaigns.addAll(entityManager.createQuery("SELECT c.nameCampaign, c.budget FROM Campaign c", Campaign.class).getResultList());
+        return campaigns;
     }
 }

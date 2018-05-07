@@ -72,13 +72,14 @@ public class Purchase implements Serializable {
 
     private Integer Quantite;
 
-    private String purchase_type;
+   
 
     private Float Somme;
 
     private String Dsecription;
-
-    private String typePayementPurchase;
+    
+    @Enumerated(EnumType.STRING)
+    private TypePayementPurchase typePayementPurchase;
 
     @ManyToOne
     private Product product;
@@ -86,6 +87,9 @@ public class Purchase implements Serializable {
     @Enumerated(EnumType.STRING)
     private Statupurchase statupurchase;
 
+    @Enumerated(EnumType.STRING)
+    private Purchase_type purchase_type;
+    
     public Integer getId_purchase() {
         return id_purchase;
     }
@@ -134,7 +138,7 @@ public class Purchase implements Serializable {
         Dsecription = dsecription;
     }
 
-    public String getTypePayementPurchase() {
+    public TypePayementPurchase getTypePayementPurchase() {
         return typePayementPurchase;
     }
 
@@ -158,11 +162,11 @@ public class Purchase implements Serializable {
         this.dateRecu = dateRecu;
     }
 
-    public String getPurchase_type() {
+    public Purchase_type getPurchase_type() {
         return purchase_type;
     }
 
-    public void setPurchase_type(String purchase_type) {
+    public void setPurchase_type(Purchase_type purchase_type) {
         this.purchase_type = purchase_type;
     }
 
@@ -182,7 +186,7 @@ public class Purchase implements Serializable {
         this.statupurchase = statupurchase;
     }
 
-    public void setTypePayementPurchase(String typePayementPurchase) {
+    public void setTypePayementPurchase(TypePayementPurchase typePayementPurchase) {
         this.typePayementPurchase = typePayementPurchase;
     }
 
@@ -238,7 +242,7 @@ public class Purchase implements Serializable {
         this.items = items;
     }
 
-    public Purchase(Contact contact, String purchase_type, String dsecription, String typePayementPurchase) {
+    public Purchase(Contact contact, Purchase_type purchase_type, String dsecription, TypePayementPurchase typePayementPurchase) {
         super();
         this.contact = contact;
 
@@ -253,8 +257,8 @@ public class Purchase implements Serializable {
         Dsecription = dsecription;
     }
 
-    public Purchase(Contact contact, Date dateDemande, Date dateRecu, String purchase_type, String dsecription,
-            String typePayementPurchase) {
+    public Purchase(Contact contact, Date dateDemande, Date dateRecu, Purchase_type purchase_type, String dsecription,
+            TypePayementPurchase typePayementPurchase) {
         super();
         this.contact = contact;
         this.dateDemande = dateDemande;
@@ -266,8 +270,8 @@ public class Purchase implements Serializable {
     }
 
     public Purchase(Integer id_purchase, User user2, General_Ledeger general_Ledeger, Contact contact,Set<Item> items,
-            Date dateDemande, Date dateRecu, Integer quantite, String purchase_type, Float somme, String dsecription,
-            String typePayementPurchase, Statupurchase statupurchase) {
+            Date dateDemande, Date dateRecu, Integer quantite, Purchase_type purchase_type, Float somme, String dsecription,
+            TypePayementPurchase typePayementPurchase, Statupurchase statupurchase) {
         super();
         this.id_purchase = id_purchase;
         this.user2 = user2;
@@ -292,7 +296,7 @@ public class Purchase implements Serializable {
     }
 
     public Purchase(Contact contact,Set<Item> items, Date dateDemande, Date dateRecu, Integer quantite,
-            String purchase_type,Float somme, String dsecription, String typePayementPurchase, Product product
+            Purchase_type purchase_type,Float somme, String dsecription, TypePayementPurchase typePayementPurchase, Product product
            ) {
         super();
         this.contact = contact;
@@ -310,7 +314,7 @@ public class Purchase implements Serializable {
     }
 /////////////
     public Purchase(Contact contact, Set<Item> items, Date dateDemande, Date dateRecu, Integer quantite,
-            String purchase_type, Float somme, String dsecription, String typePayementPurchase, Product product,
+            Purchase_type purchase_type, Float somme, String dsecription, TypePayementPurchase typePayementPurchase, Product product,
             Statupurchase statupurchase) {
         super();
         this.contact = contact;
@@ -327,7 +331,7 @@ public class Purchase implements Serializable {
         this.statupurchase = statupurchase;
     }
 
-    public Purchase(String dsecription, String typePayementPurchase) {
+    public Purchase(String dsecription, TypePayementPurchase typePayementPurchase) {
         super();
         Dsecription = dsecription;
         this.typePayementPurchase = typePayementPurchase;

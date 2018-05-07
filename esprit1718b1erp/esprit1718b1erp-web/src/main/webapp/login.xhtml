@@ -1,29 +1,59 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
- xmlns:h="http://java.sun.com/jsf/html"
- xmlns:f="http://java.sun.com/jsf/core"
- xmlns:ui="http://java.sun.com/jsf/facelets"
- template="/template/template.xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
 
- <ui:define name="pageTitle">
-				LOGIN PAGE
-			</ui:define>
- <ui:define name="pageContent">
+<h:head>
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputStylesheet library="font-awesome"
+		name="css/font-awesome.css" />
+	<h:outputStylesheet library="css" name="animate.css" />
+	<h:outputStylesheet library="css" name="style.css" />
 
-  <div class="centredZone">
-   <br />
-   <h2>LOGIN</h2>
-   <br /> <br />
-   <h:form>
-    <h:panelGrid columns="2" styleClass="centredForm">
-     <h:outputText value="LOGIN:" />
-     <h:inputText value="#{identity.user.login}" />
-     <h:outputText value="PASSWORD:" />
-     <h:inputSecret value="#{identity.user.password}" />
-     <h:commandButton action="#{identity.doLogin()}" value="SUBMIT" />
-     <h:messages styleClass="error" />
-    </h:panelGrid>
-   </h:form>
-  </div>
+</h:head>
 
- </ui:define>
-</ui:composition>
+<body class="gray-bg">
+	<div class="middle-box text-center loginscreen animated fadeInDown">
+		<div>
+			<div>
+
+				<!-- 				<h1 class="logo-name">WiiiiWou</h1> -->
+
+			</div>
+			<h3>Welcome to ERP Solutions</h3>
+			<p>
+				Perfectly designed and precisely prepared admin theme with over 50
+				pages with extra new web app views.
+				<!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
+			</p>
+			<p>Login in. To see it in action.</p>
+			<h:form styleClass="m-t">
+				<div class="form-group">
+					<h:inputText styleClass="form-control"
+						value="#{identity.user.login}" />
+				</div>
+				<div class="form-group">
+					<h:inputSecret styleClass="form-control"
+						value="#{identity.user.password}" />
+				</div>
+				<h:commandButton styleClass="btn btn-primary block full-width m-b"
+					action="#{identity.doLogin()}" value="SUBMIT" />
+				<h:messages styleClass="error" />
+			</h:form>
+			<p class="m-t">
+				<small>WiWTeam</small>
+			</p>
+		</div>
+	</div>
+
+	<!-- Mainly scripts -->
+	<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+	<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+
+
+</body>
+
+
+<!-- Mirrored from webapplayers.com/inspinia_admin-v2.0/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Apr 2015 10:51:52 GMT -->
+</html>

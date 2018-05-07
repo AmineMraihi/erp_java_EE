@@ -51,7 +51,6 @@ public class Campaign implements Serializable {
     private User responsable ;
     
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
     private List<Contact> participants = new ArrayList<>();
     
     private float budget;

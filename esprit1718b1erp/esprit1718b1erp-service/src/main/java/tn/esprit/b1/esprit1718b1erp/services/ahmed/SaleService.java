@@ -61,7 +61,7 @@ public class SaleService extends GenericDAO<Sale> implements SaleServiceRemote, 
         Double s = (double) 0;
         try {
             Query query = entityManager.createQuery(
-                    "SELECT SUM(u.Somme_products) FROM Sale u WHERE MONTH(u.dateSale)=:l and u.contact=:p GROUP BY u.contact");
+                    "SELECT ROUND (SUM(u.Somme_products),0) FROM Sale u WHERE MONTH(u.dateSale)=:l and u.contact=:p GROUP BY u.contact");
             query.setParameter("l", i);
             query.setParameter("p", c);
             s = (Double) query.getSingleResult();

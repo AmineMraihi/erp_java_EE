@@ -295,7 +295,7 @@ public class AgendaController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       
+
         try {
             ctx = new InitialContext();
             projectServiceRemote = (ProjectServiceRemote) ctx.lookup(jndiNameProject);
@@ -939,6 +939,7 @@ public class AgendaController implements Initializable {
 
                 int row = getTableRow().getIndex();
                 tablePersons.getSelectionModel().select(row);
+
                 // aksiKlikTableData(null);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are You Sure to Remove participant ?");
                 alert.initStyle(StageStyle.UTILITY);

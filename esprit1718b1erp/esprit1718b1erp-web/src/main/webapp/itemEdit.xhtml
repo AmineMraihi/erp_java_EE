@@ -1,0 +1,289 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="pageCSS">
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+		<h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+		<h:outputStylesheet library="css"
+			name="plugins/steps/jquery.steps.css" />
+		<h:outputStylesheet library="css" name="animate.css" />
+		<h:outputStylesheet library="css" name="style.css" />
+
+	</ui:define>
+
+	<ui:define name="titleHere">
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-4">
+				<h2>Put your title here</h2>
+				<ol class="breadcrumb">
+					<li><a href="home.jsf">home</a></li>
+					<li class="active"><strong>item management</strong></li>
+				</ol>
+			</div>
+			<div class="col-sm-8">
+				<div class="title-action">
+					<a href="itemDisplay.jsf" class="btn btn-primary">View All
+						items </a>
+				</div>
+			</div>
+		</div>
+
+		<!--	here -->
+		<br />
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox">
+					<div class="ibox-title">
+						<h5>Item Management</h5>
+					</div>
+					<div class="ibox-content">
+						<h2>Add item</h2>
+						<p>please complete the wizard to add item</p>
+
+						<h:form id="form" class="wizard-big">
+							<h1>info</h1>
+							<fieldset>
+								<h2>General information</h2>
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>name *</label>
+											<h:inputText value="#{itemBean.itemDetails.name}"
+												styleClass="form-control" />
+										</div>
+										<div class="form-group">
+											<label>Quantity *</label>
+											<h:inputText value="#{itemBean.itemDetails.quantity}"
+												styleClass="form-control " />
+										</div>
+										<div class="form-group">
+											<label>Category *</label>
+											<h:selectOneMenu styleClass="form-control"
+												value="#{itemBean.categoryId}">
+												<f:selectItem
+													itemLabel="#{itemBean.itemDetails.category.name}"
+													itemValue="#{itemBean.itemDetails.category.id}" />
+												<f:selectItems value="#{itemBean.categories}" var="category"
+													itemValue="#{category.id}" itemLabel="#{category.name}" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+									<div class="col-lg-6">
+
+										<div class="form-group">
+											<label>Description *</label>
+											<h:inputTextarea style="margin: 0px -12.0469px 0px 0px; height: 107px; width: 471px;" value="#{itemBean.itemDetails.description}"
+												styleClass="form-control" />
+										</div>
+										
+
+										<div class="form-group">
+											<label>Supplier *</label>
+											<h:selectOneMenu styleClass="form-control"
+												value="#{itemBean.supplierId}">
+												<f:selectItem
+													itemLabel="#{itemBean.itemDetails.supplier.name}"
+													itemValue="#{itemBean.itemDetails.supplier.id}" />
+												<f:selectItems value="#{itemBean.suppliers}" var="supplier"
+													itemValue="#{supplier.id}" itemLabel="#{supplier.name}" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+								</div>
+
+							</fieldset>
+							<h1>Specs</h1>
+							<fieldset>
+								<h2>Prices, Specs and Info</h2>
+								<div class="row">
+									<div jsf:id="helloworld" class="col-lg-6">
+										<div class="form-group">
+											<label>Depot *</label>
+											<h:selectOneMenu styleClass="form-control"
+												value="#{itemBean.itemDetails.tier.row.depot.id}">
+
+												<f:selectItem itemLabel="select depot" itemValue="" />
+												<f:selectItems value="#{itemBean.depots}" var="depot"
+													itemValue="#{depot.id}" itemLabel="#{depot.name}" />
+												<f:ajax listener="#{itemBean.onDepotChanged()}"
+													render="problemDeddddscPanels1 problemDeddddscPanels2" />
+											</h:selectOneMenu>
+										</div>
+										<div jsf:id="problemDeddddscPanels1" class="form-group">
+											<h:panelGroup>
+												<label>Row *</label>
+												<h:selectOneMenu styleClass="form-control"
+													value="#{itemBean.itemDetails.tier.row.id}">
+													<f:selectItem itemLabel="select row" itemValue="" />
+													<f:selectItems
+														value="#{itemBean.trys(itemBean.itemDetails.tier.row.depot.id)}"
+														var="row" itemValue="#{row.id}" itemLabel="#{row.abcRows}" />
+													<f:ajax listener="#{itemBean.onRowChanged()}"
+														render=" problemDeddddscPanels2" />
+												</h:selectOneMenu>
+											</h:panelGroup>
+										</div>
+										<div jsf:id="problemDeddddscPanels2" class="form-group">
+											<h:panelGroup>
+												<label>Tier *</label>
+												<h:selectOneMenu styleClass="form-control"
+													value="#{itemBean.itemDetails.tier.id}">
+													<f:selectItem itemLabel="select tier" itemValue="" />
+													<f:selectItems
+														value="#{itemBean.tryssForAdd(itemBean.itemDetails.tier.row.id)}"
+														var="tier" itemValue="#{tier.id}"
+														itemLabel="#{tier.tierEnum}" />
+												</h:selectOneMenu>
+											</h:panelGroup>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Barcode *</label>
+											<h:inputText value="#{itemBean.itemDetails.barcode}"
+												styleClass="form-control " />
+										</div>
+										<div class="form-group">
+											<label>Buying Price *</label>
+											<h:inputText value="#{itemBean.itemDetails.byingPrice}"
+												styleClass="form-control " />
+										</div>
+										<div class="form-group">
+											<label>Selling Price *</label>
+											<h:inputText value="#{itemBean.itemDetails.sellingPrice}"
+												styleClass="form-control " />
+										</div>
+
+									</div>
+								</div>
+							</fieldset>
+
+							<h1>Finish</h1>
+							<fieldset>
+								<div class="text-center" style="margin-top: 120px">
+									<h:commandButton action="#{itemBean.updateItem()}"
+										styleClass="fa fa-sign-in big-icon" />
+								</div>
+							</fieldset>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 	/here -->
+	</ui:define>
+	<ui:define name="pageJS">
+		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+		<!-- Custom and plugin javascript -->
+
+		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+		<!-- Steps -->
+		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+		<!-- Jquery Validate -->
+		<h:outputScript library="js"
+			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+		<!-- Chosen -->
+		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+		<!-- iCheck -->
+		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+		<!-- MENU -->
+		<h:outputScript library="js"
+			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+		<h:outputScript>
+		// <![CDATA[
+		 $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+		</h:outputScript>
+	</ui:define>
+</ui:composition>

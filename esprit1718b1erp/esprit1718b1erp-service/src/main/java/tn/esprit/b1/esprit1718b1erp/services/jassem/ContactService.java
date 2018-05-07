@@ -95,4 +95,12 @@ public class ContactService extends GenericDAO<Contact> implements ContactServic
         return particulars;
     }
 
+    @Override
+    public List<Entreprise> findAllCompanies() {
+        List<Entreprise> companies = new ArrayList<Entreprise>();
+
+        companies.addAll(entityManager.createQuery("SELECT e FROM Entreprise e", Entreprise.class).getResultList());
+        return companies;
+    }
+
 }

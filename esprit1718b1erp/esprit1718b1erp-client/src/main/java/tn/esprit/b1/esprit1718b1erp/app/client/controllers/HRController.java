@@ -189,6 +189,11 @@ public class HRController implements Initializable {
     private Button AddEmployee;
     @FXML
     private Label helmi;
+    @FXML
+    private TextField OldSalaryInput;
+
+    @FXML
+    private TextField NewSalaryInput;
     
     
     Config2 con = new Config2();
@@ -804,6 +809,16 @@ public class HRController implements Initializable {
                 
                 
             });
+            ListEmployees.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent event) {
+                    // TODO Auto-generated method stub
+                    OldSalaryInput.setText(String.valueOf(ListEmployees.getSelectionModel().getSelectedItem().getSalary()));
+                    
+                }
+                
+            });
             try {
                 ListSupplyChainManager.setItems(findResponsable(UserFunction.SUPPLY_CHAIN_MANAGER));
                 ListAccountant.setItems(findResponsable(UserFunction.ACCOUNTANT));
@@ -920,7 +935,22 @@ public class HRController implements Initializable {
 
         }
     }
-    
+    @FXML
+    void PromoteEmployee(ActionEvent event) throws NamingException {
+        initialContext = new InitialContext();
+        userproxy = (UserServiceRemote) initialContext.lookup(jndiNameUser);
+        if(ListEmployees.getSelectionModel().getSelectedItem()==null){
+            Config2.dialog(Alert.AlertType.INFORMATION, "Please select an employee to promote..");
+        } else {
+            if(Float.parseFloat(OldSalaryInput.getText())>Float.parseFloat(NewSalaryInput.getText())){
+                Config2.dialog(Alert.AlertType.INFORMATION, "please set a reasonable salary..");
+            } else {
+                ListEmployees.getSelectionModel().getSelectedItem().setSalary(Float.parseFloat(NewSalaryInput.getText()));
+                userproxy.update(ListEmployees.getSelectionModel().getSelectedItem());
+                Config2.dialog(Alert.AlertType.INFORMATION, "Data saved successfully..");
+            }
+        }
+    }
     @FXML
     void CloseHtml(ActionEvent event) {
         htmlPane.setOpacity(0);

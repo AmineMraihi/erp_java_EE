@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import tn.esprit.b1.esprit1718b1erp.entities.Entreprise;
+import tn.esprit.b1.esprit1718b1erp.entities.Product;
 import tn.esprit.b1.esprit1718b1erp.entities.Project;
 import tn.esprit.b1.esprit1718b1erp.entities.StateProject;
 import tn.esprit.b1.esprit1718b1erp.entities.User;
@@ -18,7 +19,7 @@ import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
 /**
  * Session Bean implementation class ProjectService
  */
-@Stateful
+@Stateless
 @LocalBean
 public class ProjectService extends GenericDAO<Project> implements ProjectServiceRemote, ProjectServiceLocal {
 
@@ -76,5 +77,50 @@ public class ProjectService extends GenericDAO<Project> implements ProjectServic
         projects.addAll(entityManager.createQuery("SELECT p.projectName FROM Project p", String.class).getResultList());
         return projects;
     }
+
+    @Override
+    public Long countProjects() {
+        TypedQuery<Long> query = entityManager
+                .createQuery("select COUNT(m) from Project m", Long.class);
+        return query.getSingleResult();        
+    }
+
+    @Override
+    public Long countProgressProjects() {
+        TypedQuery<Long> query = entityManager
+                .createQuery("select COUNT(m) from Project m where m.etat=:etat", Long.class);
+        query.setParameter("etat", StateProject.IN_PROGRESS);
+        return query.getSingleResult();       
+    }
+
+    @Override
+    public Long countFinishedProjects() {
+        TypedQuery<Long> query = entityManager
+                .createQuery("select COUNT(m) from Project m where m.etat=:etat", Long.class);
+        query.setParameter("etat", StateProject.FINISHED);
+        return query.getSingleResult();  
+    }
+
+    @Override
+    public Long countInterruptedProjects() {
+        TypedQuery<Long> query = entityManager
+                .createQuery("select COUNT(m) from Project m where m.etat=:etat", Long.class);
+        query.setParameter("etat", StateProject.INTERRUPTED);
+        return query.getSingleResult();  
+    }
+
+    @Override
+    public List<Long> numberProjectsByMonth() {
+        TypedQuery<Long> query = entityManager
+                .createQuery("select COUNT(m) from Project m group by MONTH(m.creationDate)", Long.class);
+        
+        return query.getResultList();
+    }
+
+    @Override
+    public Product getProductById(int id) {
+        return entityManager.find(Product.class, id);
+    }
+    
 
 }

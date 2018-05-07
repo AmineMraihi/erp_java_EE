@@ -2,6 +2,7 @@ package tn.esprit.b1.esprit1718b1erp.services.amine;
 
 import java.util.List;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
  * Session Bean implementation class CategoryService
  */
 @Stateless
+@LocalBean
 public class CategoryService extends GenericDAO<Category> implements CategoryServiceRemote, CategoryServiceLocal {
 
     @PersistenceContext
