@@ -15,9 +15,49 @@
 	</ui:define>
 
 	<ui:define name="titleHere">
-		<div class="col-lg-4">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="wrapper wrapper-content">
+							<div class="row">
+								<div class="col-lg-4">
 									<div class="ibox float-e-margins">
-										<div class="ibox-title">
+										<div  class="ibox-title">
+											<h5>Finished projects List</h5>
+											<div class="ibox-tools">
+												<span class="label label-warning-light">Select</span>
+											</div>
+										</div>
+										<div class="ibox-content">
+											
+											
+											
+												<div class="feed-activity-list">
+											<ui:repeat var="project" value="#{projectBean.finished}">
+											<h:form>
+													<div class="feed-element">
+														<a href="profile.html" class="pull-left"> <img
+															alt="image" class="img-circle"
+															src="resources/img/profile.jpg" /></a>
+														<div class="media-body ">
+															<small class="pull-right">Responsible : #{project.responsable.name}</small><strong>
+															#{project.projectName}</strong><br /> Started #{project.startDate} <br /> <small
+																class="text-muted">finished the #{project.finDate}</small> <br />
+																<small><a
+														jsf:action="#{projectBean.toFinishedProjectDetails(project.id)}"> view more.. </a>
+														
+														</small>
+														</div>
+													</div>
+													</h:form>									
+											</ui:repeat>
+												</div>
+										</div>
+									</div>
+
+								</div>
+								<div class="col-lg-4">
+									<div class="ibox float-e-margins">
+										<div  class="ibox-title">
 											<h5>In progress projects List</h5>
 											<div class="ibox-tools">
 												<span class="label label-warning-light">Select</span>
@@ -35,9 +75,9 @@
 															alt="image" class="img-circle"
 															src="resources/img/profile.jpg" /></a>
 														<div class="media-body ">
-															<small class="pull-right">#{project.projectName}</small><strong>
-															#{project.responsable.name}</strong> Starts #{project.startDate} <br /> <small
-																class="text-muted">Will finish the #{project.finDate}</small> <br />
+															<small class="pull-right">Responsible : #{project.responsable.name}</small><strong>
+															#{project.projectName}</strong><br /> Started #{project.startDate} <br /> <small
+																class="text-muted">finished the #{project.finDate}</small> <br />
 																<small><a
 														jsf:action="#{projectBean.toProjectDetails(project.id)}"> view more.. </a>
 														
@@ -54,6 +94,50 @@
 									</div>
 
 								</div>
+								<div class="col-lg-4">
+									<div class="ibox float-e-margins">
+										<div  class="ibox-title">
+											<h5>Interrupted projects List</h5>
+											<div class="ibox-tools">
+												<span class="label label-warning-light">Select</span>
+											</div>
+										</div>
+										<div class="ibox-content">
+											
+											
+											
+												<div class="feed-activity-list">
+											<ui:repeat var="project" value="#{projectBean.interrupted}">
+											<h:form>
+													<div class="feed-element">
+														<a href="profile.html" class="pull-left"> <img
+															alt="image" class="img-circle"
+															src="resources/img/profile.jpg" /></a>
+														<div class="media-body ">
+															<small class="pull-right">Responsible : #{project.responsable.name}</small><strong>
+															#{project.projectName}</strong><br /> Started #{project.startDate} <br /> <small
+																class="text-muted">finished the #{project.finDate}</small> <br />
+																<small><a
+														jsf:action="#{projectBean.toInterruptedProjectDetails(project.id)}"> view more.. </a>
+														
+														</small>
+														</div>
+													</div>
+													</h:form>									
+											</ui:repeat>
+												</div>
+											
+												
+											
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
 
 		<!-- 	/here -->
 	</ui:define>

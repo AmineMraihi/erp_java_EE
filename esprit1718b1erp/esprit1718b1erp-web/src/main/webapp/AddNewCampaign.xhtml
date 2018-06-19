@@ -1,0 +1,281 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns:f="http://java.sun.com/jsf/core"
+ xmlns:m="http://code.google.com/p/gmaps4jsf/"
+ xmlns:p="http://primefaces.org/ui"
+ xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+ xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+ <ui:define name="pageCSS">
+  <h:outputStylesheet library="css" name="bootstrap.min.css" />
+  <h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+  <h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+  <h:outputStylesheet library="css"
+   name="plugins/steps/jquery.steps.css" />
+  <h:outputStylesheet library="css" name="animate.css" />
+  <h:outputStylesheet library="css" name="style.css" />
+  <style>
+p {
+ text-align: center;
+ font-size: 60px;
+ margin-top: 0px;
+}
+</style>
+  <script
+   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc3QZUxX-9y1OPFwmeUyMUQnMXRmt0h2c"></script>
+  <script>
+   function checkInput(s) {
+	 //  var textInput = document.getElementById(textbox).value;
+
+
+  if (s>1000-#{campaignBean.sumBudgetOfCampaigns}) {
+   var b = 1000-#{campaignBean.sumBudgetOfCampaigns};
+   var a = "S'il vous plait choisissez un budget inférieur a " + b + " Million dinars";
+   
+	  
+	  alert(a); 
+}
+
+	   
+	  }
+
+   </script>
+
+
+ </ui:define>
+
+ <ui:define name="titleHere">
+  <h:form>
+   <div class="col-lg-6">
+
+    <div class="ibox float-e-margins">
+     <div class="ibox-title">
+      <h5>Add a new Campaign</h5>
+      <div class="ibox-tools">
+       <a class="collapse-link"> <i class="fa fa-chevron-up"></i>
+       </a> <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <i class="fa fa-wrench"></i>
+       </a> <a class="close-link"> <i class="fa fa-times"></i>
+       </a>
+      </div>
+     </div>
+     <div class="ibox-content no-padding">
+      <ul class="list-group">
+
+       <li class="list-group-item"><label>Campaign's name *</label>
+        <h:inputText value="#{campaignBean.nameCampaign}"
+         styleClass="form-control required" /></li>
+       <li class="list-group-item"><label>Start Date *</label> <h:inputText
+         value="#{campaignBean.creationDate}"
+         styleClass="form-control required">
+         <f:convertDateTime pattern="dd-MM-yyyy" />
+        </h:inputText></li>
+       <li class="list-group-item"><label>Finishing Date
+         (estimated)*</label> <h:inputText value="#{campaignBean.endingDate}"
+         styleClass="form-control required">
+         <f:convertDateTime pattern="dd-MM-yyyy" />
+        </h:inputText></li>
+       <li class="list-group-item"><label>Product *</label> <h:selectOneMenu
+         value="#{campaignBean.id_product}">
+         <f:selectItem itemLabel="select product" itemValue="" />
+         <f:selectItems value="#{productBean.products}" var="product"
+          itemValue="#{product.id_Product}"
+          itemLabel="#{product.nomProduit}" />
+        </h:selectOneMenu></li>
+       <li class="list-group-item"><label>Budget *</label> <h:inputText
+         value="#{campaignBean.budget}"
+         styleClass="form-control required"
+         onchange="checkInput(this.value);" /></li>
+       <li class="list-group-item "><label>Description *</label> <h:inputTextarea
+         value="#{campaignBean.description}" styleClass="form-control" />
+       </li>
+
+       <li class="list-group-item">
+        <div align="center">
+         <h:commandButton value="add Campaign"
+          action="#{campaignBean.addCampaign()}"
+          styleClass="btn btn-primary" id="budgetInput" />
+          <h:message for="budgetInput"/>
+        </div>
+       </li>
+
+
+      </ul>
+
+     </div>
+    </div>
+   </div>
+   <div class="col-lg-6">
+
+    <div class="ibox float-e-margins">
+     <div class="ibox-title">
+      <h5>Sale Opportunities List</h5>
+      <div class="ibox-tools">
+       <span class="label label-warning-light">Select</span>
+      </div>
+     </div>
+     <div class="ibox-content">
+
+
+
+      <div class="feed-activity-list">
+       <ui:repeat var="saleOpportunity"
+        value="#{saleOpportunityBean.saleOpportunities}">
+        <div class="feed-element">
+         <a href="profile.html" class="pull-left"> <img alt="image"
+          class="img-circle" src="resources/img/sale.png" /></a>
+         <div class="media-body ">
+          <small class="pull-right">#{saleOpportunity.nameSaleOpportunity}
+          </small> <input type="radio" name="name_for_this_element"
+           value="#{campaignBean.saleOpportunity}" /> <strong>
+           #{saleOpportunity.creationDate}</strong> Product :
+          #{saleOpportunity.produit.nomProduit} <br /> <small
+           class="text-muted">Located in
+           #{saleOpportunity.region}</small>
+         </div>
+        </div>
+       </ui:repeat>
+      </div>
+
+
+
+     </div>
+    </div>
+
+   </div>
+  </h:form>
+
+  <p:growl id="messages" showDetail="true" />
+
+
+  <p:dialog widgetVar="dlg" showEffect="fade">
+   <h:form prependId="false">
+    <h:panelGrid columns="2">
+     <h:outputLabel for="title" value="Title:" />
+     <p:inputText id="title" value="#{addMarkersView.title}" />
+
+     <f:facet name="footer">
+      <p:commandButton value="Add"
+       actionListener="#{addMarkersView.addMarker}" update=":messages"
+       oncomplete="markerAddComplete()" />
+      <p:commandButton value="Cancel" onclick="return cancel()" />
+     </f:facet>
+    </h:panelGrid>
+
+    <h:inputHidden id="lat" value="#{addMarkersView.lat}" />
+    <h:inputHidden id="lng" value="#{addMarkersView.lng}" />
+   </h:form>
+  </p:dialog>
+
+
+
+ </ui:define>
+ <ui:define name="pageJS">
+  <h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+  <h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+  <h:outputScript library="js"
+   name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+  <h:outputScript library="js"
+   name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+
+
+  <!-- Custom and plugin javascript -->
+
+  <h:outputScript library="js" name="inspinia.js"></h:outputScript>
+  <h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
+
+
+  <!-- Steps -->
+  <h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+  <!-- Jquery Validate -->
+  <h:outputScript library="js"
+   name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+
+
+  <!-- Chosen -->
+  <h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+
+
+  <!-- iCheck -->
+  <h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
+
+  <!-- MENU -->
+  <h:outputScript library="js"
+   name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+  <h:outputScript>
+        // <![CDATA[
+         $(document).ready(function(){
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                enableFinishButton: false,
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex)
+                    {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18)
+                    {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex)
+                    {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex)
+                {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
+                    {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3)
+                    {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                },
+                onFinished: function (event, currentIndex)
+                {
+                }
+            }).validate({
+                        errorPlacement: function (error, element)
+                        {
+                            element.before(error);
+                        },
+                        rules: {
+                            confirm: {
+                                equalTo: "#password"
+                            }
+                        }
+                    });
+       });
+        // ]]>
+  </h:outputScript>
+ </ui:define>
+</ui:composition>

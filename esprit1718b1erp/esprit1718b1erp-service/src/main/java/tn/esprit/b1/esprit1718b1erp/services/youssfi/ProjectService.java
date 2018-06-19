@@ -1,14 +1,21 @@
 package tn.esprit.b1.esprit1718b1erp.services.youssfi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import tn.esprit.b1.esprit1718b1erp.entities.Contact;
 import tn.esprit.b1.esprit1718b1erp.entities.Entreprise;
 import tn.esprit.b1.esprit1718b1erp.entities.Product;
 import tn.esprit.b1.esprit1718b1erp.entities.Project;
@@ -116,11 +123,69 @@ public class ProjectService extends GenericDAO<Project> implements ProjectServic
         
         return query.getResultList();
     }
+    @Override
+    public Long ProjectPerMonth(Integer i) {
+        Long s = (long) 0;
+        try {
+            Query query = entityManager.createQuery(
+                    "select COUNT(m) from Project m where MONTH(m.startDate)=:l ");
+            query.setParameter("l", i);
+            s = (Long) query.getSingleResult();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return s;
+    }
+    @Override
+    public Map<String, Long> projectsBymonth(){
+        TypedQuery<Long> query = entityManager
+                .createQuery("select COUNT(m) from Project m group by MONTH(m.creationDate)", Long.class);
+        List<String> names = Arrays.asList("January","February","Mars","April");
+        List<Long> things = query.getResultList();
+        Map<String,Long> map = new HashMap<String, Long>();  // ordered
+
+        for (int i=0; i<names.size(); i++) {
+           
+                map.put(names.get(i), things.get(i));
+           
+        }
+
+        System.out.println(map);
+        return map;
+      }
+    
     @Override
     public Product getProductById(int id) {
         return entityManager.find(Product.class, id);
     }
-    
+
+    @Override
+    public User getUserById(long id) {
+        return entityManager.find(User.class, id);
+    }
+
+    @Override
+    public Date ClosestProject() {
+        TypedQuery<Date> query = entityManager
+                .createQuery("select MIN(m.finDate) from Project m where m.etat=:etat", Date.class);
+        query.setParameter("etat", StateProject.IN_PROGRESS);
+        return query.getSingleResult();  
+        
+    }
+    @Override
+    public Project findByDate(Date date){
+      return (Project) entityManager
+                .createNativeQuery("select * from project  where finDate=? LIMIT 1",Project.class).setParameter(1, date).getSingleResult();
+    }
+
+    @Override
+    public Double SommeBudgets() {
+        TypedQuery<Double> query = entityManager
+                .createQuery("select SUM(m.bugdet) from Project m", Double.class);
+        return query.getSingleResult();
+        
+    }
 
 }

@@ -1,109 +1,155 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:m="http://code.google.com/p/gmaps4jsf/"
-     xmlns:p="http://primefaces.org/ui"
-    xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
-    xmlns:jsf="http://xmlns.jcp.org/jsf">
+ xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns:f="http://java.sun.com/jsf/core"
+ xmlns:m="http://code.google.com/p/gmaps4jsf/"
+ xmlns:p="http://primefaces.org/ui"
+ xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
+ xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-    <ui:define name="pageCSS">
-        <h:outputStylesheet library="css" name="bootstrap.min.css" />
-        <h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
-        <h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
-        <h:outputStylesheet library="css"
-            name="plugins/steps/jquery.steps.css" />
-        <h:outputStylesheet library="css" name="animate.css" />
-        <h:outputStylesheet library="css" name="style.css" />
-<style>
+ <ui:define name="pageCSS">
+  <h:outputStylesheet library="css" name="bootstrap.min.css" />
+  <h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+  <h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
+  <h:outputStylesheet library="css"
+   name="plugins/steps/jquery.steps.css" />
+  <h:outputStylesheet library="css" name="animate.css" />
+  <h:outputStylesheet library="css" name="style.css" />
+  <style>
 p {
-  text-align: center;
-  font-size: 60px;
-  margin-top:0px;
+ text-align: center;
+ font-size: 60px;
+ margin-top: 0px;
 }
-
 </style>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc3QZUxX-9y1OPFwmeUyMUQnMXRmt0h2c"></script>
+  <script
+   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc3QZUxX-9y1OPFwmeUyMUQnMXRmt0h2c"></script>
 
-       
-    </ui:define>
 
-    <ui:define name="titleHere">
-    <div class="col-lg-4">
-    
-                                    <div class="ibox float-e-margins">
-                                        <div class="ibox-title">
-                                            <h5>Sale Opportunities List</h5>
-                                            <div class="ibox-tools">
-                                                <span class="label label-warning-light">Select</span>
-                                            </div>
-                                        </div>
-                                        <div class="ibox-content">
-                                            
-                                            
-                                            
-                                                <div class="feed-activity-list">
-                                            <ui:repeat var="saleOpportunity" value="#{saleOpportunityBean.saleOpportunities}">
-                                                    <div class="feed-element">
-                                                        <a href="profile.html" class="pull-left"> <img
-                                                            alt="image" class="img-circle"
-                                                            src="resources/img/sale.png" /></a>
-                                                        <div class="media-body ">
-                                                            <small class="pull-right">#{saleOpportunity.nameSaleOpportunity} </small><strong>
-                                                            #{saleOpportunity.creationDate}</strong> Product : #{saleOpportunity.produit.nomProduit} <br /> <small
-                                                                class="text-muted">Located in #{saleOpportunity.region}</small>
-                                                        </div>
-                                                    </div>                                  
-                                            </ui:repeat>
-                                                </div>
-                                            
-                                                
-                                            
-                                        </div>
-                                    </div>
+ </ui:define>
 
-                                </div>
-                                      
-    
-    <p:growl id="messages" showDetail="true" />
- <div style="margin-left:auto; margin-right:0;width: 50%;height: 400px;position: relative;overflow: hidden;">
-<p:gmap id="gmap" center="47.78680171751627,-122.30632082519531" zoom="13" type="ROADMAP" style="width:100%;height:400px" model="#{infoWindowView.advancedModel}">
-        <p:ajax event="overlaySelect" listener="#{infoWindowView.onMarkerSelect}" />
-        <p:gmapInfoWindow id="infoWindow">
-            <p:outputPanel style="text-align: center; display: block; margin: auto">
- 
-                    
-                  
-                    <h:outputText value="#{infoWindowView.marker.title}" />
- 
-            </p:outputPanel>
-        </p:gmapInfoWindow>
-    </p:gmap>
- 
- </div>
- 
-<p:dialog widgetVar="dlg" showEffect="fade">
-    <h:form prependId="false">
-        <h:panelGrid columns="2">
-            <h:outputLabel for="title" value="Title:" />
-            <p:inputText id="title" value="#{addMarkersView.title}" />
- 
-            <f:facet name="footer">
-                <p:commandButton value="Add" actionListener="#{addMarkersView.addMarker}" update=":messages" oncomplete="markerAddComplete()" />
-                <p:commandButton value="Cancel" onclick="return cancel()" />
-            </f:facet>
-        </h:panelGrid>
- 
-        <h:inputHidden id="lat" value="#{addMarkersView.lat}" />
-        <h:inputHidden id="lng" value="#{addMarkersView.lng}" />
-    </h:form>
-</p:dialog>
-<h:form>
-    <p:growl id="growl" life="3000" />
- 
-    
-</h:form>
- 
-<script type="text/javascript">
+ <ui:define name="titleHere">
+  <div class="col-lg-6">
+   <h:form>
+    <p:dataTable id="tbl" var="saleOpportunity"
+     value="#{saleOpportunityBean.saleOpportunities}"
+     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+     paginator="true" rows="10" style="margin-bottom:20px">
+
+     <f:facet name="{Exporters}">
+      <h:commandLink>
+       <p:graphicImage value="resources/img/excel.png" width="24" />
+       <p:dataExporter type="xls" target="tbl" fileName="Sales" />
+      </h:commandLink>
+      <h:outputText value="&#160;" />
+      <h:commandLink>
+       <p:graphicImage value="resources/img/pdf.png" width="24" />
+       <p:dataExporter type="pdf" target="tbl" fileName="Sales" />
+      </h:commandLink>
+      <h:outputText value="&#160;" />
+      <h:commandLink>
+       <p:graphicImage value="resources/img/csv.png" width="24" />
+       <p:dataExporter type="csv" target="tbl" fileName="Sales" />
+      </h:commandLink>
+      <h:outputText value="&#160;" />
+      <h:commandLink>
+       <p:graphicImage value="resources/img/xml.png" width="24" />
+       <p:dataExporter type="xml" target="tbl" fileName="Sales" />
+      </h:commandLink>
+     </f:facet>
+
+     <p:column>
+      <f:facet name="header">
+       <h:outputText value="Name" />
+      </f:facet>
+      <h:outputText value="#{saleOpportunity.nameSaleOpportunity}" />
+     </p:column>
+
+     <p:column>
+      <f:facet name="header">
+       <h:outputText value="Date" />
+      </f:facet>
+      <h:outputText value="#{saleOpportunity.creationDate}" />
+     </p:column>
+
+     <p:column>
+      <f:facet name="header">
+       <h:outputText value="Product" />
+      </f:facet>
+      <h:outputText value="#{saleOpportunity.produit.nomProduit}" />
+     </p:column>
+
+     <p:column>
+      <f:facet name="header">
+       <h:outputText value="Region" />
+      </f:facet>
+      <h:outputText value="#{saleOpportunity.region}" />
+     </p:column>
+
+     <p:column>
+      <f:facet name="header">
+       <h:outputText value="Delete" />
+      </f:facet>
+      <h:form id="form">
+       <a
+        jsf:action="#{saleOpportunityBean.deleteSaleOp(saleOpportunity)}"
+        jsf:styleClass="btn btn-white btn-sm"> <i
+        class="fa fa-trash"></i> Delete
+       </a>
+      </h:form>
+     </p:column>
+    </p:dataTable>
+
+   </h:form>
+  </div>
+
+
+  <p:growl id="messages" showDetail="true" />
+  <div
+   style="margin-left: auto; margin-right: 0; width: 50%; height: 400px; position: relative; overflow: hidden;">
+   <p:gmap id="gmap" center="47.78680171751627,-122.30632082519531"
+    zoom="2" type="ROADMAP" style="width:100%;height:400px"
+    model="#{infoWindowView.advancedModel}">
+    <p:ajax event="overlaySelect"
+     listener="#{infoWindowView.onMarkerSelect}" />
+    <p:gmapInfoWindow id="infoWindow">
+     <p:outputPanel
+      style="text-align: center; display: block; margin: auto">
+
+
+
+      <h:outputText value="#{infoWindowView.marker.title}" />
+
+     </p:outputPanel>
+    </p:gmapInfoWindow>
+   </p:gmap>
+
+  </div>
+
+  <p:dialog widgetVar="dlg" showEffect="fade">
+   <h:form prependId="false">
+    <h:panelGrid columns="2">
+     <h:outputLabel for="title" value="Title:" />
+     <p:inputText id="title" value="#{addMarkersView.title}" />
+
+     <f:facet name="footer">
+      <p:commandButton value="Add"
+       actionListener="#{addMarkersView.addMarker}" update=":messages"
+       oncomplete="markerAddComplete()" />
+      <p:commandButton value="Cancel" onclick="return cancel()" />
+     </f:facet>
+    </h:panelGrid>
+
+    <h:inputHidden id="lat" value="#{addMarkersView.lat}" />
+    <h:inputHidden id="lng" value="#{addMarkersView.lng}" />
+   </h:form>
+  </p:dialog>
+  <h:form>
+   <p:growl id="growl" life="3000" />
+
+
+  </h:form>
+
+  <script type="text/javascript">
     var currentMarker = null;
  
     function handlePointClick(event) {
@@ -138,44 +184,44 @@ p {
         return false;
     }
 </script>
-    </ui:define>
-    <ui:define name="pageJS">
-        <h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
-        <h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
-        <h:outputScript library="js"
-            name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
-        <h:outputScript library="js"
-            name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
+ </ui:define>
+ <ui:define name="pageJS">
+  <h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
+  <h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
+  <h:outputScript library="js"
+   name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+  <h:outputScript library="js"
+   name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
 
 
-        <!-- Custom and plugin javascript -->
+  <!-- Custom and plugin javascript -->
 
-        <h:outputScript library="js" name="inspinia.js"></h:outputScript>
-        <h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
-
-
-        <!-- Steps -->
-        <h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
-
-        <!-- Jquery Validate -->
-        <h:outputScript library="js"
-            name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+  <h:outputScript library="js" name="inspinia.js"></h:outputScript>
+  <h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
 
 
-        <!-- Chosen -->
-        <h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
+  <!-- Steps -->
+  <h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+
+  <!-- Jquery Validate -->
+  <h:outputScript library="js"
+   name="plugins/validate/jquery.validate.min.js"></h:outputScript>
 
 
-        <!-- iCheck -->
-        <h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
-
-        <!-- MENU -->
-        <h:outputScript library="js"
-            name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+  <!-- Chosen -->
+  <h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
 
 
+  <!-- iCheck -->
+  <h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
 
-        <h:outputScript>
+  <!-- MENU -->
+  <h:outputScript library="js"
+   name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+
+
+
+  <h:outputScript>
         // <![CDATA[
          $(document).ready(function(){
             $("#wizard").steps();
@@ -245,6 +291,6 @@ p {
                     });
        });
         // ]]>
-        </h:outputScript>
-    </ui:define>
+  </h:outputScript>
+ </ui:define>
 </ui:composition>

@@ -14,6 +14,7 @@ import javax.faces.bean.ViewScoped;
 import tn.esprit.b1.esprit1718b1erp.entities.Event;
 import tn.esprit.b1.esprit1718b1erp.entities.Meeting;
 import tn.esprit.b1.esprit1718b1erp.entities.Project;
+import tn.esprit.b1.esprit1718b1erp.entities.Schedule;
 import tn.esprit.b1.esprit1718b1erp.services.jassem.ScheduleService;
 import tn.esprit.b1.esprit1718b1erp.services.youssfi.ProjectService;
 
@@ -29,6 +30,7 @@ public class ScheduleBean {
     private String targetDate;
     private Event e;
     private Meeting m;
+    private List<Schedule> schedules;
     @EJB
     ScheduleService scheduleservice;
     @EJB
@@ -54,7 +56,7 @@ public class ScheduleBean {
         this.title=null;
         this.description=null;
         this.budget=null;
-        this.budget=null;
+        this.place=null;
         this.projectId=null;
         this.targetDate=null;
         
@@ -73,7 +75,7 @@ public class ScheduleBean {
         this.title=null;
         this.description=null;
         this.budget=null;
-        this.budget=null;
+        this.place=null;
         this.projectId=null;
         this.targetDate=null;
         
@@ -173,6 +175,14 @@ public class ScheduleBean {
 
     public void setM(Meeting m) {
         this.m = m;
+    }
+
+    public List<Schedule> getSchedules() {
+        return scheduleservice.findAll();
+    }
+
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
     }
     
 }

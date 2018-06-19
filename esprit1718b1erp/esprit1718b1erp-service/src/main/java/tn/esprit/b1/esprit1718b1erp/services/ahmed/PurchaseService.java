@@ -101,7 +101,7 @@ public class PurchaseService extends GenericDAO<Purchase> implements PurchaseSer
         entityManager.remove(entityManager.find(Purchase.class, i));
     }
     
-    
+    @Override
     @SuppressWarnings("unchecked")
     public Map<String, Number> sommetot_purchase() {
         Map<String, Number> results = new HashMap<String, Number>();
@@ -129,5 +129,11 @@ public class PurchaseService extends GenericDAO<Purchase> implements PurchaseSer
         List<Double> result = query.getResultList();
 
         return result;
+    }
+
+    @Override
+    public void updateStatusPurchase(Integer id) {
+        Query query = entityManager.createNativeQuery("UPDATE purchase SET statupurchase ='Paid' WHERE id_purchase=:l"); 
+        query.setParameter("l", id).executeUpdate();        
     }
 }

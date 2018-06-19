@@ -15,6 +15,6 @@ public interface NeedServiceRemote extends IGenericDAO<Needa>{
     Double SommeSalesiPhone8(Integer i);
     Double SommeSalesiPhone8Plus(Integer i);
     Double SommeSalesiPhone7(Integer i);
-    
+    Map<String, Number> Need_somme();
     
 }

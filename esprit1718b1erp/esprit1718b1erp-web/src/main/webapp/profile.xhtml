@@ -20,8 +20,8 @@
 			<div class="col-lg-10">
 				<h2>Profile</h2>
 				<ol class="breadcrumb">
-					<li><a href="index.html">Home</a></li>
-					<li><a>Extra Pages</a></li>
+					<li><a href="home.jsf">Home</a></li>
+					
 					<li class="active"><strong>Profile</strong></li>
 				</ol>
 			</div>
@@ -50,9 +50,9 @@
 									#{contactBean.contactDetails.street}
 								</p>
 								<h5>#{contactBean.contactDetails.role}</h5>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua. Ut enim ad minim veniam, quis nostrud exercitat.</p>
+								<p><strong>mobile: </strong>#{contactBean.contactDetails.mobile}</p>
+								<p><strong>phone: </strong>#{contactBean.contactDetails.phone}</p>
+								<p><strong>Email: </strong>#{contactBean.contactDetails.email}</p>
 								<div class="row m-t-lg">
 									<div class="col-md-4">
 										<span class="bar">5,3,9,6,5,9,7,3,5,2</span>
@@ -73,22 +73,7 @@
 										</h5>
 									</div>
 								</div>
-								<div class="user-button">
-									<div class="row">
-										<div class="col-md-6">
-											<button type="button"
-												class="btn btn-primary btn-sm btn-block">
-												<i class="fa fa-envelope"></i> Send Message
-											</button>
-										</div>
-										<div class="col-md-6">
-											<button type="button"
-												class="btn btn-default btn-sm btn-block">
-												<i class="fa fa-coffee"></i> Buy a coffee
-											</button>
-										</div>
-									</div>
-								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -113,6 +98,21 @@
 								<input id="Jun" value="#{contactBean.ContactSalesPerMonth6()}"
 								type="hidden"></input>
 								<input id="Jul" value="#{contactBean.ContactSalesPerMonth7()}"
+								type="hidden"></input>
+								
+								<input id="Jann" value="#{contactBean.ContactPurchasePerMonth1()}"
+								type="hidden"></input>								
+								<input id="Febb" value="#{contactBean.ContactPurchasePerMonth2()}"
+								type="hidden"></input>
+								<input id="Marr" value="#{contactBean.ContactPurchasePerMonth3()}"
+								type="hidden"></input>
+								<input id="Aprr" value="#{contactBean.ContactPurchasePerMonth4()}"
+								type="hidden"></input>
+								<input id="Mayy" value="#{contactBean.ContactPurchasePerMonth5()}"
+								type="hidden"></input>
+								<input id="Junn" value="#{contactBean.ContactPurchasePerMonth6()}"
+								type="hidden"></input>
+								<input id="Jull" value="#{contactBean.ContactPurchasePerMonth7()}"
 								type="hidden"></input>
 						</div>
 
@@ -341,7 +341,16 @@
     var lineData = {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
         datasets: [
-            
+            {
+                label: "Example dataset",
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: [$("#Jann").val(),$("#Febb").val(), $("#Marr").val(), $("#Aprr").val(), $("#Mayy").val(), $("#Junn").val(), $("#Jull").val()]
+            },
             {
                 label: "Example dataset",
                 fillColor: "rgba(26,179,148,0.5)",

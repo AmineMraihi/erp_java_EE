@@ -103,6 +103,9 @@ public class SaleOpportunityBean {
         saleOpportunityService.save(p);
 
     }
+    public void deleteSaleOp(SaleOpportunity so) {
+        saleOpportunityService.delete(so);
+    }
 
     public List<SaleOpportunity> getSaleOpportunities() {
 

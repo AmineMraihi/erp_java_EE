@@ -3,17 +3,23 @@ package tn.esprit.b1.esprit1718b1erp.mbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.flow.FlowScoped;
+import javax.faces.validator.ValidatorException;
 
 import tn.esprit.b1.esprit1718b1erp.entities.Category;
 import tn.esprit.b1.esprit1718b1erp.entities.Contact;
@@ -45,6 +51,8 @@ public class ItemBean {
     private Item_Type type;
 
     private Integer quantity;
+
+    private Integer minimumQuantity;
 
     private Float byingPrice;
 
@@ -90,6 +98,8 @@ public class ItemBean {
 
     private Tier tierDetails;
 
+    private String textSearch;
+
     @ManagedProperty(value = "#{identity}")
     private Identity identity;
 
@@ -118,6 +128,31 @@ public class ItemBean {
         i = new Item();
         depotId = 1;
         rowId = 1;
+        ItemBeann();
+
+    }
+
+    public void ItemBeann() {
+        this.name = null;
+        this.description = null;
+        this.categoryId = null;
+        this.barcode = null;
+        this.type = null;
+        this.quantity = null;
+        this.minimumQuantity = null;
+        this.byingPrice = null;
+        this.sellingPrice = null;
+        this.supplierId = null;
+        this.picture = null;
+        itemDetails = new Item();
+    }
+
+    public Map<Integer, BigInteger> getNumberOfItemAddedPerMonth(int i) {
+        return itemService.getNumberOfItemAddedPerMonth(i);
+    }
+
+    public BigInteger getNumberOfItemAddedPerMonthGenral(int i) {
+        return itemService.getNumberOfItemAddedPerMonthGenral(i);
     }
 
     public List<Row> trys(int i) {
@@ -127,45 +162,45 @@ public class ItemBean {
     public List<Tier> tryss(int i) {
         return tierService.gettiersByRowId(i);
     }
-    
+
     public List<Tier> tryssForAdd(int i) {
         return tierService.gettiersByRowIdForAdd(i);
     }
-    
-    public List<Item> getItemsByDepotId(int i){
+
+    public List<Item> getItemsByDepotId(int i) {
         return itemService.getItemsByDepotId(i);
     }
 
     public List<Item> getItemsByTierId(int i) {
         return itemService.getItemsByTierId(i);
     }
-    
+
     public BigInteger getNumberOfRowsByDepotId(int i) {
         return rowService.getNumberOfRowsByDepotId(i);
     }
-    
+
     public BigInteger getNumberOfTiersByDepotId(int i) {
         return tierService.getNumberOfTiersByDepotId(i);
     }
-    
+
     public BigInteger getNumberOfItemsByDepotId(int i) {
         return itemService.getNumberOfItemsByDepotId(i);
     }
-    
-    public List<Item> getItemAlert(){
+
+    public List<Item> getItemAlert() {
         return itemService.getItemsOnAlert();
     }
 
-    public void addItem() {
+    public String addItem() {
         i.setName(this.name);
         i.setDescription(this.description);
-
 
         Category category = itemService.getCategoryById(categoryId);
         Contact supplier = itemService.getSupplierById(supplierId);
 
         i.setCategory(category);
         i.setQuantity(this.quantity);
+        i.setMinimumQuanity(this.minimumQuantity);
         i.setByingPrice(this.byingPrice);
         i.setSellingPrice(this.sellingPrice);
         i.setSupplier(supplier);
@@ -183,6 +218,9 @@ public class ItemBean {
         // end new funct
 
         itemService.save(i);
+        FacesContext.getCurrentInstance().addMessage("form:btnadd", new FacesMessage("item added successfully"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        return "/itemDisplay?faces-redirect=true";
 
     }
 
@@ -200,7 +238,7 @@ public class ItemBean {
         tiers = tierService.gettiersByRowId(rowId);
     }
 
-    public void updateItem() {
+    public String updateItem() {
 
         managedDate = new Date();
 
@@ -208,8 +246,8 @@ public class ItemBean {
         Contact supplier = itemService.getSupplierById(supplierId);
         itemDetails.setCategory(category);
         itemDetails.setSupplier(supplier);
-        itemDetails.setLastUpdatedDate(managedDate);
         itemService.update(itemDetails);
+        return "/itemDisplay?faces-redirect=true";
     }
 
     public String toItemDetails(int i) {
@@ -219,18 +257,22 @@ public class ItemBean {
 
     public String toItemEdit(int i) {
         itemDetails = itemService.find(i);
+        System.out.println(itemDetails.getCategory().getName());
+
         return "/itemEdit?faces-redirect=true";
     }
-    
+
     public String toItemImportPage(int i) {
         itemDetails = itemService.find(i);
         return "/importItemPage?faces-redirect=true";
     }
-    
-    public void updateImportedItem(int i) {
-        itemDetails=itemService.find(i);
-        itemDetails.setQuantity(itemDetails.getQuantity()+this.quantity);
+
+    public String updateImportedItem(int i) {
+        System.out.println("id: " + i);
+        itemDetails = itemService.find(i);
+        itemDetails.setQuantity(itemDetails.getQuantity() + this.quantity);
         itemService.update(itemDetails);
+        return "/itemAlert?faces-redirect=true";
     }
 
     public void fillItemEdit(int i) {
@@ -498,6 +540,26 @@ public class ItemBean {
 
     public void setTierDetails(Tier tierDetails) {
         this.tierDetails = tierDetails;
+    }
+
+    public Integer getMinimumQuantity() {
+        return minimumQuantity;
+    }
+
+    public void setMinimumQuantity(Integer minimumQuantity) {
+        this.minimumQuantity = minimumQuantity;
+    }
+
+    public String getTextSearch() {
+        return textSearch;
+    }
+
+    public void setTextSearch(String textSearch) {
+        this.textSearch = textSearch;
+    }
+
+    public void handleKeyEvent() {
+        textSearch = textSearch.toUpperCase();
     }
 
 }

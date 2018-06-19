@@ -23,7 +23,9 @@ public class ProductBean {
     private  float prixQuantite;
     private  Project project;
     private List<Product> products;
+    private Product productProject;
     private Product p;
+    private Product productToUpdate;
     @EJB
     ProductService productService;
 
@@ -36,6 +38,27 @@ public class ProductBean {
         p.setPrixQuantite(this.prixUnitaire*this.qte);
         productService.save(p);
     }
+    public String UpdateProduct()
+    {
+        productService.update(productToUpdate);
+        return "/DetailsProgressProjects?faces-redirect=true";
+    }
+    public String toProductUpdate(int i) {
+        productToUpdate = productService.find(i);
+        return "/UpdateProduct?faces-redirect=true";
+    }
+    public void setProductProject(Product productProject) {
+        this.productProject = productProject;
+    }
+
+    public Product getP() {
+        return p;
+    }
+
+    public void setP(Product p) {
+        this.p = p;
+    }
+
     public String getNomProduit() {
         return nomProduit;
     }
@@ -116,5 +139,18 @@ public class ProductBean {
     public void setId_Product(int id_Product) {
         Id_Product = id_Product;
     }
+
+    public Product getProductToUpdate() {
+        return productToUpdate;
+    }
+
+    public void setProductToUpdate(Product productToUpdate) {
+        this.productToUpdate = productToUpdate;
+    }
+
+    public Product getProductProject() {
+        return productProject;
+    }
+    
     
 }

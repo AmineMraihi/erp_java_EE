@@ -1,9 +1,9 @@
 package tn.esprit.b1.esprit1718b1erp.entities;
 
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -69,6 +69,7 @@ public class Project implements Serializable {
 
     @OneToMany(mappedBy="project",fetch=FetchType.EAGER,cascade=CascadeType.REMOVE)
     private List<Task> tasks;
+    
     
     public int getId() {
         return id;

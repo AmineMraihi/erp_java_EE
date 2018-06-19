@@ -21,4 +21,7 @@ public interface PurchaseServiceRemote extends IGenericDAO<Purchase> {
    List<Purchase> aaaa();
    List<Item> getlistItem(int i);
    Double ContactPurchasesPerMonth(Integer i,Contact c);
+   Map<String, Number> sommetot_purchase();
+   void updateStatusPurchase (Integer id);
+
 }

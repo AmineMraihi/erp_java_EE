@@ -1,6 +1,9 @@
 package tn.esprit.b1.esprit1718b1erp.services.youssfi;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Remote;
 
@@ -24,4 +27,10 @@ public interface ProjectServiceRemote extends IGenericDAO<Project> {
     public Long countInterruptedProjects();
     public List<Long> numberProjectsByMonth();
     public Product getProductById(int id);
+    public User getUserById(long id);
+    public Map<String, Long> projectsBymonth();
+    public Long ProjectPerMonth(Integer i);
+    public Date ClosestProject();
+    public Project findByDate(Date date);
+    public Double SommeBudgets();
 }

@@ -262,7 +262,7 @@ public class PurchBean {
         
     }
     
-    
+    ///////////hgfdgs
     public void cash() throws ParseException{
       /*  Date date =new SimpleDateFormat("yyyy-mm-dd").parse("2014-12-31");
        Double D= Math.abs(userService.Totalpay_Employee_parYear(date,"2014"));

@@ -42,7 +42,10 @@
 
 					<div class="ibox">
 						<div class="ibox-title">
-							<h5>All projects assigned to this account</h5>
+							<h5>All items</h5>
+							<br />
+							<h:messages styleClass="alert alert-success" />
+							<br />
 							<div class="ibox-tools">
 								<a href="itemManagement.jsf" class="btn btn-primary btn-xs">Add
 									a new item</a>
@@ -74,6 +77,7 @@
 										<tbody>
 											<tr>
 												<th>Status</th>
+												<th>image</th>
 												<th>Name</th>
 												<th>category</th>
 												<th>quantity</th>
@@ -82,11 +86,23 @@
 												<tr>
 													<td class="project-status"><ui:fragment
 															rendered="#{item.quantity gt item.minimumQuanity}">
-															<span class="label label-primary">no action required </span>
+															<span class="label label-primary">no action
+																required </span>
 														</ui:fragment> <ui:fragment
 															rendered="#{item.quantity lt item.minimumQuanity }">
 															<span class="label label-danger">action required </span>
+														</ui:fragment> <ui:fragment
+															rendered="#{item.quantity eq item.minimumQuanity }">
+															<span class="label label-warning">action
+																recommended </span>
+														</ui:fragment> <ui:fragment rendered="#{item.minimumQuanity eq null }">
+															<span class="label label-plain">status unavailable
+															</span>
 														</ui:fragment></td>
+
+													<td><img alt="image" class="img-circle"
+														src="resources/img/#{item.picture}" height="48" width="48" /></td>
+
 
 
 													<td class="project-title"><a
@@ -101,22 +117,14 @@
 														class="pie">#{item.quantity}/#{itemBean.overallQuantities}}</span></td>
 
 
-													<td class="project-actions">
-													
-													<ui:fragment
+													<td class="project-actions"><ui:fragment
 															rendered="#{item.quantity lt item.minimumQuanity }">
-															<a
-														jsf:styleClass="btn btn-white btn-sm"
-														jsf:action="#{itemBean.toItemImportPage(item.id)}"><i
-															class="fa-plus"></i> import </a>
-														</ui:fragment>
-													
-													
-													<a
-														jsf:styleClass="btn btn-white btn-sm"
+															<a jsf:styleClass="btn btn-white btn-sm"
+																jsf:action="#{itemBean.toItemImportPage(item.id)}"><i
+																class="fa-plus"></i> import </a>
+														</ui:fragment> <a jsf:styleClass="btn btn-white btn-sm"
 														jsf:action="#{itemBean.toItemEdit(item.id)}"><i
-															class="fa fa-pencil"></i> Edit </a> 
-														<a
+															class="fa fa-pencil"></i> Edit </a> <a
 														jsf:action="#{itemBean.deleteItem(item.id)}"
 														jsf:styleClass="btn btn-white btn-sm"> <i
 															class="fa fa-trash"></i> Delete
@@ -126,12 +134,27 @@
 											</ui:repeat>
 										</tbody>
 									</table>
+
 								</h:form>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="col-lg-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>Quantity and minimum quantity of each item in the data base</h5>
+						<div class="ibox-tools"></div>
+					</div>
+					<div class="ibox-content">
+						<div class="text-center">
+							<div id="container" style="width:100%; height:400px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
 		<!-- 	/here -->
 
@@ -186,6 +209,9 @@
 		<!-- Peity -->
 		<h:outputScript library="js" name="plugins/peity/jquery.peity.min.js"></h:outputScript>
 		<h:outputScript library="js" name="demo/peity-demo.js"></h:outputScript>
+
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+
 
 		<h:outputScript>
 		// <![CDATA[
@@ -258,5 +284,46 @@
        });
         // ]]>
 		</h:outputScript>
+
+		<script>
+		$(function () { 
+		    var myChart = Highcharts.chart('container', {
+		        chart: {
+		            type: 'bar'
+		        },
+		        title: {
+		            text: 'Quantity and minimum quantity of each item in database '
+		        },
+		        xAxis: {
+		            categories: [
+
+		            	<ui:repeat var="item" value="#{itemBean.items}">
+							'#{item.name}',
+		            	</ui:repeat>
+		                
+		                 ]
+		        },
+		        yAxis: {
+		        },
+		        series: [{
+		            name: 'quantity',
+		            data: [
+		            	<ui:repeat var="item" value="#{itemBean.items}">
+		            	#{item.quantity},
+		            	</ui:repeat>
+		                
+		                ]
+		        }, {
+		            name: 'minimum quantity',
+		            data: [
+		            	<ui:repeat var="item" value="#{itemBean.items}">
+		            	#{item.minimumQuanity},
+		            	</ui:repeat>
+		                
+		                ]
+		        }]
+		    });
+		});
+		</script>
 	</ui:define>
 </ui:composition>

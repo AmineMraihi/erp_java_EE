@@ -10,6 +10,8 @@
 		<h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
 		<h:outputStylesheet library="css" name="animate.css" />
 		<h:outputStylesheet library="css" name="style.css" />
+		<h:outputStylesheet library="css" name="morris.css" />
+
 
 	</ui:define>
 
@@ -24,13 +26,14 @@
 			</div>
 			<div class="col-sm-8">
 				<div class="title-action">
-					<a href="#" class="btn btn-primary">action </a>
+					<a href="itemDepots.jsf" class="btn btn-primary">View All
+						depots </a>
 				</div>
 			</div>
 		</div>
 
 
-		<!--	here -->
+		<!--    here -->
 		<div class="wrapper wrapper-content">
 			<div class="row animated fadeInRight">
 				<div class="col-lg-6">
@@ -41,7 +44,8 @@
 						<div>
 							<div class="ibox-content profile-content">
 								<h4>
-									<strong>#{itemBean.depotDetails.name}  #{itemBean.depotDetails.id}</strong>
+									<strong>#{itemBean.depotDetails.name}
+										#{itemBean.depotDetails.id}</strong>
 								</h4>
 								<p>
 									<i class="fa fa-map-marker"></i> #{itemBean.depotDetails.place}
@@ -53,19 +57,22 @@
 									<div class="col-md-4">
 										<span class="bar">5,3,9,6,5,9,7,3,5,2</span>
 										<h5>
-											<strong>#{itemBean.getNumberOfRowsByDepotId(itemBean.depotDetails.id)}</strong> Rows
+											<strong>#{itemBean.getNumberOfRowsByDepotId(itemBean.depotDetails.id)}</strong>
+											Rows
 										</h5>
 									</div>
 									<div class="col-md-4">
 										<span class="line">5,3,9,6,5,9,7,3,5,2</span>
 										<h5>
-											<strong>#{itemBean.getNumberOfTiersByDepotId(itemBean.depotDetails.id)}</strong> Tiers
+											<strong>#{itemBean.getNumberOfTiersByDepotId(itemBean.depotDetails.id)}</strong>
+											Tiers
 										</h5>
 									</div>
 									<div class="col-md-4">
 										<span class="bar">5,3,2,-1,-3,-2,2,3,5,2</span>
 										<h5>
-											<strong>#{itemBean.getNumberOfItemsByDepotId(itemBean.depotDetails.id)}</strong> Items
+											<strong>#{itemBean.getNumberOfItemsByDepotId(itemBean.depotDetails.id)}</strong>
+											Items
 										</h5>
 									</div>
 								</div>
@@ -103,6 +110,25 @@
 						</div>
 					</div>
 				</div>
+
+
+
+				<div class="col-lg-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>number of items added to this depot per month</h5>
+							<div class="ibox-tools"></div>
+						</div>
+						<div class="ibox-content">
+							<div class="text-center">
+								<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
 				<div class="col-lg-6">
 					<div class="ibox ">
 						<div class="ibox-title">
@@ -159,7 +185,19 @@
 
 					</div>
 				</div>
-
+				<div class="col-lg-6">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>quantity and minimum quantity of items in this depot</h5>
+							<div class="ibox-tools"></div>
+						</div>
+						<div class="ibox-content">
+							<div class="text-center">
+								<div id="container" style="width: 100%; height: 400px;"></div>
+							</div>
+						</div>
+					</div>
+				</div>
 
 			</div>
 		</div>
@@ -177,10 +215,13 @@
 			</div>
 		</div>
 
-		<!-- 	/here -->
+		<!--    /here -->
 
 
 	</ui:define>
+
+
+
 	<ui:define name="pageJS">
 
 		<!-- Mainly scripts -->
@@ -204,16 +245,31 @@
 		<!-- ChartJS-->
 		<h:outputScript library="js" name="Chart.js"></h:outputScript>
 
+		<!-- Morris -->
+		<h:outputScript library="js"
+			name="plugins/morris/raphael-2.1.0.min.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/morris/morris.js"></h:outputScript>
+
+		<h:outputScript library="js" name="canvasjs.min.js"></h:outputScript>
+
+		<!-- Nestable List -->
+		<h:outputScript library="js"
+			name="plugins/nestable/jquery.nestable.js"></h:outputScript>
+
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+
+
+		<h:outputScript library="js" name="highcharts.js"></h:outputScript>
 
 
 		<script type="text/javascript" language="javascript">
         var ctx = document.getElementById("myChart").getContext('2d');
-		var myChart = new Chart(ctx, {
-    	type: 'pie',
-    	data: {
+        var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
         labels: [
             ""
-        	<ui:repeat var="item" value="#{itemBean.getItemsByDepotId(itemBean.depotDetails.id)}">,"#{item.name}"</ui:repeat>
+            <ui:repeat var="item" value="#{itemBean.getItemsByDepotId(itemBean.depotDetails.id)}">,"#{item.name}"</ui:repeat>
 
             ],
         datasets: [{
@@ -240,9 +296,9 @@
                 'rgba(255, 159, 64, 1)'
             ],
             borderWidth: 1
-        	}]
-   			 },
-    		options: {
+            }]
+             },
+            options: {
         scales: {
             yAxes: [{
                 ticks: {
@@ -253,6 +309,74 @@
    		 }
 		});
 		</script>
+		<script>
+		window.onload = function () {
+
+		var chart = new CanvasJS.Chart("chartContainer", {
+		animationEnabled: true,  
+		axisY: {
+			title: "Units Sold",
+			valueFormatString: "#0,,.",
+			suffix: "mn",
+		},
+		data: [{
+			yValueFormatString: "#,### Units",
+			xValueFormatString: "YYYY",
+			type: "spline",
+			dataPoints: [
+
+				<ui:repeat  value="#{itemBean.getNumberOfItemAddedPerMonth(itemBean.depotDetails.id).entrySet().toArray()}" var="_entry">
+					{x: new Date(2018, #{_entry.key-1}), y: #{_entry.value}},
+		    	</ui:repeat>
+				
+			]
+		}]
+		});
+		chart.render();
+
+		}
+</script>
+		<script>
+$(function () { 
+    var myChart = Highcharts.chart('container', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Quantity and minimum quantity of each item in #{itemBean.depotDetails.name} '
+        },
+        xAxis: {
+            categories: [
+
+            	<ui:repeat var="item" value="#{itemBean.getItemsByDepotId(itemBean.depotDetails.id)}">
+					'#{item.name}',
+            	</ui:repeat>
+                
+                 ]
+        },
+        yAxis: {
+        },
+        series: [{
+            name: 'quantity',
+            data: [
+            	<ui:repeat var="item" value="#{itemBean.getItemsByDepotId(itemBean.depotDetails.id)}">
+            	#{item.quantity},
+            	</ui:repeat>
+                
+                ]
+        }, {
+            name: 'minimum quantity',
+            data: [
+            	<ui:repeat var="item" value="#{itemBean.getItemsByDepotId(itemBean.depotDetails.id)}">
+            	#{item.minimumQuanity},
+            	</ui:repeat>
+                
+                ]
+        }]
+    });
+});
+</script>
+
 
 	</ui:define>
 </ui:composition>

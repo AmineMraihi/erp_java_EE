@@ -442,11 +442,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 										</h:inputText>
 												</li>
 												<li class="list-group-item">
-												<label>Product *</label>
+												<label>Product *</label> <br />
 										<h:selectOneMenu value="#{projectBean.id_product}">
 										<f:selectItem itemLabel="select product" itemValue=""/>
 										<f:selectItems value="#{productBean.products}" var="product"
 										 itemValue="#{product.id_Product}" itemLabel="#{product.nomProduit}"/>
+										</h:selectOneMenu>
+											
+												</li>
+												<li class="list-group-item">
+												<label>Responsible(Engineers) *</label> <br />
+										<h:selectOneMenu value="#{projectBean.id_responsible}">
+										<f:selectItem itemLabel="select responsible" itemValue=""/>
+										<f:selectItems value="#{userBean.engineers}" var="engineer"
+										 itemValue="#{engineer.code}" itemLabel="#{engineer.name}"/>
 										</h:selectOneMenu>
 											
 												</li>

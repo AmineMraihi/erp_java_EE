@@ -312,9 +312,9 @@ public class PurchaseController implements Initializable {
     @FXML
     private Button enterfacehello;
     @FXML
-    private ComboBox<String> cbtypepurchase;
+    private ComboBox<Purchase_type> cbtypepurchase;
     @FXML
-    private ComboBox<String> txtpaymenttype;
+    private ComboBox<TypePayementPurchase> txtpaymenttype;
 
     @FXML
     private TableView<Item> tableitem;
@@ -518,10 +518,21 @@ public class PurchaseController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
         
-        
-        
+       ///// System.out.println(tablePurchase.getSelectionModel().getSelectedItem().getId_purchase()+"tbsale");
+
+        tablePurchase.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+          System.out.println(tablePurchase.getSelectionModel().getSelectedItem().getId_purchase()+"tbpurch");
+          buildNotification("", "Update done",
+                  Pos.CENTER);
+          updatepurchaseByStatus(tablePurchase.getSelectionModel().getSelectedItem().getId_purchase());
+          afficherPurchase();
+        });
+    
         cbemployeecateo.getItems().addAll("ENGINEER","chef department","DIRECTOR");
+       
+
         cbemployeecateo.valueProperty().addListener(new ChangeListener<String>() {
+
 
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -552,7 +563,10 @@ public class PurchaseController implements Initializable {
             
         });
         
-   
+ 
+        
+      
+    
         new FadeInUpTransition(welcomepane).play();
         /////// TabPane.toBack();
         TabPane.setOpacity(0);
@@ -696,6 +710,7 @@ public class PurchaseController implements Initializable {
         paneTabelSale.setOpacity(1);
         paneTabelSale.toFront();
         afficherPurchase();
+
         afficherSale();
         selectWithServiceSale();
         selectWithServicePurchase();
@@ -726,9 +741,8 @@ public class PurchaseController implements Initializable {
         });
         cbProjectname.getItems().addAll(findAlProducts());
        
-        cbtypepurchase.getItems().addAll("Purchases of raw materials", "Manufactured purchases", "Investment purchases",
-                "Trading purchases", "Overhead purchases", "Service purchases");
-        txtpaymenttype.getItems().addAll("Cash", "Check", "Credit Card");
+        cbtypepurchase.getItems().addAll(Purchase_type.Investment_purchases,Purchase_type.Manufactured_purchases);
+        txtpaymenttype.getItems().addAll(TypePayementPurchase.Cash,TypePayementPurchase.Check,TypePayementPurchase.Credit_Card);
 
         cbitems.getItems().addAll(findAlItemsfind());
 
@@ -853,8 +867,8 @@ public class PurchaseController implements Initializable {
     ///////// add purchase Button ////////
     @FXML
     private void aksiSave(ActionEvent event) throws Exception {
-        String typepurchase = cbtypepurchase.getValue();
-        String tpaymenttype = txtpaymenttype.getValue();
+       //////// String typepurchase = cbtypepurchase.getValue();
+        TypePayementPurchase tpaymenttype = txtpaymenttype.getValue();
 
         Contact supplier = cbsupplier.getValue();
 
@@ -864,24 +878,24 @@ public class PurchaseController implements Initializable {
         Date daterequested = convert(txtdaterequested.getEditor().getText());
         Date deliverydate = convert(txtdaterequested.getEditor().getText());
         Set<Item> bb = new HashSet(listData);
-      
+         
+        Purchase_type f = cbtypepurchase.getValue();
    
 /////xfhd
-      //////  Purchase purchase = new Purchase(supplier, bb, daterequested, deliverydate, quantity, typepurchase, aaa,
-         //////       Description, tpaymenttype, Projectname);
+       Purchase purchase = new Purchase(supplier, bb, daterequested, deliverydate, quantity, f, aaa,Description, tpaymenttype, Projectname);
 
         if ((paid.isSelected()) && (unpaid.isSelected())) {
             Config2.dialog(Alert.AlertType.WARNING, "Choose only one parameter");
             paid.requestFocus();
         } else if (paid.isSelected()) {
-           /////// purchase.setStatupurchase(Statupurchase.Paid);
+          purchase.setStatupurchase(Statupurchase.Paid);
         } else
-           /////// purchase.setStatupurchase(Statupurchase.Unpaid);
+         purchase.setStatupurchase(Statupurchase.Unpaid);
         if (!(txtID.getText()).equals("")) {
-          /////  purchase.setId_purchase(Integer.parseInt(txtID.getText()));
-           //////// purchase.getItems().addAll(merzougList);
+         purchase.setId_purchase(Integer.parseInt(txtID.getText()));
+        purchase.getItems().addAll(merzougList);
         }
-      ////////  addPurchase(purchase);
+       addPurchase(purchase);
         paneCrud.setOpacity(0);
         selectWithServicePurchase();
         cleartxtPurchase();
@@ -1355,6 +1369,7 @@ public class PurchaseController implements Initializable {
                 tablePurchase.getSelectionModel().select(row);
                 aksiKlikTablePurchase(null);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are You Sure to Delete this purchase ?");
+
                 alert.initStyle(StageStyle.UTILITY);
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
@@ -1434,10 +1449,10 @@ public class PurchaseController implements Initializable {
         unpaid.setSelected(false);
         cbsupplier.getItems().clear();
         cbsupplier.getItems().addAll(filterSupplierList());
-        cbtypepurchase.setValue("please choose the type");
+       cbtypepurchase.getItems().clear();
         cbProjectname.getItems().clear();
         cbProjectname.getItems().addAll(findAlProducts());
-        txtpaymenttype.setValue("please choose the type");
+    txtpaymenttype.getItems().clear();
 
         cbitems.getItems().clear();
         cbitems.getItems().addAll(findAlItemsfind());
@@ -1719,7 +1734,7 @@ public class PurchaseController implements Initializable {
         Config2.setModelColumn(tbDateSale, "dateSale");
         Config2.setModelColumn(tbquantitypoSale, "quantity_products");
 
-        ContactSale.setCellValueFactory(
+            ContactSale.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Sale, String>, ObservableValue<String>>() {
 
                     @Override
@@ -1754,6 +1769,7 @@ public class PurchaseController implements Initializable {
                 tableSale.getSelectionModel().select(row);
                 aksiKlikTableSale(null);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are You Sure to Delete this Sale ?");
+              ////  System.out.println(tableSale.getSelectionModel().getSelectedItem().getId_Sale()+"tbsale");
                 alert.initStyle(StageStyle.UTILITY);
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
@@ -2355,7 +2371,20 @@ public class PurchaseController implements Initializable {
         }
         return ik;
     }
-
+    private void updatepurchaseByStatus(Integer i) {
+       
+        try {
+            ctx = new InitialContext();
+            purchaseService = (PurchaseServiceRemote) ctx.lookup(jndiPurchase);
+           purchaseService.updateStatusPurchase(i);;
+        } catch (NamingException e) {
+            System.out.println("NamingException jndi");
+        } catch (RejectedExecutionException e1) {
+            System.out.println("catched rejected");
+        }
+        
+    }
+    
     private Double afficherSommeSalesiPhoneX(Integer i) {
         Double ik = (double) 0;
         try {

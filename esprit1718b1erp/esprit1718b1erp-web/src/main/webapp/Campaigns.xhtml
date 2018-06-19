@@ -7,7 +7,7 @@
  xmlns:jsf="http://xmlns.jcp.org/jsf">
 
  <ui:define name="pageCSS">
-  <h:outputStylesheet library="css" name="marketing.css" />
+
   <h:outputStylesheet library="css" name="bootstrap.min.css" />
   <h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
   <h:outputStylesheet library="css" name="plugins/iCheck/custom.css" />
@@ -37,9 +37,8 @@ p {
 
         var data = google.visualization.arrayToDataTable([
           ['Factors', 'Impact'],
-          ['Anesthesia', 33],
-          ['Implant Type', 33],
-          ['a333', 33],
+                    <ui:repeat var="item" value="#{campaignBean.campaignsNamesAndBudget}">['#{item.nameCampaign}',#{item.budget}/3],</ui:repeat>
+
 
         ]);
 
@@ -48,6 +47,7 @@ p {
           slices: {  0: {color: '#583516'},   
                      1: {color: '#9f7043'},
                      2: {color: '#774d26'},
+                     2: {color: '#FFA07A'},
               }, 
            chartArea: {left:0, top:0, width:'100%', height:'100%'},
            legend: 'none',
@@ -68,7 +68,7 @@ p {
  </ui:define>
 
  <ui:define name="titleHere">
-  <div class="col-lg-4">
+  <div class="col-lg-6">
 
    <div class="ibox float-e-margins">
     <div class="ibox-title">
@@ -88,7 +88,17 @@ p {
         <a href="profile.html" class="pull-left"> <img alt="image"
          class="img-circle" src="resources/img/sale.png" /></a>
         <div class="media-body ">
-         <small class="pull-right">#{campaign.nameCampaign}
+         <small class="pull-right">#{campaign.nameCampaign} 
+         <f:facet name="header">
+       <h:outputText value="Delete" />
+      </f:facet>
+      <h:form id="form">
+       <a
+        jsf:action="#{campaignBean.deleteCampaign(campaign)}"
+        jsf:styleClass="btn btn-white btn-sm"> <i
+        class="fa fa-trash"></i> Delete
+       </a>
+      </h:form>
          </small><strong> #{campaign.nameCampaign}</strong> Product :
          #{campaign.nameCampaign} <br /> <small
           class="text-muted">Located in
@@ -104,11 +114,12 @@ p {
    </div>
 
   </div>
-  <div class="col-lg-4"></div>
-  <div class="col-lg-4">
+
+  <div class="col-lg-6">
 
    <div align="center">
     <div id="piechart"></div>
+       <p style="font-size:20px">Chart for Budget used by every Campaign</p>
    </div>
 
   </div>

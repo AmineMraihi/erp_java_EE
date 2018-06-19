@@ -35,7 +35,7 @@ public class Breakdown implements Serializable {
     
     private Date registrationdate;
     
-    @ManyToOne
+    @ManyToOne 
     private Item objecttomaintain;
    
     @OneToOne

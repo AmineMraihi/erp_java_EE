@@ -1,7 +1,9 @@
 package tn.esprit.b1.esprit1718b1erp.services.jassem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -14,6 +16,7 @@ import tn.esprit.b1.esprit1718b1erp.entities.Contact;
 import tn.esprit.b1.esprit1718b1erp.entities.Entreprise;
 import tn.esprit.b1.esprit1718b1erp.entities.Intervention;
 import tn.esprit.b1.esprit1718b1erp.entities.Particular;
+import tn.esprit.b1.esprit1718b1erp.entities.Product;
 import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
 
 /**
@@ -101,6 +104,19 @@ public class ContactService extends GenericDAO<Contact> implements ContactServic
 
         companies.addAll(entityManager.createQuery("SELECT e FROM Entreprise e", Entreprise.class).getResultList());
         return companies;
+    }
+
+    @Override
+    public Integer findSuggestionForProduct(Product prod) {
+       Integer bestContactId;
+
+        String myQuery = "SELECT DISTINCT(id) FROM contact JOIN sale ON contact.id=sale.contact_id JOIN"+
+        " sale_product ON sale.Id_Sale=sale_product.sale_id JOIN product ON sale_product.product_id=product.Id_Product"+
+                " WHERE type=? AND Somme_products=(SELECT MAX(sale.Somme_products) FROM sale)";
+        
+       bestContactId=(Integer) entityManager.createNativeQuery(myQuery).setParameter(1,prod.getType()).getSingleResult();
+       
+        return bestContactId;
     }
 
 }

@@ -126,7 +126,7 @@ public class NeedService extends GenericDAO<Needa> implements NeedServiceRemote,
     }
     
     
-   
+    @Override
     public Map<String, Number> Need_somme() {
         Map<String, Number> results = new HashMap<String, Number>();
         ////// String jpaQuery = "SELECT p.product_id, SUM(s.Somme_products)

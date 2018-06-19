@@ -16,6 +16,8 @@ import tn.esprit.b1.esprit1718b1erp.entities.Contact;
 import tn.esprit.b1.esprit1718b1erp.entities.Entreprise;
 import tn.esprit.b1.esprit1718b1erp.entities.Item;
 import tn.esprit.b1.esprit1718b1erp.entities.Particular;
+import tn.esprit.b1.esprit1718b1erp.entities.Product;
+import tn.esprit.b1.esprit1718b1erp.services.ahmed.PurchaseService;
 import tn.esprit.b1.esprit1718b1erp.services.ahmed.SaleService;
 import tn.esprit.b1.esprit1718b1erp.services.jassem.ContactService;
 
@@ -53,12 +55,14 @@ public class ContactBean {
     ContactService contactservice;
     @EJB
     SaleService saleservice;
+    @EJB
+    PurchaseService purchaseservice;
 
     @PostConstruct
     void init() {
         companies = contactservice.findAllCompanies();
 
-        p = new Particular();
+        
         e = new Entreprise();
         contactDetails = new Contact();
 
@@ -66,7 +70,7 @@ public class ContactBean {
     }
 
     public void addContact() {
-
+        p = new Particular();
         p.setName(this.name);
         p.setFirst_name(this.first_name);
         p.setCivility(this.civility);
@@ -108,7 +112,7 @@ public class ContactBean {
     }
     
     public void addCompany() {
-
+        e = new Entreprise();
         e.setName(this.name);
         e.setMobile(this.mobile);
         e.setPhone(this.phone);
@@ -150,9 +154,11 @@ public class ContactBean {
         contactservice.update(particularDetails);
     }
 
-    /*
-     * public void updateCompany() { contactservice.update(companyDetails); }
-     */
+    
+      public void updateCompany() {
+          contactservice.update(companyDetails); 
+          }
+     
 
     public String toContactEdit(int i) {
         contactDetails = contactservice.find(i);
@@ -166,6 +172,10 @@ public class ContactBean {
             companyDetails = (Entreprise) contactDetails;
         }
         return "/contactEdit?faces-redirect=true";
+    }
+    public Contact findBestContactSuggestion(Product prod)
+    {
+        return contactservice.find(contactservice.findSuggestionForProduct(prod));
     }
     public String toContactProfile(int i) {
         contactDetails = contactservice.find(i);        
@@ -198,6 +208,34 @@ public class ContactBean {
     public Double ContactSalesPerMonth7()
     {
         return saleservice.ContactSalesPerMonth(7,contactDetails);
+    }
+    public Double ContactPurchasePerMonth1()
+    {
+        return purchaseservice.ContactPurchasesPerMonth(1,contactDetails);
+    }
+    public Double ContactPurchasePerMonth2()
+    {
+        return purchaseservice.ContactPurchasesPerMonth(2,contactDetails);
+    }
+    public Double ContactPurchasePerMonth3()
+    {
+        return purchaseservice.ContactPurchasesPerMonth(3,contactDetails);
+    }
+    public Double ContactPurchasePerMonth4()
+    {
+        return purchaseservice.ContactPurchasesPerMonth(4,contactDetails);
+    }
+    public Double ContactPurchasePerMonth5()
+    {
+        return purchaseservice.ContactPurchasesPerMonth(5,contactDetails);
+    }
+    public Double ContactPurchasePerMonth6()
+    {
+        return purchaseservice.ContactPurchasesPerMonth(6,contactDetails);
+    }
+    public Double ContactPurchasePerMonth7()
+    {
+        return purchaseservice.ContactPurchasesPerMonth(7,contactDetails);
     }
     public void deleteContact(Integer i) {
         contactservice.delete(contactservice.find(i));

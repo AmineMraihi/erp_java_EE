@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import tn.esprit.b1.esprit1718b1erp.entities.Product;
+import tn.esprit.b1.esprit1718b1erp.entities.Project;
 import tn.esprit.b1.esprit1718b1erp.utilities.IGenericDAO;
 
 @Remote

@@ -36,63 +36,134 @@
 						<h5>Breakdown Management</h5>
 						<div class="toast-progress"></div>
 
+
 					</div>
 
 					<h:form>
 
 
+						<div>
+							<div class="col-lg-4">
 
-						<div class="col-lg-12">
-
-							<div class="ibox-title">
-								<h5>Item List</h5>
-								<div class="ibox-tools"></div>
-							</div>
-							<div class="ibox-content">
-
-
-
-								<div class="feed-activity-list">
-
-									<ui:repeat var="item" value="#{maintenanceBean.maintain}">
-										<div class="feed-element">
-											<p:selectManyCheckbox
-												value="#{maintenanceBean.maintainselected}"
-												class="pull-right">
-
-												<f:selectItem itemLabel="" itemValue="#{item}" />
-											</p:selectManyCheckbox>
+								<div class="ibox-title">
+									<h5>Item List</h5>
+									<div class="ibox-tools"></div>
+								</div>
+								<div class="ibox-content">
 
 
-											<img alt="image" class="img-circle"
-												src="resources/img/u_10157739.jpg" />
-											<div class="media-body ">
-												<strong> Item : #{item.name} </strong><br>
-												<small class="pull-right">#{item.currency} </small></br> <strong>
-													Price : #{item.byingPrice} </strong><br>
-												<strong>Quantity available #{item.quantity}</strong></br>
+									<div class="feed-activity-list">
+
+										<ui:repeat var="item" value="#{maintenanceBean.maintain}">
+											<div class="feed-element">
+												<!--  	<p:selectManyCheckbox
+													value="#{maintenanceBean.maintainselected}"
+													class="pull-right">
+
+													<f:selectItem value="#{maintenanceBean.maintainselected}" var="item" itemLabel="#{item}" itemValue="#{item}" />
+												</p:selectManyCheckbox>
+-->
+
+												<p:selectManyCheckbox
+													value="#{maintenanceBean.maintainselectedset}"
+													class="pull-right">
+
+													<f:selectItem value="#{maintenanceBean.maintainselected}"
+														var="item" itemLabel="#{item}" itemValue="#{item}" />
+												</p:selectManyCheckbox>
+
+												<img alt="image" class="img-circle"
+													src="resources/img/#{maintenanceBean.itemDetails.picture}" />
+												<div class="media-body ">
+													<strong> Item : #{item.name} </strong><br>
+													<small class="pull-right">#{item.currency} </small></br> <strong>
+														Price : #{item.byingPrice} </strong><br>
+													<strong>Quantity available #{item.quantity}</strong></br>
+												</div>
+
 											</div>
+										</ui:repeat>
 
-										</div>
-									</ui:repeat>
+									</div>
+
+
 
 								</div>
 
-
-
-							</div>
-
-							<div class="text-center">
-								<h:commandButton
-									action="#{maintenanceBean.updateBreakdownitem()}" value="Add"
-									styleClass="btn btn-primary pull-right" />
-								<h:commandButton action="#{maintenanceBean.calculprice()}"
-								onclick="alert('#{maintenanceBean.calculprice()}')"
-									value="Cost" styleClass="btn btn-primary pull-left" />
-						
-
-							</div>
+								<div class="text-center">
+									<h:commandButton
+										action="#{maintenanceBean.updateBreakdownitem()}" value="Add"
+										styleClass="btn btn-primary pull-right" />
 									
+
+										<button type="button" class="btn btn-primary pull-left"
+											action="#{maintenanceBean.calculprice()}" data-toggle="modal"
+											data-target="#myModal4">Cost</button>
+
+									<div class="modal inmodal" id="myModal4" tabindex="-1"
+										role="dialog" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content animated fadeIn">
+												<h:form id="hello">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">
+															<span aria-hidden="true"></span><span class="sr-only">Close</span>
+														</button>
+
+													</div>
+													<div class="modal-body">
+														<h4 class="modal-title">Breakdown Cost :</h4>
+
+														<H1>
+															<label>It Cost :</label>
+															#{maintenanceBean.breakdownDetails.price} $
+														</H1>
+
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-white"
+															data-dismiss="modal">Close</button>
+
+
+													</div>
+												</h:form>
+											</div>
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+							<div class="col-lg-6">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>#{maintenanceBean.itemDetails.name} Breakdowns</h5>
+										<input id="Jan"
+											value="#{maintenanceBean.ItemBreakdownPerMonth1()}"
+											type="hidden"></input> <input id="Feb"
+											value="#{maintenanceBean.ItemBreakdownPerMonth2()}"
+											type="hidden"></input> <input id="Mar"
+											value="#{maintenanceBean.ItemBreakdownPerMonth3()}"
+											type="hidden"></input> <input id="Apr"
+											value="#{maintenanceBean.ItemBreakdownPerMonth4()}"
+											type="hidden"></input> <input id="May"
+											value="#{maintenanceBean.ItemBreakdownPerMonth5()}"
+											type="hidden"></input> <input id="Jun"
+											value="#{maintenanceBean.ItemBreakdownPerMonth6()}"
+											type="hidden"></input> <input id="Jul"
+											value="#{maintenanceBean.ItemBreakdownPerMonth7()}"
+											type="hidden"></input>
+									</div>
+
+									<div class="ibox-content">
+										<div>
+											<canvas id="lineChart" height="140"></canvas>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
 						</div>
 
 
@@ -105,8 +176,8 @@
 
 				</div>
 			</div>
-
 		</div>
+
 
 		<!-- 	/here -->
 	</ui:define>
@@ -118,115 +189,64 @@
 		<h:outputScript library="js"
 			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
 
-
 		<!-- Custom and plugin javascript -->
-
 		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
 		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
 
+		<!-- Peity -->
+		<h:outputScript library="js" name="plugins/peity/jquery.peity.min.js"></h:outputScript>
+		<h:outputScript library="js" name="demo/peity-demo.js"></h:outputScript>
 
-		<!-- Steps -->
-		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/chartJs/Chart.min.js"></h:outputScript>
 
-		<!-- Jquery Validate -->
+
+		<!-- Flot -->
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.js"></h:outputScript>
 		<h:outputScript library="js"
-			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
-
-
-		<!-- Chosen -->
-		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
-
-
-		<!-- iCheck -->
-		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
-
-		<!-- MENU -->
-		<h:outputScript library="js"
-			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
-
-
-
+			name="plugins/flot/jquery.flot.tooltip.min.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.resize.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.pie.js"></h:outputScript>
 		<h:outputScript>
-		    $(document).ready(function() {
-            setTimeout(function() {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    showMethod: 'slideDown',
-                    timeOut: 4000
-                };
-                toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+    $(document).ready(function(){
+    var lineData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+            
+            {
+                label: "Example dataset",
+                fillColor: "rgba(26,179,148,0.5)",
+                strokeColor: "rgba(26,179,148,0.7)",
+                pointColor: "rgba(26,179,148,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(26,179,148,1)",
+                data: [$("#Jan").val(),$("#Feb").val(), $("#Mar").val(), $("#Apr").val(), $("#May").val(), $("#Jun").val(), $("#Jul").val()]
+            }
+        ]
+    };
 
-            }, 1300);
-		// <![CDATA[
-		 $(document).ready(function(){
-            $("#wizard").steps();
-            $("#form").steps({
-                bodyTag: "fieldset",
-                enableFinishButton: false,
-                onStepChanging: function (event, currentIndex, newIndex)
-                {
-                    // Always allow going backward even if the current step contains invalid fields!
-                    if (currentIndex > newIndex)
-                    {
-                        return true;
-                    }
+    var lineOptions = {
+        scaleShowGridLines: true,
+        scaleGridLineColor: "rgba(0,0,0,.05)",
+        scaleGridLineWidth: 1,
+        bezierCurve: true,
+        bezierCurveTension: 0.4,
+        pointDot: true,
+        pointDotRadius: 4,
+        pointDotStrokeWidth: 1,
+        pointHitDetectionRadius: 20,
+        datasetStroke: true,
+        datasetStrokeWidth: 2,
+        datasetFill: true,
+        responsive: true,
+    };
 
-                    // Forbid suppressing "Warning" step if the user is to young
-                    if (newIndex === 3 && Number($("#age").val()) < 18)
-                    {
-                        return false;
-                    }
 
-                    var form = $(this);
+    var ctx = document.getElementById("lineChart").getContext("2d");
+    var myNewChart = new Chart(ctx).Line(lineData, lineOptions);
+    
+    });
+    </h:outputScript>
 
-                    // Clean up if user went backward before
-                    if (currentIndex < newIndex)
-                    {
-                        // To remove error styles
-                        $(".body:eq(" + newIndex + ") label.error", form).remove();
-                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-                    }
-
-                    // Disable validation on fields that are disabled or hidden.
-                    form.validate().settings.ignore = ":disabled,:hidden";
-
-                    // Start validation; Prevent going forward if false
-                    return form.valid();
-                },
-                onStepChanged: function (event, currentIndex, priorIndex)
-                {
-                    // Suppress (skip) "Warning" step if the user is old enough.
-                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
-                    {
-                        $(this).steps("next");
-                    }
-
-                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
-                    if (currentIndex === 2 && priorIndex === 3)
-                    {
-                        $(this).steps("previous");
-                    }
-                },
-                onFinishing: function (event, currentIndex)
-                {
-                },
-                onFinished: function (event, currentIndex)
-                {
-                }
-            }).validate({
-                        errorPlacement: function (error, element)
-                        {
-                            element.before(error);
-                        },
-                        rules: {
-                            confirm: {
-                                equalTo: "#password"
-                            }
-                        }
-                    });
-       });
-        // ]]>
-		</h:outputScript>
 	</ui:define>
 </ui:composition>

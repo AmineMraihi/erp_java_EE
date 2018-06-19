@@ -1,5 +1,6 @@
 package tn.esprit.b1.esprit1718b1erp.mbeans;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.flow.FlowScoped;
+import javax.faces.model.SelectItem;
 import javax.servlet.RequestDispatcher;
 
 import javafx.collections.FXCollections;
@@ -86,10 +88,16 @@ public class MaintenanceBean {
 	private Boolean availability;
 
 	private Date requestdate;
-
+	
+	private Date nextmaintenance;
+	
+	private Date durationguarantee;
+	
 	private Date Breakdowndate;
 
 	private Intervention interventionDetails;
+	
+	private Item itemDetails;
 
 	private Breakdown breakdownDetails;
 
@@ -114,8 +122,14 @@ public class MaintenanceBean {
 
 	@EJB
 	UserService userService;
+    List<String> xvaluefor_axis;
+
 	Set<Item> maintainselectedset = new HashSet<Item>();
-	
+    List<String> ordredProdNames;
+
+	 private List<SelectItem> cars;
+	    private Item[] selectedCars;
+	 
 
 
 	@PostConstruct
@@ -130,9 +144,13 @@ public class MaintenanceBean {
 		System.out.println(items);
 		requestdate = new Date();
 		desireddate = new Date();
+		durationguarantee = new Date();
+		nextmaintenance = new Date();
+		
 
 		i = new Intervention();
 		b = new Breakdown();
+		itemDetails = new Item();
 	}
 
 	public void addIntervention() {
@@ -192,6 +210,10 @@ public class MaintenanceBean {
 
 		interventionService.update(interventionDetails);
 	}
+	public void updateItem2() {
+		interventionDetails.setRepairer(userService.findByCode(usercode));
+		interventionService.update(interventionDetails);
+	}
 
 	public void updateItem1(Item item) {
 
@@ -207,9 +229,71 @@ public class MaintenanceBean {
 		System.out.println(maintainselectedset + "YE NAAAAAAAAAWFEL");
 
 	}
-	
+	 public List itemBreakdownCost(){
+		        List<String> sub2 = new ArrayList<>();
+		        List<Integer> fg = new ArrayList<>();
+		       // Map<String, Number> hhh = new HashMap<String, Number>(purchaseService.sommetot_purchase());
+		        Map<String, Number> aaaa = new HashMap<String, Number>(breakdownService.itemBreakdownCost());
+		        HashMap<String, Integer> thisistheone = new HashMap<String, Integer>();
+
+		        List<String> ordredProdNames;
+		        double kk;
+		        Integer ab = null;
+		        xvaluefor_axis = new ArrayList<>();
+
+		  
+		        Set finalset = aaaa.entrySet();
+		        Iterator iter = finalset.iterator();
+		        ordredProdNames = new ArrayList<>();
+		        while (iter.hasNext()) {
+
+		            Map.Entry me = (Map.Entry) iter.next();
+
+		            ///// System.out.print("key s is: " + me.getKey() + " & Value S is:
+		            ///// " + me.getValue() + "\n");
+
+		            ordredProdNames.add((String) me.getKey());
+		        }
+
+		        sub2 = ordredProdNames.subList(0, 2);
+		        return sub2;
+
+		    	    }
+	 
+	 public List itemBreakdownCost1(){
+	        List<Double> sub1 = new ArrayList<>();
+	        List<Integer> fg = new ArrayList<>();
+	       // Map<String, Number> hhh = new HashMap<String, Number>(purchaseService.sommetot_purchase());
+	        Map<String, Number> aaaa = new HashMap<String, Number>(breakdownService.itemBreakdownCost());
+	        HashMap<String, Integer> thisistheone = new HashMap<String, Integer>();
+
+	        List<Double> ordredProdNames1;
+	        double kk;
+	        Integer ab = null;
+	        xvaluefor_axis = new ArrayList<>();
+
+	  
+	        Set finalset = aaaa.entrySet();
+	        Iterator iter = finalset.iterator();
+	        ordredProdNames1 = new ArrayList<>();
+	        while (iter.hasNext()) {
+
+	            Map.Entry me = (Map.Entry) iter.next();
+
+	            ///// System.out.print("key s is: " + me.getKey() + " & Value S is:
+	            ///// " + me.getValue() + "\n");
+
+	            ordredProdNames1.add((Double) me.getValue());
+	        }
+
+	        sub1 = ordredProdNames1.subList(0, 2);
+	        return sub1;
+
+	    	    }
+	 
 	public Number calculprice(){
 		List<Number> productsname_sale = new ArrayList<>();
+		List<Float> prix=new ArrayList<>();
 
         Map<Number, Number> hhh = new HashMap<Number, Number>(breakdownService.sommetot_purchase());
         System.out.println(hhh+"YALLAAAAAAAAH");
@@ -225,8 +309,9 @@ public class MaintenanceBean {
             if(mentrysale.getKey().equals(breakdownDetails.getId())){
             productsname_sale.add( (Number) mentrysale.getValue());}
         }
-      
-		
+        System.out.println(productsname_sale.get(0).floatValue()+"SALUTWIW");
+        breakdownDetails.setPrice(productsname_sale.get(0).floatValue());
+      breakdownService.update(breakdownDetails);
 		return productsname_sale.get(0);
 	}
 
@@ -256,7 +341,43 @@ public class MaintenanceBean {
 		return "/breakdownedit?faces-redirect=true\"";
 
 	}
+	
+	public String itemstat(Integer i) {
+		itemDetails = itemService.find(i);
+		return "/itembreak?faces-redirect=true\"";
 
+	}
+	public BigInteger ItemBreakdownPerMonth1()
+    {
+        return breakdownService.itemBreakdownPerMonth(1,itemDetails);
+    }
+    public BigInteger ItemBreakdownPerMonth2()
+    {
+        return breakdownService.itemBreakdownPerMonth(2,itemDetails);
+    }
+    public BigInteger ItemBreakdownPerMonth3()
+    {
+        return breakdownService.itemBreakdownPerMonth(3,itemDetails);
+    }
+    public BigInteger ItemBreakdownPerMonth4()
+    {
+    	System.out.println(breakdownService.itemBreakdownPerMonth(5,itemDetails)+"AFIICHIII WOOY2222");
+        return breakdownService.itemBreakdownPerMonth(4,itemDetails);
+    }
+    public BigInteger ItemBreakdownPerMonth5()
+    {
+    	System.out.println(breakdownService.itemBreakdownPerMonth(5,itemDetails)+"AFIICHIII WOOY");
+        return breakdownService.itemBreakdownPerMonth(5,itemDetails);
+    	//return 2.0;
+    }
+    public BigInteger ItemBreakdownPerMonth6()
+    {
+        return breakdownService.itemBreakdownPerMonth(6,itemDetails);
+    }
+    public BigInteger ItemBreakdownPerMonth7()
+    {
+        return breakdownService.itemBreakdownPerMonth(7,itemDetails);
+    }
 	public void fillItemEdit(int i) {
 		System.out.println(i);
 		interventionDetails = interventionService.find(i);
@@ -553,5 +674,48 @@ public class MaintenanceBean {
 	public void setMaintainselectedset(Set<Item> maintainselectedset) {
 		this.maintainselectedset = maintainselectedset;
 	}
+
+	public Item getItemDetails() {
+		return itemDetails;
+	}
+
+	public void setItemDetails(Item itemDetails) {
+		this.itemDetails = itemDetails;
+	}
+
+	public Date getNextmaintenance() {
+		return nextmaintenance;
+	}
+
+	public void setNextmaintenance(Date nextmaintenance) {
+		this.nextmaintenance = nextmaintenance;
+	}
+
+	public Date getDurationguarantee() {
+		return durationguarantee;
+	}
+
+	public void setDurationguarantee(Date durationguarantee) {
+		this.durationguarantee = durationguarantee;
+	}
+
+	public List<SelectItem> getCars() {
+		return cars;
+	}
+
+	public void setCars(List<SelectItem> cars) {
+		this.cars = cars;
+	}
+
+	public Item[] getSelectedCars() {
+		return selectedCars;
+	}
+
+	public void setSelectedCars(Item[] selectedCars) {
+		this.selectedCars = selectedCars;
+	}
+
+	
+	
 	
 }

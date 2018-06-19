@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,9 +31,9 @@ public class Product implements Serializable {
     int qte;
     String type;
     float prixQuantite;
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "products",cascade=CascadeType.REMOVE)
     private Set<Sale> Sales = new HashSet<Sale>();
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.REMOVE)
     private Sale sale;
     @ManyToMany(mappedBy = "productsCampaign")
     private List<Campaign> campaigns;

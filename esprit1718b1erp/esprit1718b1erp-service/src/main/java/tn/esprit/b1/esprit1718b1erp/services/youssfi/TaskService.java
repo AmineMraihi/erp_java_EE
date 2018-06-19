@@ -16,6 +16,7 @@ import tn.esprit.b1.esprit1718b1erp.entities.Contact;
 import tn.esprit.b1.esprit1718b1erp.entities.Project;
 import tn.esprit.b1.esprit1718b1erp.entities.Task;
 import tn.esprit.b1.esprit1718b1erp.entities.User;
+import tn.esprit.b1.esprit1718b1erp.entities.taskID;
 import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
 
 @Stateless
@@ -46,6 +47,16 @@ public class TaskService extends GenericDAO<Task> implements TaskServiceRemote{
         query.setParameter("project", project);
         return query.getResultList();
         
+    }
+    
+    @Override
+    public User findResponsableById(long id) {
+        return entityManager.find(User.class, id);
+    }
+
+    @Override
+    public Project findProjectById(int id) {
+        return entityManager.find(Project.class, id);
     }
    
     
@@ -87,9 +98,38 @@ public class TaskService extends GenericDAO<Task> implements TaskServiceRemote{
         }
         return results;
     }
-    
-    
-   
-    
 
-}
+    @Override
+    public Task findById(taskID taskid) {
+        TypedQuery<Task> query = entityManager
+                .createQuery("select m from Task m  where m.idTask=:id  ", Task.class);
+        query.setParameter("id", taskid);
+        
+        return query.getSingleResult();
+    }
+    
+    public Long CountTasksByProject(Integer id){
+        TypedQuery<Long> query = entityManager
+                .createQuery("select COUNT(m) from Task m  where m.idTask.idProject=:id  ", Long.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
+        }
+    
+    public Long TaskPerMonth(Integer i,Project project) {
+        Long s = (long) 0;
+        try {
+            Query query = entityManager.createQuery(
+                    "select COUNT(m) from Task m where MONTH(m.dateDebut)=:l and m.idTask.idProject=:project ");
+            query.setParameter("l", i);
+            query.setParameter("project", project.getId());
+            s = (Long) query.getSingleResult();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return s;
+    }
+    }
+
+   

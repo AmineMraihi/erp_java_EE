@@ -39,12 +39,13 @@
 				</div>
 				<h:commandButton styleClass="btn btn-primary block full-width m-b"
 					action="#{identity.doLogin()}" value="SUBMIT" />
-				<h:messages styleClass="error" />
+				<h:messages id="messages" showDetail="true" closable="true" styleClass="error" />
 			</h:form>
 			<p class="m-t">
 				<small>WiWTeam</small>
 			</p>
 		</div>
+		
 	</div>
 
 	<!-- Mainly scripts -->

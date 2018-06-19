@@ -1,5 +1,6 @@
 package tn.esprit.b1.esprit1718b1erp.services.malek;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,12 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import tn.esprit.b1.esprit1718b1erp.entities.Breakdown;
 import tn.esprit.b1.esprit1718b1erp.entities.Intervention;
+import tn.esprit.b1.esprit1718b1erp.entities.Item;
 import tn.esprit.b1.esprit1718b1erp.utilities.GenericDAO;
 
 
@@ -58,4 +62,35 @@ public class BreakdownService extends GenericDAO<Breakdown> implements Breakdown
           }
           return results;
 }
+    
+    @Override
+    public BigInteger itemBreakdownPerMonth(Integer i, Item c) {
+    	BigInteger s ;
+        Query query = entityManager.createNativeQuery(
+                    "SELECT COUNT(*) FROM breakdown u WHERE MONTH(u.breakdowndate)=:l and u.objecttomaintain_id=:p ");
+            query.setParameter("l", i);
+            query.setParameter("p", c);
+
+            s = (BigInteger) query.getSingleResult();
+
+
+        return s;
+    }
+    
+    @Override
+    public  Map<String, Number> itemBreakdownCost() {
+  	  Map<String, Number> results = new HashMap<String, Number>();
+
+  	String jpaQuery="SELECT i.name ,SUM(b.price) FROM breakdown b , item i "
+  			+ "WHERE i.name=(SELECT i.name FROM item WHERE i.id=b.objecttomaintain_id LIMIT 1)"
+  			+ " GROUP BY b.objecttomaintain_id ORDER BY `SUM(b.price)` DESC  ";
+  	 List<Object[]> resultList = entityManager.createNativeQuery(jpaQuery).getResultList();
+
+     for (Object[] borderTypes : resultList) {
+         results.put((String) borderTypes[0], (Number) borderTypes[1]);
+
+     }
+     return results;
+    }
+    
 }

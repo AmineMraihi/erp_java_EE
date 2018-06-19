@@ -64,6 +64,8 @@ public class ProductService extends GenericDAO<Product> implements ProductServic
         return query.getResultList();
         
     }
+
+    
     
     
     

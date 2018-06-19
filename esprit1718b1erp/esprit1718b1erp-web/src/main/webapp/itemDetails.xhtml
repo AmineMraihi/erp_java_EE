@@ -26,7 +26,8 @@
 			</div>
 			<div class="col-sm-8">
 				<div class="title-action">
-					<a href="itemDisplay.jsf" class="btn btn-primary">View All items </a>
+					<a href="itemDisplay.jsf" class="btn btn-primary">View All
+						items </a>
 				</div>
 			</div>
 		</div>
@@ -42,14 +43,37 @@
 							<div class="row">
 								<div class="col-lg-12">
 									<div class="m-b-md">
-										<a href="#" class="btn btn-white btn-xs pull-right">Edit
-											project</a>
+										<h:form>
+											<a jsf:styleClass="btn btn-white btn-xs pull-right"
+												jsf:action="#{itemBean.toItemEdit(itemBean.itemDetails.id)}">
+												Edit item </a>
+										</h:form>
+
 										<h2>#{itemBean.itemDetails.name}</h2>
 									</div>
 									<dl class="dl-horizontal">
 										<dt>Status:</dt>
 										<dd>
-											<span class="label label-primary">Active</span>
+
+											<ui:fragment
+												rendered="#{itemBean.itemDetails.quantity gt itemBean.itemDetails.minimumQuanity}">
+												<span class="label label-primary">no action required
+												</span>
+											</ui:fragment>
+											<ui:fragment
+												rendered="#{itemBean.itemDetails.quantity lt itemBean.itemDetails.minimumQuanity }">
+												<span class="label label-danger">action required </span>
+											</ui:fragment>
+											<ui:fragment
+												rendered="#{itemBean.itemDetails.quantity eq itemBean.itemDetails.minimumQuanity }">
+												<span class="label label-warning">action recommended
+												</span>
+											</ui:fragment>
+											<ui:fragment
+												rendered="#{itemBean.itemDetails.minimumQuanity eq null }">
+												<span class="label label-plain">status unavailable </span>
+											</ui:fragment>
+
 										</dd>
 									</dl>
 								</div>
@@ -59,9 +83,7 @@
 									<dl class="dl-horizontal">
 
 										<dt>Created by:</dt>
-										<dd>Alex Smith</dd>
-										<dt>Messages:</dt>
-										<dd>162</dd>
+										<dd>#{itemBean.itemDetails.user.name}</dd>
 										<dt>Client:</dt>
 										<dd>
 											<a href="#" class="text-navy"> Zender Company</a>
@@ -73,33 +95,25 @@
 								<div class="col-lg-7" id="cluster_info">
 									<dl class="dl-horizontal">
 
-										<dt>Last Updated:</dt>
-										<dd>16.08.2014 12:15:57</dd>
-										<dt>Created:</dt>
-										<dd>10.07.2014 23:36:57</dd>
-										<dt>Participants:</dt>
-										<dd class="project-people">
-											<a href="#"><img alt="image" class="img-circle"
-												src="img/a3.jpg" /></a> <a href="#"><img alt="image"
-												class="img-circle" src="img/a1.jpg" /></a> <a href="#"><img
-												alt="image" class="img-circle" src="img/a2.jpg" /></a> <a
-												href="#"><img alt="image" class="img-circle"
-												src="img/a4.jpg" /></a> <a href="#"><img alt="image"
-												class="img-circle" src="img/a5.jpg" /></a>
-										</dd>
+										<dt>quantity</dt>
+										<dd>#{itemBean.itemDetails.quantity}</dd>
 									</dl>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-lg-12">
 									<dl class="dl-horizontal">
-										<dt>Completed:</dt>
+										<dt>Status:</dt>
 										<dd>
-											<div class="progress progress-striped active m-b-sm">
-												<div style="width: 60%;" class="progress-bar"></div>
-											</div>
-											<small>Project completed in <strong>60%</strong>.
-												Remaining close the project, sign a contract and invoice.
+											<div class="progress progress-striped active">
+										
+										<div style="width: #{(itemBean.itemDetails.minimumQuanity*100)/itemBean.itemDetails.quantity}% "
+											class="progress-bar progress-bar-warning">
+											#{(itemBean.itemDetails.minimumQuanity*100) / itemBean.itemDetails.quantity}%
+										</div>
+									</div>
+											<small>minimum quantity represents <strong>#{(itemBean.itemDetails.minimumQuanity*100) / itemBean.itemDetails.quantity}%</strong>
+												Of the quantity of #{itemBean.itemDetails.name} .
 											</small>
 										</dd>
 									</dl>
@@ -111,41 +125,14 @@
 			</div>
 			<div class="col-lg-3">
 				<div class="wrapper wrapper-content project-manager">
-					<h4>Project description</h4>
-<!-- 					<img src="img/zender_logo.png" class="img-responsive" /> -->
-					<p class="small">There are many variations of passages of Lorem
-						Ipsum available, but the majority have suffered alteration in some
-						form, by injected humour, or randomised words which don't look
-						even slightly believable. If you are going to use a passage of
-						Lorem Ipsum, you need to be sure there isn't anything embarrassing
-					</p>
+					<h4>Item description</h4>
+					<img src="resources/img/#{itemBean.itemDetails.picture}"
+						height="340" width="226" class="img-responsive" />
+					<p class="small">#{itemBean.itemDetails.description}</p>
 					<p class="small font-bold">
 						<span><i class="fa fa-circle text-warning"></i> High
 							priority</span>
 					</p>
-					<h5>Project tag</h5>
-					<ul class="tag-list" style="padding: 0">
-						<li><a href="#"><i class="fa fa-tag"></i> Zender</a></li>
-						<li><a href="#"><i class="fa fa-tag"></i> Lorem ipsum</a></li>
-						<li><a href="#"><i class="fa fa-tag"></i> Passages</a></li>
-						<li><a href="#"><i class="fa fa-tag"></i> Variations</a></li>
-					</ul>
-					<h5>Project files</h5>
-					<ul class="list-unstyled project-files">
-						<li><a href="#"><i class="fa fa-file"></i>
-								Project_document.docx</a></li>
-						<li><a href="#"><i class="fa fa-file-picture-o"></i>
-								Logo_zender_company.jpg</a></li>
-						<li><a href="#"><i class="fa fa-stack-exchange"></i>
-								Email_from_Alex.mln</a></li>
-						<li><a href="#"><i class="fa fa-file"></i>
-								Contract_20_11_2014.docx</a></li>
-					</ul>
-					<div class="text-center m-t-md">
-						<a href="#" class="btn btn-xs btn-primary">Add files</a> <a
-							href="#" class="btn btn-xs btn-primary">Report contact</a>
-
-					</div>
 				</div>
 			</div>
 		</div>

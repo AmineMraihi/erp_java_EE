@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.persistence.CascadeType;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -55,13 +57,16 @@ public class CampaignBean {
 
     private User responsable;
 
+    private Campaign c;
+
     private List<Contact> participants = new ArrayList<>();
 
     private float budget;
 
     private String region;
 
-    private List<Product> productsCampaign;
+    private List<Product> productsCampaign = new ArrayList<>();
+    private int id_product;
 
     private float revenue;
 
@@ -69,13 +74,55 @@ public class CampaignBean {
 
     private Report report;
 
+    private Double sumBudgetOfCampaigns;
+
     private SaleOpportunity saleOpportunity;
 
     private Campaign_Type type;
-    
+
     private List<Campaign> CampaignsNamesAndBudget;
+
+    private List<Campaign> CampaignStatistcs;
     @EJB
     CampaignService campaignService;
+
+    @EJB
+    SaleOpportunityService saleOpportunityService;
+
+    public void addCampaign() {
+        c = new Campaign();
+        Date date = new Date();
+        c.setNameCampaign(this.nameCampaign);
+
+        c.setCreationDate(date);
+        c.setEndingDate(this.endingDate);
+        c.setBudget(this.budget);
+        c.setSaleOpportunity(this.saleOpportunity);
+        // Product product = saleOpportunityService.getProductById(id_product);
+        Product product = saleOpportunityService.getProductById(id_product);
+        productsCampaign.add(product);
+        c.setProductsCampaign(productsCampaign);
+        c.setDescription(this.description);
+
+        /*
+         * p.setAnnule(0); p.setEtat(StateProject.IN_PROGRESS);
+         * p.setFinDate(this.finDate); Product product =
+         * projectService.getProductById(id_product);
+         * 
+         * p.setBugdet(this.bugdet); p.setDescription(this.description); p.setRetard(0);
+         */
+        if (this.budget > 1000 - campaignService.SommeBudgetOfCampaigns()) {
+            FacesContext.getCurrentInstance().addMessage("form:budgetInput", new FacesMessage("S'il vous plait choisissez un budget inférieur a " + (1000 - campaignService.SommeBudgetOfCampaigns()) + " Million dinars"));
+        } else {
+            campaignService.save(c);
+            FacesContext.getCurrentInstance().addMessage("form:budgetInput", new FacesMessage("Campaign Added"));
+        }
+
+    }
+
+    public void deleteCampaign(Campaign campaign) {
+        campaignService.delete(campaign);
+    }
 
     public Integer getId() {
         return id;
@@ -206,15 +253,46 @@ public class CampaignBean {
     }
 
     public List<Campaign> getCampaignsNamesAndBudget() {
-        CampaignsNamesAndBudget= campaignService.findAll();
+        CampaignsNamesAndBudget = campaignService.findAll();
         return CampaignsNamesAndBudget;
     }
 
     public void setCampaignsNamesAndBudget(List<Campaign> campaignsNamesAndBudget) {
         CampaignsNamesAndBudget = campaignsNamesAndBudget;
     }
-    
-    
-    
+
+    public List<Campaign> getCampaignStatistcs() {
+        CampaignsNamesAndBudget = campaignService.findAllCampignsNamesAndBudgets();
+        return CampaignStatistcs;
+    }
+
+    public void setCampaignStatistcs(List<Campaign> campaignStatistcs) {
+        CampaignStatistcs = campaignStatistcs;
+    }
+
+    public Campaign getC() {
+        return c;
+    }
+
+    public void setC(Campaign c) {
+        this.c = c;
+    }
+
+    public int getId_product() {
+        return id_product;
+    }
+
+    public void setId_product(int id_product) {
+        this.id_product = id_product;
+    }
+
+    public Double getSumBudgetOfCampaigns() {
+        sumBudgetOfCampaigns = campaignService.SommeBudgetOfCampaigns();
+        return sumBudgetOfCampaigns;
+    }
+
+    public void setSumBudgetOfCampaigns(Double sumBudgetOfCampaigns) {
+        sumBudgetOfCampaigns = this.sumBudgetOfCampaigns;
+    }
 
 }

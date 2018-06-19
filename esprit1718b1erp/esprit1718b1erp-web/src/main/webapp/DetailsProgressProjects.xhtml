@@ -2,7 +2,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html" template="/home.xhtml"
-	xmlns:jsf="http://xmlns.jcp.org/jsf">
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ct="http://www.chartistjsf.org/charts">
 
 	<ui:define name="pageCSS">
 		<h:outputStylesheet library="css" name="bootstrap.min.css" />
@@ -12,20 +14,49 @@
 			name="plugins/steps/jquery.steps.css" />
 		<h:outputStylesheet library="css" name="animate.css" />
 		<h:outputStylesheet library="css" name="style.css" />
-<style>
-p {
-  text-align: center;
-  font-size: 60px;
-  margin-top:0px;
+		<style>
+.paragraphe {
+	text-align: center;
+	font-size: 60px;
+	margin-top: 0px;
 }
 </style>
+		<script type="text/javascript"
+			src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript">
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+	
+  var data = google.visualization.arrayToDataTable([
+  ['Task', 'Hours per Day'],
+  ['Work', 8],
+  ['Friends', 2],
+  ['Eat', 2],
+  ['TV', 3],
+  ['Gym', 2],
+  ['Sleep', 7]
+]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {'title':'Statistics ', 'width':300, 'height':250};
+
+ 
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+}
+</script>
 	</ui:define>
 
 	<ui:define name="titleHere">
-	<div>
-	<h2 style="margin-top: 30px">Remaining Time : </h2><p id="demo" ></p>
+		<div>
+			<h2 style="margin-top: 30px">Remaining Time :</h2>
+			<p class="paragraphe" id="demo"></p>
 
-<script>
+			<script>
 window.onload = function(){
 	var countDownDate = new Date(document.getElementById("datefinproject").value +' 00:00:00').getTime();
 	// Update the count down every 1 second
@@ -52,50 +83,266 @@ window.onload = function(){
 	}, 1000);
 }
 
-
 </script>
-	</div>
-		<div class="col-lg-4">
-									<div class="ibox float-e-margins">
-										<div class="ibox-title">
-											<h5>#{projectBean.projectDetails.projectName}</h5>
-											<div class="ibox-tools">
-												<span class="label label-warning-light">Details</span>
-											</div>
-										</div>
-										<div class="ibox-content">
-											
-											
-											
-												<div class="feed-activity-list">
-											
-												<h:form>
-													<div class="feed-element">
-														<a href="profile.html" class="pull-left"> <img
-															alt="image" class="img-circle"
-															src="resources/img/profile.jpg" /></a>
-														<div class="media-body ">
-															<small class="pull-right">#{projectBean.projectDetails.projectName}</small><strong>
-															#{projectBean.projectDetails.responsable.name}</strong> Starts #{projectBean.projectDetails.startDate} <br /> <small
-																class="text-muted">Will finish the #{projectBean.projectDetails.finDate}</small> <br />
-																<input hidden="true" id="datefinproject" type="text" value="#{projectBean.projectDetails.finDate}"/>
-														</div>
-													</div>
-													</h:form>									
-												</div>
-											
-												
-											
-										</div>
+
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="wrapper wrapper-content">
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="ibox float-e-margins">
+								<div class="ibox-title">
+									<h5>Product Delivered</h5>
+									<span class="label label-primary">ERP</span>
+									<div class="ibox-tools">
+										<a class="collapse-link"> <i class="fa fa-chevron-up"></i>
+										</a> <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+											<i class="fa fa-wrench"></i>
+										</a>
+										<ul class="dropdown-menu dropdown-user">
+											<li><a href="#">Config option 1</a></li>
+											<li><a href="#">Config option 2</a></li>
+										</ul>
+										<a class="close-link"> <i class="fa fa-times"></i>
+										</a>
 									</div>
-<div>
-
-</div>
 								</div>
+								<div class="ibox-content">
+									<div>
 
+										<div class="pull-right text-right">
+
+											<span class="bar_dashboard">5,3,9,6,5,9,7,3,5,2,4,7,3,2,7,9,6,4,5,7,3,2,1,0,9,5,6,8,3,2,1</span>
+
+											<br /> <small class="font-bold">will be delivered
+												the #{projectBean.projectDetails.finDate}</small>
+										</div>
+										<h:form>
+											<h4>
+												#{projectBean.projectDetails.product.nomProduit} <br /> <small
+													class="m-r"> <br /> <a
+													jsf:action="#{productBean.toProductUpdate(projectBean.projectDetails.product.id)}"><i
+														class="fa fa-pencil"></i> update it here </a>
+												</small>
+											</h4>
+										</h:form>
+									</div>
+								</div>
+							</div>
+							<div class="ibox float-e-margins">
+								<div class="ibox-title">
+
+									<h:form>
+										<h5>Want you to interrupt #{projectBean.projectDetails.projectName} ?</h5>
+									</h:form>
+									<div class="ibox-tools">
+										<a class="collapse-link"> <i class="fa fa-chevron-up"></i>
+										</a> <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+											<i class="fa fa-wrench"></i>
+										</a>
+										<ul class="dropdown-menu dropdown-user">
+											<li><a href="#">Config option 1</a></li>
+											<li><a href="#">Config option 2</a></li>
+										</ul>
+										<a class="close-link"> <i class="fa fa-times"></i>
+										</a>
+									</div>
+								</div>
+								<div class="ibox-content no-padding">
+									<ul class="list-group">
+
+										<li class="list-group-item">
+											<div align="center">
+											<h:form>
+												<TABLE>
+													<tr>
+														<td><strong>Reason</strong></td>
+													</tr>
+													<tr>
+														<td><br /></td>
+													</tr>
+													<tr>
+														<td><h:inputTextarea value="#{projectBean.reason}" rows="5" cols="30" /></td>
+													</tr>
+													<tr>
+														<td></td>
+													</tr>
+													<tr>
+														<td><div class="text-center" style="margin-top: 20px">
+									<h:commandButton value="Set interruption"  action="#{projectBean.InterruptProject()}"
+										styleClass="btn btn-primary btn-rounded btn-block" />
+								</div></td>
+													
+
+													</tr>
+												</TABLE>
+											</h:form>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- Ideal Contact Suggestion -->
+						<div class="col-lg-4">
+							<div class="ibox float-e-margins">
+								<div class="ibox-title">
+									<h5>Ideal Contact Suggestion</h5>
+									<div class="ibox-tools">
+										<span class="label label-warning-light">Details</span>
+									</div>
+								</div>
+								<div class="ibox-content">
+
+
+
+									<div class="feed-activity-list">
+
+										<h:form>
+											<div class="feed-element">
+												<a
+													jsf:action="#{contactBean.toContactProfile(contactBean.findBestContactSuggestion(projectBean.projectDetails.product).id)}"
+													class="pull-left"> <img alt="image" class="img-circle"
+													src="resources/img/#{contactBean.findBestContactSuggestion(projectBean.projectDetails.product).picture}" /></a>
+												<div class="media-body ">
+													<strong>
+														#{contactBean.findBestContactSuggestion(projectBean.projectDetails.product).name}</strong>
+													#{contactBean.findBestContactSuggestion(projectBean.projectDetails.product).role}
+													<br />
+													<p>
+														<i class="fa fa-map-marker"></i>
+														#{contactBean.findBestContactSuggestion(projectBean.projectDetails.product).country}
+														#{contactBean.findBestContactSuggestion(projectBean.projectDetails.product).city}
+														#{contactBean.findBestContactSuggestion(projectBean.projectDetails.product).street}
+													</p>
+												</div>
+											</div>
+
+										</h:form>
+
+
+									</div>
+								</div>
+							</div>
+							<div></div>
+						</div>  
+						<!-- END Suggestion -->   
+						
+												<div class="col-lg-4">
+							<div class="ibox float-e-margins">
+								<div class="ibox-title">
+									<h5>#{projectBean.projectDetails.projectName}</h5>
+									<div class="ibox-tools">
+										<span class="label label-warning-light">Details</span>
+									</div>
+								</div>
+								<div class="ibox-content">
+
+
+
+									<div class="feed-activity-list">
+
+										<h:form>
+											<div class="feed-element">
+												<a href="profile.html" class="pull-left"> <img
+													alt="image" class="img-circle"
+													src="resources/img/profile.jpg" /></a>
+												<div class="media-body ">
+													<small class="pull-right">Responsible :
+														#{projectBean.projectDetails.responsable.name}</small><strong>
+														#{projectBean.projectDetails.projectName}</strong> Starts
+													#{projectBean.projectDetails.startDate} <br /> <small
+														class="text-muted">Will finish the
+														#{projectBean.projectDetails.finDate}</small> <br /> <small><a
+														jsf:action="#{projectBean.toProjectUpdate(projectBean.projectDetails.id)}">
+															update </a></small> <input hidden="true" id="datefinproject"
+														type="text" value="#{projectBean.projectDetails.finDate}" />
+												</div>
+											</div>
+
+										</h:form>
+
+
+									</div>
+								</div>
+							</div>
+							<div></div>
+						</div>
+
+						<div class="col-lg-4">
+							<div class="ibox float-e-margins">
+								<div class="ibox-title">
+									<h:form>
+
+										<h5>#{projectBean.projectDetails.projectName}'s tasks</h5>
+									</h:form>
+									<div class="ibox-tools">
+										<a class="collapse-link"> <i class="fa fa-chevron-up"></i>
+										</a> <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+											<i class="fa fa-wrench"></i>
+										</a>
+										<ul class="dropdown-menu dropdown-user">
+											<li><a href="#">Config option 1</a></li>
+											<li><a href="#">Config option 2</a></li>
+										</ul>
+										<a class="close-link"> <i class="fa fa-times"></i>
+										</a>
+									</div>
+								</div>
+								<div class="ibox-content ibox-heading">
+									<h3>Check the tasks here</h3>
+									<small><a href="AddTask.jsf">you can also add a
+											task</a></small>
+								</div>
+								<div class="ibox-content inspinia-timeline">
+
+									<div class="timeline-item">
+										<h:form>
+											<div class="row">
+
+												<ui:repeat var="task"
+													value="#{projectBean.projectDetails.tasks}">
+
+													<div class="col-xs-3 date">
+														<i class="fa fa-briefcase"></i><a
+															jsf:action="#{taskBean.toTaskUpdate(task.idTask)}">
+															update </a> <br /> <small class="text-navy"><a
+															jsf:action="#{taskBean.deleteTask(task)}"> delete </a></small>
+													</div>
+													<div class="col-xs-7 content no-top-border">
+														<p class="m-b-xs">
+															<strong>#{task.nomTache}</strong>
+														</p>
+
+														<p>#{task.descrption}</p>
+
+														<p>
+															<small>from #{task.dateDebut} to #{task.dateFin}</small>
+														</p>
+													</div>
+
+												</ui:repeat>
+
+											</div>
+										</h:form>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="ibox float-e-margins">
+								<div id="piechart"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
 		<!-- 	/here -->
 	</ui:define>
-	<ui:define name="pageJS">
+	<ui:insert name="pageJS">
 		<h:outputScript library="js" name="jquery-2.1.1.js"></h:outputScript>
 		<h:outputScript library="js" name="bootstrap.min.js"></h:outputScript>
 		<h:outputScript library="js"
@@ -103,104 +350,186 @@ window.onload = function(){
 		<h:outputScript library="js"
 			name="plugins/slimscroll/jquery.slimscroll.min.js"></h:outputScript>
 
+		<!-- Flot -->
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.js"></h:outputScript>
+		<h:outputScript library="js"
+			name="plugins/flot/jquery.flot.tooltip.min.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.spline.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.resize.js"></h:outputScript>
+		<h:outputScript library="js" name="plugins/flot/jquery.flot.pie.js"></h:outputScript>
+
+		<!-- Peity -->
+		<h:outputScript library="js" name="plugins/peity/jquery.peity.min.js"></h:outputScript>
+		<h:outputScript library="js" name="demo/peity-demo.js"></h:outputScript>
 
 		<!-- Custom and plugin javascript -->
-
 		<h:outputScript library="js" name="inspinia.js"></h:outputScript>
 		<h:outputScript library="js" name="plugins/pace/pace.min.js"></h:outputScript>
 
+		<!-- jQuery UI -->
+		<h:outputScript library="js" name="plugins/jquery-ui/jquery-ui.min.js"></h:outputScript>
 
-		<!-- Steps -->
-		<h:outputScript library="js" name="plugins/staps/jquery.steps.min.js"></h:outputScript>
-
-		<!-- Jquery Validate -->
+		<!-- GITTER -->
 		<h:outputScript library="js"
-			name="plugins/validate/jquery.validate.min.js"></h:outputScript>
+			name="plugins/gritter/jquery.gritter.min.js"></h:outputScript>
 
-
-		<!-- Chosen -->
-		<h:outputScript library="js" name="plugins/chosen/chosen.jquery.js"></h:outputScript>
-
-
-		<!-- iCheck -->
-		<h:outputScript library="js" name="plugins/iCheck/icheck.min.js"></h:outputScript>
-
-		<!-- MENU -->
+		<!-- Sparkline -->
 		<h:outputScript library="js"
-			name="plugins/metisMenu/jquery.metisMenu.js"></h:outputScript>
+			name="plugins/sparkline/jquery.sparkline.min.js"></h:outputScript>
 
+		<!-- Sparkline demo data  -->
+		<h:outputScript library="js" name="demo/sparkline-demo.js"></h:outputScript>
+
+		<!-- ChartJS-->
+		<h:outputScript library="js" name="plugins/chartJs/Chart.min.js"></h:outputScript>
+
+		<!-- Toastr -->
+		<h:outputScript library="js" name="plugins/toastr/toastr.min.js"></h:outputScript>
 
 
 		<h:outputScript>
-		// <![CDATA[
-		 $(document).ready(function(){
-            $("#wizard").steps();
-            $("#form").steps({
-                bodyTag: "fieldset",
-                enableFinishButton: false,
-                onStepChanging: function (event, currentIndex, newIndex)
-                {
-                    // Always allow going backward even if the current step contains invalid fields!
-                    if (currentIndex > newIndex)
+        $(document).ready(function() {
+            setTimeout(function() {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+
+            }, 1300);
+
+
+            var data1 = [
+                [0,4],[1,8],[2,5],[3,10],[4,4],[5,16],[6,5],[7,11],[8,6],[9,11],[10,30],[11,10],[12,13],[13,4],[14,3],[15,3],[16,6]
+            ];
+            var data2 = [
+                [0,1],[1,0],[2,2],[3,0],[4,1],[5,3],[6,1],[7,5],[8,2],[9,3],[10,2],[11,1],[12,0],[13,2],[14,8],[15,0],[16,0]
+            ];
+            $("#flot-dashboard-chart").length &amp;&amp; $.plot($("#flot-dashboard-chart"), [
+                data1, data2
+            ],
                     {
-                        return true;
-                    }
-
-                    // Forbid suppressing "Warning" step if the user is to young
-                    if (newIndex === 3 && Number($("#age").val()) < 18)
-                    {
-                        return false;
-                    }
-
-                    var form = $(this);
-
-                    // Clean up if user went backward before
-                    if (currentIndex < newIndex)
-                    {
-                        // To remove error styles
-                        $(".body:eq(" + newIndex + ") label.error", form).remove();
-                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-                    }
-
-                    // Disable validation on fields that are disabled or hidden.
-                    form.validate().settings.ignore = ":disabled,:hidden";
-
-                    // Start validation; Prevent going forward if false
-                    return form.valid();
-                },
-                onStepChanged: function (event, currentIndex, priorIndex)
-                {
-                    // Suppress (skip) "Warning" step if the user is old enough.
-                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
-                    {
-                        $(this).steps("next");
-                    }
-
-                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
-                    if (currentIndex === 2 && priorIndex === 3)
-                    {
-                        $(this).steps("previous");
-                    }
-                },
-                onFinishing: function (event, currentIndex)
-                {
-                },
-                onFinished: function (event, currentIndex)
-                {
-                }
-            }).validate({
-                        errorPlacement: function (error, element)
-                        {
-                            element.before(error);
+                        series: {
+                            lines: {
+                                show: false,
+                                fill: true
+                            },
+                            splines: {
+                                show: true,
+                                tension: 0.4,
+                                lineWidth: 1,
+                                fill: 0.4
+                            },
+                            points: {
+                                radius: 0,
+                                show: true
+                            },
+                            shadowSize: 2
                         },
-                        rules: {
-                            confirm: {
-                                equalTo: "#password"
-                            }
-                        }
-                    });
-       });
-        // ]]>
-		</h:outputScript>
-	</ui:define>
+                        grid: {
+                            hoverable: true,
+                            clickable: true,
+                            tickColor: "#d5d5d5",
+                            borderWidth: 1,
+                            color: '#d5d5d5'
+                        },
+                        colors: ["#1ab394", "#464f88"],
+                        xaxis:{
+                        },
+                        yaxis: {
+                            ticks: 4
+                        },
+                        tooltip: false
+                    }
+            );
+
+            var doughnutData = [
+                {
+                    value: 300,
+                    color: "#a3e1d4",
+                    highlight: "#1ab394",
+                    label: "App"
+                },
+                {
+                    value: 50,
+                    color: "#dedede",
+                    highlight: "#1ab394",
+                    label: "Software"
+                },
+                {
+                    value: 100,
+                    color: "#b5b8cf",
+                    highlight: "#1ab394",
+                    label: "Laptop"
+                }
+            ];
+
+            var doughnutOptions = {
+                segmentShowStroke: true,
+                segmentStrokeColor: "#fff",
+                segmentStrokeWidth: 2,
+                percentageInnerCutout: 45, // This is 0 for Pie charts
+                animationSteps: 100,
+                animationEasing: "easeOutBounce",
+                animateRotate: true,
+                animateScale: false,
+            };
+
+            var ctx = document.getElementById("doughnutChart").getContext("2d");
+            var DoughnutChart = new Chart(ctx).Doughnut(doughnutData, doughnutOptions);
+
+            var polarData = [
+                {
+                    value: 300,
+                    color: "#a3e1d4",
+                    highlight: "#1ab394",
+                    label: "App"
+                },
+                {
+                    value: 140,
+                    color: "#dedede",
+                    highlight: "#1ab394",
+                    label: "Software"
+                },
+                {
+                    value: 200,
+                    color: "#b5b8cf",
+                    highlight: "#1ab394",
+                    label: "Laptop"
+                }
+            ];
+
+            var polarOptions = {
+                scaleShowLabelBackdrop: true,
+                scaleBackdropColor: "rgba(255,255,255,0.75)",
+                scaleBeginAtZero: true,
+                scaleBackdropPaddingY: 1,
+                scaleBackdropPaddingX: 1,
+                scaleShowLine: true,
+                segmentShowStroke: true,
+                segmentStrokeColor: "#fff",
+                segmentStrokeWidth: 2,
+                animationSteps: 100,
+                animationEasing: "easeOutBounce",
+                animateRotate: true,
+                animateScale: false,
+            };
+            var ctx = document.getElementById("polarChart").getContext("2d");
+            var Polarchart = new Chart(ctx).PolarArea(polarData, polarOptions);
+
+        });
+	</h:outputScript>
+		<h:outputScript>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','../../www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-4625583-2', 'webapplayers.com');
+        ga('send', 'pageview');
+
+        </h:outputScript>
+	</ui:insert>
 </ui:composition>

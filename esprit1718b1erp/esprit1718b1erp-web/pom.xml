@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
  <parent>
@@ -22,6 +23,18 @@
    <artifactId>javaee-web-api</artifactId>
   </dependency>
   <dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>3.17</version>
+</dependency>
+  
+  <dependency>
+   <groupId>com.lowagie</groupId>
+   <artifactId>itext</artifactId>
+   <version>1.4.8</version>
+  </dependency>
+
+  <dependency>
    <groupId>tn.esprit.b1</groupId>
    <artifactId>esprit1718b1erp-service</artifactId>
    <type>ejb</type>
@@ -35,7 +48,22 @@
    <groupId>com.fasterxml.jackson.core</groupId>
    <artifactId>jackson-databind</artifactId>
    <version>2.4.4</version>
- </dependency>
+  </dependency>
+  <dependency>
+   <groupId>com.itextpdf</groupId>
+   <artifactId>itextpdf</artifactId>
+   <version>5.5.10</version>
+  </dependency>
+  <dependency>
+   <groupId>org.apache.pdfbox</groupId>
+   <artifactId>pdfbox</artifactId>
+   <version>2.0.4</version>
+  </dependency>
+  <dependency>
+   <groupId>org.chartistjsf</groupId>
+   <artifactId>ChartistJSF</artifactId>
+   <version>2.1</version>
+  </dependency>
  </dependencies>
- 
+
 </project>

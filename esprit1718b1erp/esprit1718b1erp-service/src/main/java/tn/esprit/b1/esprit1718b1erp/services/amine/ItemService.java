@@ -2,7 +2,9 @@ package tn.esprit.b1.esprit1718b1erp.services.amine;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -151,27 +153,12 @@ public class ItemService extends GenericDAO<Item> implements ItemServiceRemote, 
         query.setParameter("i", cat);
         return query.getResultList();
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //////////////addded by ahmed////////
+
+    ////////////// addded by ahmed////////
     public List<Double> Somme_Item_intheLast5Years() {
-        /////DISTINCT year(durationguarantee),
+        ///// DISTINCT year(durationguarantee),
         Query query = entityManager.createNativeQuery(
-"SELECT ROUND(SUM(byingPrice),0) from item GROUP BY year(durationguarantee) ORDER BY year(durationguarantee) asc LIMIT 5");
+                "SELECT SUM(byingPrice) from item GROUP BY year(durationguarantee) ORDER BY year(durationguarantee) asc LIMIT 5");
 
         List<Double> result = query.getResultList();
 
@@ -193,9 +180,25 @@ public class ItemService extends GenericDAO<Item> implements ItemServiceRemote, 
     }
 
     public List<Item> getItemsOnAlert() {
-        return entityManager.createNativeQuery(
-                "select * from item where item.minimumQuanity>item.quantity",
-                Item.class).getResultList();
+        return entityManager.createNativeQuery("select * from item where item.minimumQuanity>item.quantity", Item.class)
+                .getResultList();
+    }
+
+    public Map<Integer, BigInteger> getNumberOfItemAddedPerMonth(int j) {
+        Map<Integer, BigInteger> results = new HashMap<Integer, BigInteger>();
+        for (int i = 1; i < 13; i++) {
+            String query = " SELECT COUNT(*) FROM `item` JOIN tier on item.tier_id=tier.id  JOIN row on tier.row_id=row.id  JOIN depot on row.depot_id=depot.id WHERE depot.id=? and month(item.lastUpdatedDate)="
+                    + i;
+            results.put(i, (BigInteger) entityManager.createNativeQuery(query).setParameter(1, j).getSingleResult());
+        }
+
+        return results;
+
+    }
+
+    public BigInteger getNumberOfItemAddedPerMonthGenral(int i) {
+        String query = "SELECT COUNT(*) FROM `item` JOIN tier on item.tier_id=tier.id  JOIN row on tier.row_id=row.id  JOIN depot on row.depot_id=depot.id where month(item.lastUpdatedDate)=?";
+        return (BigInteger) entityManager.createNativeQuery(query).setParameter(1, i).getSingleResult();
     }
 
 }

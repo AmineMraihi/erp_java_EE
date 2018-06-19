@@ -43,7 +43,7 @@
 							<div class="row">
 								<div class="col-lg-12">
 									<div class="m-b-md">
-										<button  class="btn btn-white btn-xs pull-right"
+										<button class="btn btn-white btn-xs pull-right"
 											data-toggle="modal" data-target="#myModal4">import
 											item</button>
 										<h2>#{itemBean.itemDetails.name}</h2>
@@ -82,13 +82,19 @@
 							<div class="row">
 								<div class="col-lg-12">
 									<dl class="dl-horizontal">
-										<dt>Completed:</dt>
+										<dt>Status:</dt>
 										<dd>
-											<div class="progress progress-striped active m-b-sm">
-												<div style="width: 60%;" class="progress-bar"></div>
+											<div class="progress progress-striped active">
+
+												<div
+													style="width: #{(itemBean.itemDetails.quantity*100)/itemBean.itemDetails.minimumQuanity}% "
+													class="progress-bar progress-bar-danger">
+													#{(itemBean.itemDetails.quantity*100) /
+													itemBean.itemDetails.minimumQuanity}%</div>
 											</div>
-											<small>Project completed in <strong>60%</strong>.
-												Remaining close the project, sign a contract and invoice.
+											<small>quantity represents  <strong>#{(itemBean.itemDetails.quantity*100)
+													/ itemBean.itemDetails.minimumQuanity}%</strong> Of the minimum quantity of
+												#{itemBean.itemDetails.name} .
 											</small>
 										</dd>
 									</dl>
@@ -119,22 +125,24 @@
 								<span aria-hidden="true"></span><span class="sr-only">Close</span>
 							</button>
 							<h4 class="modal-title">import item</h4>
-							<small>Please insert a valid number of quantities in order to import them from the supplier</small>
+							<small>Please insert a valid number of quantities in
+								order to import them from the supplier</small>
 						</div>
 						<div class="modal-body">
 
 							<div class="form-group">
 								<label>quantity to be added *</label>
-								<input class="form-control" jsf:value="#{itemBean.quantity}" placeholder="minimum quantity required is: #{itemBean.itemDetails.minimumQuanity - itemBean.itemDetails.quantity} "/>
+
+								<h:inputText value="#{itemBean.quantity}"
+									styleClass="form-control " />
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
 							<h:commandButton styleClass="btn btn-primary" update="showtime"
-								action="#{depotBean.addDepot()}" value="add Depot">
-								<f:ajax execute="hello" render="showtime" />
+								action="#{itemBean.updateImportedItem(itemBean.itemDetails.id)}"
+								value="import item">
 							</h:commandButton>
-
 						</div>
 					</h:form>
 				</div>

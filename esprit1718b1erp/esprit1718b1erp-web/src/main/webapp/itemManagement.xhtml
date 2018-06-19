@@ -41,10 +41,17 @@
 						<h5>Item Management</h5>
 					</div>
 					<div class="ibox-content">
+						<div>
+							<h:message styleClass="alert alert-danger" for="quantityvalidate">
+							</h:message>
+						</div>
+						<br /> <br />
+
 						<h2>Add item</h2>
 						<p>please complete the wizard to add item</p>
 
 						<h:form id="form" class="wizard-big">
+
 							<h1>info</h1>
 							<fieldset>
 								<h2>General information</h2>
@@ -56,8 +63,11 @@
 												styleClass="form-control " />
 										</div>
 										<div class="form-group">
-											<label>Quantity *</label>
-											<h:inputText value="#{itemBean.quantity}"
+											<label>Quantity and minimum quantity *</label>
+											<h:inputText id="quantityvalidate"
+												value="#{itemBean.quantity}" styleClass="form-control "
+												required="true" requiredMessage="please insert quantity" />
+											<h:inputText value="#{itemBean.minimumQuantity}"
 												styleClass="form-control " />
 										</div>
 										<div class="form-group">
@@ -74,10 +84,11 @@
 
 										<div class="form-group">
 											<label>Description *</label>
-											<h:inputTextarea style="margin: 0px -12.0469px 0px 0px; height: 107px; width: 471px;" value="#{itemBean.description}"
-												styleClass="form-control" />
+											<h:inputTextarea
+												style="margin: 0px -12.0469px 0px 0px; height: 107px; width: 471px;"
+												value="#{itemBean.description}" styleClass="form-control" />
 										</div>
-										
+
 
 										<div class="form-group">
 											<label>Supplier *</label>
@@ -128,9 +139,9 @@
 												<h:selectOneMenu styleClass="form-control"
 													value="#{itemBean.tierId}">
 													<f:selectItem itemLabel="select tier" itemValue="" />
-													<f:selectItems value="#{itemBean.tryssForAdd(itemBean.rowId)}"
-														var="tier" itemValue="#{tier.id}"
-														itemLabel="#{tier.tierEnum}" />
+													<f:selectItems
+														value="#{itemBean.tryssForAdd(itemBean.rowId)}" var="tier"
+														itemValue="#{tier.id}" itemLabel="#{tier.tierEnum}" />
 												</h:selectOneMenu>
 											</h:panelGroup>
 										</div>
@@ -147,7 +158,7 @@
 												styleClass="form-control " />
 										</div>
 										<div class="form-group">
-											<label>Buying Price *</label>
+											<label>Selling Price *</label>
 											<h:inputText value="#{itemBean.sellingPrice}"
 												styleClass="form-control " />
 										</div>
@@ -159,8 +170,9 @@
 							<h1>Finish</h1>
 							<fieldset>
 								<div class="text-center" style="margin-top: 120px">
-									<h:commandButton action="#{itemBean.addItem()}"
-										styleClass="fa fa-sign-in big-icon" />
+									<h:commandButton value="add item" id="btnadd"
+										action="#{itemBean.addItem()}"
+										styleClass="btn btn-primary btn-rounded btn-block" />
 								</div>
 							</fieldset>
 
